@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ফাস্টল্যাব ইউনানী - ম্যানেজমেন্ট সিস্টেম</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/bundle.min.js"></script>
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
+    <!-- Header -->
+    <header class="bg-emerald-700 text-white shadow-md p-4 text-center">
+        <h1 class="text-2xl font-bold">ফাস্টল্যাব ইউনানী</h1>
+        <p class="text-xs text-emerald-100">আফুরিয়া, হেমাইতপুর, পাবনা | মোবাইল: 01335-097460</p>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto p-4 space-y-6">
+        <!-- Navigation Tabs -->
+        <div class="flex overflow-x-auto bg-white p-2 rounded-xl shadow gap-2 text-sm font-medium">
+            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="px-4 py-2 bg-emerald-600 text-white rounded-lg whitespace-nowrap">ড্যাশবোর্ড</button>
+            <button onclick="switchTab('income-expense')" id="btn-income-expense" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">আয় ও ব্যয়</button>
+            <button onclick="switchTab('suppliers')" id="btn-suppliers" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">সাপ্লাইয়ার</button>
+            <button onclick="switchTab('parties')" id="btn-parties" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">পার্টি ম্যানেজমেন্ট</button>
+            <button onclick="switchTab('balance-sheet')" id="btn-balance-sheet" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">ব্যালেন্স শীট</button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <section id="tab-dashboard" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-emerald-500">
+                    <p class="text-xs text-gray-500">চলতি মাসের আয়</p>
+                    <h3 id="dash-total-income" class="text-xl font-bold text-emerald-600">৳ ০</h3>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-rose-500">
+                    <p class="text-xs text-gray-500">চলতি মাসের ব্যয়</p>
+                    <h3 id="dash-total-expense" class="text-xl font-bold text-rose-600">৳ ০</h3>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-blue-500">
+                    <p class="text-xs text-gray-500">সাপ্লাইয়ার বকেয়া</p>
+                    <h3 id="dash-supplier-due" class="text-xl font-bold text-blue-600">৳ ০</h3>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-amber-500">
+                    <p class="text-xs text-gray-500">পার্টির কাছে পাওনা</p>
+                    <h3 id="dash-party-due" class="text-xl font-bold text-amber-600">৳ ০</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Income & Expense Tab -->
+        <section id="tab-income-expense" class="hidden space-y-4 bg-white p-4 rounded-xl shadow">
+            <h2 class="text-lg font-bold border-b pb-2">আয় ও ব্যয় হিসাব ব্যবস্থাপনা</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-sm">নতুন খাত তৈরি করুন</h3>
+                    <div class="flex gap-2">
+                        <input type="text" id="new-category-name" placeholder="খাতের নাম (যেমন: বিদ্যুৎ বিল)" class="border p-2 rounded w-full text-sm">
+                        <select id="new-category-type" class="border p-2 rounded text-sm">
+                            <option value="income">আয়</option>
+                            <option value="expense">ব্যয়</option>
+                        </select>
+                        <button onclick="addCategory()" class="bg-emerald-600 text-white px-4 rounded text-sm">যোগ</button>
+                    </div>
+                    <div id="category-list" class="flex flex-wrap gap-2 pt-2"></div>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-sm">দৈনিক লেনদেন এন্ট্রি</h3>
+                    <input type="date" id="ie-date" class="border p-2 rounded w-full text-sm">
+                    <select id="ie-category" class="border p-2 rounded w-full text-sm"></select>
+                    <input type="number" id="ie-amount" placeholder="টাকার পরিমাণ" class="border p-2 rounded w-full text-sm">
+                    <input type="text" id="ie-note" placeholder="বটম বা নোট (ঐচ্ছিক)" class="border p-2 rounded w-full text-sm">
+                    <button onclick="addTransaction()" class="bg-blue-600 text-white w-full py-2 rounded text-sm font-semibold">এন্ট্রি সেভ করুন</button>
+                </div>
+            </div>
+            <div class="pt-4 overflow-x-auto">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 border-b">
+                            <th class="p-2">তারিখ</th>
+                            <th class="p-2">খাত</th>
+                            <th class="p-2">টাইপ</th>
+                            <th class="p-2">পরিমাণ</th>
+                            <th class="p-2">নোট</th>
+                            <th class="p-2">অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transaction-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Suppliers Tab -->
+        <section id="tab-suppliers" class="hidden space-y-4 bg-white p-4 rounded-xl shadow">
+            <h2 class="text-lg font-bold border-b pb-2">সাপ্লাইয়ার ম্যানেজমেন্ট</h2>
+            <div class="flex gap-2">
+                <input type="text" id="supplier-name" placeholder="সাপ্লাইয়ারের নাম" class="border p-2 rounded w-full text-sm">
+                <button onclick="addSupplier()" class="bg-emerald-600 text-white px-4 rounded text-sm">যোগ করুন</button>
+            </div>
+            <div id="supplier-container" class="space-y-3"></div>
+        </section>
+
+        <!-- Parties Tab -->
+        <section id="tab-parties" class="hidden space-y-4 bg-white p-4 rounded-xl shadow">
+            <h2 class="text-lg font-bold border-b pb-2">পার্টি ম্যানেজমেন্ট (কাস্টমার)</h2>
+            <div class="flex gap-2">
+                <input type="text" id="party-name" placeholder="পার্টির নাম" class="border p-2 rounded w-full text-sm">
+                <button onclick="addParty()" class="bg-emerald-600 text-white px-4 rounded text-sm">যোগ করুন</button>
+            </div>
+            <div id="party-container" class="space-y-3"></div>
+        </section>
+
+        <!-- Balance Sheet Tab -->
+        <section id="tab-balance-sheet" class="hidden space-y-4 bg-white p-4 rounded-xl shadow">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h2 class="text-lg font-bold">ব্যালেন্স শীট ও মাসিক স্টেটমেন্ট</h2>
+                <button onclick="downloadPDF()" class="bg-rose-600 text-white px-3 py-1.5 rounded text-sm font-semibold">PDF ডাউনলোড</button>
+            </div>
+            <div id="pdf-content" class="space-y-4 p-2">
+                <div class="text-center">
+                    <h3 class="font-bold text-xl">ফাস্টল্যাব ইউনানী</h3>
+                    <p class="text-xs text-gray-500">মাসিক লাভ ও লস স্টেটমেন্ট</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded">
+                    <div> মোট আয়: <span id="bs-income" class="font-bold text-emerald-600">৳ ০</span></div>
+                    <div> মোট ব্যয়: <span id="bs-expense" class="font-bold text-rose-600">৳ ০</span></div>
+                </div>
+                <div class="p-4 rounded text-center bg-emerald-50 border border-emerald-200">
+                    <h4 class="text-sm font-semibold text-gray-600">নিট লাভ / ক্ষতি</h4>
+                    <span id="bs-net-profit" class="text-2xl font-bold text-emerald-700">৳ ০</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Data Store setup via localStorage
+        let db = JSON.parse(localStorage.getItem('fastlab_db')) || {
+            categories: [
+                {id: 1, name: 'ঔষধ বিক্রি', type: 'income'},
+                {id: 2, name: 'কাঁচামাল ক্রয়', type: 'expense'},
+                {id: 3, name: 'দোকান ভাড়া', type: 'expense'}
+            ],
+            transactions: [],
+            suppliers: [],
+            parties: []
+        };
+
+        function saveData() {
+            localStorage.setItem('fastlab_db', JSON.stringify(db));
+            updateUI();
+        }
+
+        function switchTab(tabId) {
+            ['dashboard', 'income-expense', 'suppliers', 'parties', 'balance-sheet'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`btn-${t}`).classList.remove('bg-emerald-600', 'text-white');
+                document.getElementById(`btn-${t}`).classList.add('bg-gray-100', 'text-gray-700');
+            });
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById(`btn-${tabId}`).classList.add('bg-emerald-600', 'text-white');
+            document.getElementById(`btn-${tabId}`).classList.remove('bg-gray-100', 'text-gray-700');
+        }
+
+        function addCategory() {
+            let name = document.getElementById('new-category-name').value;
+            let type = document.getElementById('new-category-type').value;
+            if(!name) return alert('খাতের নাম দিন');
+            db.categories.push({id: Date.now(), name, type});
+            document.getElementById('new-category-name').value = '';
+            saveData();
+        }
+
+        function deleteCategory(id) {
+            db.categories = db.categories.filter(c => c.id !== id);
+            saveData();
+        }
+
+        function addTransaction() {
+            let date = document.getElementById('ie-date').value || new Date().toISOString().split('T')[0];
+            let catName = document.getElementById('ie-category').value;
+            let amount = parseFloat(document.getElementById('ie-amount').value);
+            let note = document.getElementById('ie-note').value;
+            if(!amount || !catName) return alert('সঠিক তথ্য দিন');
+            let cat = db.categories.find(c => c.name === catName);
+            db.transactions.push({id: Date.now(), date, category: catName, type: cat ? cat.type : 'expense', amount, note});
+            document.getElementById('ie-amount').value = '';
+            document.getElementById('ie-note').value = '';
+            saveData();
+        }
+
+        function deleteTransaction(id) {
+            db.transactions = db.transactions.filter(t => t.id !== id);
+            saveData();
+        }
+
+        function addSupplier() {
+            let name = document.getElementById('supplier-name').value;
+            if(!name) return;
+            db.suppliers.push({id: Date.now(), name, purchases: [], payments: []});
+            document.getElementById('supplier-name').value = '';
+            saveData();
+        }
+
+        function addSupplierTx(supId, type) {
+            let amount = parseFloat(prompt(type === 'purchase' ? 'মালের দাম কত?' : 'পেমেন্ট কত টাকা?'));
+            if(!amount) return;
+            let sup = db.suppliers.find(s => s.id === supId);
+            if(type === 'purchase') sup.purchases.push({date: new Date().toLocaleDateString(), amount});
+            else sup.payments.push({date: new Date().toLocaleDateString(), amount});
+            saveData();
+        }
+
+        function addParty() {
+            let name = document.getElementById('party-name').value;
+            if(!name) return;
+            db.parties.push({id: Date.now(), name, sales: [], collections: []});
+            document.getElementById('party-name').value = '';
+            saveData();
+        }
+
+        function addPartyTx(partyId, type) {
+            let amount = parseFloat(prompt(type === 'sale' ? 'বিক্রয়মূল্য কত?' : 'জমা কত টাকা?'));
+            if(!amount) return;
+            let p = db.parties.find(x => x.id === partyId);
+            if(type === 'sale') p.sales.push({date: new Date().toLocaleDateString(), amount});
+            else p.collections.push({date: new Date().toLocaleDateString(), amount});
+            saveData();
+        }
+
+        function updateUI() {
+            // Categories render
+            let catList = document.getElementById('category-list');
+            let catSelect = document.getElementById('ie-category');
+            catList.innerHTML = '';
+            catSelect.innerHTML = '';
+            db.categories.forEach(c => {
+                catList.innerHTML += `<span class="bg-gray-100 px-2 py-1 rounded text-xs border flex items-center gap-1">${c.name} (${c.type === 'income' ? 'আয়' : 'ব্যয়'}) <button onclick="deleteCategory(${c.id})" class="text-red-500 font-bold">&times;</button></span>`;
+                catSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+            });
+
+            // Transactions render
+            let tBody = document.getElementById('transaction-table-body');
+            tBody.innerHTML = '';
+            let totalInc = 0, totalExp = 0;
+            db.transactions.forEach(t => {
+                if(t.type === 'income') totalInc += t.amount; else totalExp += t.amount;
+                tBody.innerHTML += `<tr class="border-b"><td class="p-2">${t.date}</td><td class="p-2">${t.category}</td><td class="p-2 ${t.type==='income'?'text-emerald-600':'text-rose-600'}">${t.type==='income'?'আয়':'ব্যয়'}</td><td class="p-2">৳${t.amount}</td><td class="p-2">${t.note||''}</td><td class="p-2"><button onclick="deleteTransaction(${t.id})" class="text-red-500 text-xs">ডিলিট</button></td></tr>`;
+            });
+
+            // Suppliers render
+            let supContainer = document.getElementById('supplier-container');
+            supContainer.innerHTML = '';
+            let totalSupDue = 0;
+            db.suppliers.forEach(s => {
+                let pTotal = s.purchases.reduce((a,b)=>a+b.amount,0);
+                let payTotal = s.payments.reduce((a,b)=>a+b.amount,0);
+                let due = pTotal - payTotal;
+                totalSupDue += due;
+                supContainer.innerHTML += `<div class="border p-3 rounded bg-gray-50 flex justify-between items-center text-sm"><div><strong>${s.name}</strong><p class="text-xs text-gray-500">বকেয়া: ৳${due}</p></div><div class="flex gap-1"><button onclick="addSupplierTx(${s.id}, 'purchase')" class="bg-blue-500 text-white px-2 py-1 rounded text-xs">+ মাল ক্রয়</button><button onclick="addSupplierTx(${s.id}, 'payment')" class="bg-emerald-500 text-white px-2 py-1 rounded text-xs">+ পেমেন্ট</button></div></div>`;
+            });
+
+            // Parties render
+            let partyContainer = document.getElementById('party-container');
+            partyContainer.innerHTML = '';
+            let totalPartyDue = 0;
+            db.parties.forEach(p => {
+                let sTotal = p.sales.reduce((a,b)=>a+b.amount,0);
+                let cTotal = p.collections.reduce((a,b)=>a+b.amount,0);
+                let due = sTotal - cTotal;
+                totalPartyDue += due;
+                partyContainer.innerHTML += `<div class="border p-3 rounded bg-gray-50 flex justify-between items-center text-sm"><div><strong>${p.name}</strong><p class="text-xs text-gray-500">পাওনা: ৳${due}</p></div><div class="flex gap-1"><button onclick="addPartyTx(${p.id}, 'sale')" class="bg-blue-500 text-white px-2 py-1 rounded text-xs">+ বিক্রি</button><button onclick="addPartyTx(${p.id}, 'collection')" class="bg-emerald-500 text-white px-2 py-1 rounded text-xs">+ টাকা আদায়</button></div></div>`;
+            });
+
+            // Dashboard values
+            document.getElementById('dash-total-income').innerText = `৳ ${totalInc}`;
+            document.getElementById('dash-total-expense').innerText = `৳ ${totalExp}`;
+            document.getElementById('dash-supplier-due').innerText = `৳ ${totalSupDue}`;
+            document.getElementById('dash-party-due').innerText = `৳ ${totalPartyDue}`;
+
+            // Balance sheet values
+            document.getElementById('bs-income').innerText = `৳ ${totalInc}`;
+            document.getElementById('bs-expense').innerText = `৳ ${totalExp}`;
+            let net = totalInc - totalExp;
+            let netEl = document.getElementById('bs-net-profit');
+            netEl.innerText = `৳ ${net}`;
+            netEl.className = `text-2xl font-bold ${net >= 0 ? 'text-emerald-700' : 'text-rose-700'}`;
+        }
+
+        function downloadPDF() {
+            const element = document.getElementById('pdf-content');
+            html2pdf().from(element).save('Fastlab-Unani-Statement.pdf');
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>
+                      
