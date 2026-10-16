@@ -12,131 +12,194 @@
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
-    <!-- Header -->
-    <header class="bg-emerald-700 text-white shadow-md p-4 text-center">
-        <h1 class="text-2xl font-bold">ফাস্টল্যাব ইউনানী</h1>
-        <p class="text-xs text-emerald-100">আফুরিয়া, হেমাইতপুর, পাবনা | মোবাইল: 01335-097460</p>
-    </header>
 
-    <!-- Main Container -->
-    <main class="max-w-4xl mx-auto p-4 space-y-6">
-        <!-- Navigation Tabs -->
-        <div class="flex overflow-x-auto bg-white p-2 rounded-xl shadow gap-2 text-sm font-medium">
-            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="px-4 py-2 bg-emerald-600 text-white rounded-lg whitespace-nowrap">ড্যাশবোর্ড</button>
-            <button onclick="switchTab('income-expense')" id="btn-income-expense" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">আয় ও ব্যয়</button>
-            <button onclick="switchTab('suppliers')" id="btn-suppliers" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">সাপ্লাইয়ার</button>
-            <button onclick="switchTab('parties')" id="btn-parties" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">পার্টি ম্যানেজমেন্ট</button>
-            <button onclick="switchTab('balance-sheet')" id="btn-balance-sheet" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">ব্যালেন্স শীট</button>
+    <!-- Login Screen -->
+    <div id="login-screen" class="fixed inset-0 bg-slate-900 bg-opacity-95 flex items-center justify-center p-4 z-50">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-sm space-y-4 text-center">
+            <div class="bg-emerald-100 p-3 rounded-full w-16 h-16 mx-auto flex items-center justify-center text-emerald-700 font-bold text-2xl">
+                🔒
+            </div>
+            <h2 class="text-xl font-bold text-slate-800">ফাস্টল্যাব ইউনানী</h2>
+            <p class="text-xs text-gray-500">ম্যানেজমেন্ট সিস্টেমে প্রবেশ করতে লগইন করুন</p>
+            
+            <div class="space-y-3 text-left">
+                <div>
+                    <label class="text-xs font-semibold text-gray-600">ইউজারনেম</label>
+                    <input type="text" id="login-user" placeholder="admin" class="w-full border p-2 rounded-lg text-sm mt-1 focus:outline-none focus:border-emerald-600">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-gray-600">পাসওয়ার্ড</label>
+                    <input type="password" id="login-pass" placeholder="••••" class="w-full border p-2 rounded-lg text-sm mt-1 focus:outline-none focus:border-emerald-600">
+                </div>
+            </div>
+
+            <p id="login-error" class="text-xs text-rose-600 hidden font-semibold">ভুল ইউজারনেম বা পাসওয়ার্ড!</p>
+
+            <button onclick="checkLogin()" class="w-full bg-emerald-700 text-white py-2 rounded-lg font-semibold hover:bg-emerald-800 transition">লগইন করুন</button>
         </div>
+    </div>
 
-        <!-- Dashboard Tab -->
-        <section id="tab-dashboard" class="space-y-4">
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-emerald-500">
-                    <p class="text-xs text-gray-500">চলতি মাসের আয়</p>
-                    <h3 id="dash-total-income" class="text-xl font-bold text-emerald-600">৳ ০</h3>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-rose-500">
-                    <p class="text-xs text-gray-500">চলতি মাসের ব্যয়</p>
-                    <h3 id="dash-total-expense" class="text-xl font-bold text-rose-600">৳ ০</h3>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-blue-500">
-                    <p class="text-xs text-gray-500">সাপ্লাইয়ার বকেয়া</p>
-                    <h3 id="dash-supplier-due" class="text-xl font-bold text-blue-600">৳ ০</h3>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow border-l-4 border-amber-500">
-                    <p class="text-xs text-gray-500">পার্টির কাছে পাওনা</p>
-                    <h3 id="dash-party-due" class="text-xl font-bold text-amber-600">৳ ০</h3>
-                </div>
+    <!-- Main Content (Hidden until Login) -->
+    <div id="app-content" class="hidden">
+        <!-- Header -->
+        <header class="bg-emerald-700 text-white shadow-md p-4 text-center relative">
+            <h1 class="text-2xl font-bold">ফাস্টল্যাব ইউনানী</h1>
+            <p class="text-xs text-emerald-100">আফুরিয়া, হেমাইতপুর, পাবনা | মোবাইল: 01335-097460</p>
+            <button onclick="logout()" class="absolute right-4 top-4 bg-emerald-900 hover:bg-rose-700 text-xs text-white px-3 py-1.5 rounded-lg transition">লগআউট</button>
+        </header>
+
+        <!-- Main Container -->
+        <main class="max-w-4xl mx-auto p-4 space-y-6">
+            <!-- Navigation Tabs -->
+            <div class="flex overflow-x-auto bg-white p-2 rounded-xl shadow gap-2 text-sm font-medium">
+                <button onclick="switchTab('dashboard')" id="btn-dashboard" class="px-4 py-2 bg-emerald-600 text-white rounded-lg whitespace-nowrap">ড্যাশবোর্ড</button>
+                <button onclick="switchTab('income-expense')" id="btn-income-expense" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">আয় ও ব্যয়</button>
+                <button onclick="switchTab('suppliers')" id="btn-suppliers" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">সাপ্লাইয়ার</button>
+                <button onclick="switchTab('parties')" id="btn-parties" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">পার্টি ম্যানেজমেন্ট</button>
+                <button onclick="switchTab('balance-sheet')" id="btn-balance-sheet" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">ব্যালেন্স শীট</button>
             </div>
-        </section>
 
-        <!-- Income & Expense Tab -->
-        <section id="tab-income-expense" class="hidden space-y-4 bg-white p-4 rounded-xl shadow">
-            <h2 class="text-lg font-bold border-b pb-2">আয় ও ব্যয় হিসাব ব্যবস্থাপনা</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="space-y-2">
-                    <h3 class="font-semibold text-sm">নতুন খাত তৈরি করুন</h3>
-                    <div class="flex gap-2">
-                        <input type="text" id="new-category-name" placeholder="খাতের নাম (যেমন: বিদ্যুৎ বিল)" class="border p-2 rounded w-full text-sm">
-                        <select id="new-category-type" class="border p-2 rounded text-sm">
-                            <option value="income">আয়</option>
-                            <option value="expense">ব্যয়</option>
-                        </select>
-                        <button onclick="addCategory()" class="bg-emerald-600 text-white px-4 rounded text-sm">যোগ</button>
+            <!-- Dashboard Tab -->
+            <section id="tab-dashboard" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-xl shadow border-l-4 border-emerald-500">
+                        <p class="text-xs text-gray-500">চলতি মাসের আয়</p>
+                        <h3 id="dash-total-income" class="text-xl font-bold text-emerald-600">৳ ০</h3>
                     </div>
-                    <div id="category-list" class="flex flex-wrap gap-2 pt-2"></div>
+                    <div class="bg-white p-4 rounded-xl shadow border-l-4 border-rose-500">
+                        <p class="text-xs text-gray-500">চলতি মাসের ব্যয়</p>
+                        <h3 id="dash-total-expense" class="text-xl font-bold text-rose-600">৳ ০</h3>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow border-l-4 border-blue-500">
+                        <p class="text-xs text-gray-500">সাপ্লাইয়ার বকেয়া</p>
+                        <h3 id="dash-supplier-due" class="text-xl font-bold text-blue-600">৳ ০</h3>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow border-l-4 border-amber-500">
+                        <p class="text-xs text-gray-500">পার্টির কাছে পাওনা</p>
+                        <h3 id="dash-party-due" class="text-xl font-bold text-amber-600">৳ ০</h3>
+                    </div>
                 </div>
-                <div class="space-y-2">
-                    <h3 class="font-semibold text-sm">দৈনিক লেনদেন এন্ট্রি</h3>
-                    <input type="date" id="ie-date" class="border p-2 rounded w-full text-sm">
-                    <select id="ie-category" class="border p-2 rounded w-full text-sm"></select>
-                    <input type="number" id="ie-amount" placeholder="টাকার পরিমাণ" class="border p-2 rounded w-full text-sm">
-                    <input type="text" id="ie-note" placeholder="বটম বা নোট (ঐচ্ছিক)" class="border p-2 rounded w-full text-sm">
-                    <button onclick="addTransaction()" class="bg-blue-600 text-white w-full py-2 rounded text-sm font-semibold">এন্ট্রি সেভ করুন</button>
-                </div>
-            </div>
-            <div class="pt-4 overflow-x-auto">
-                <table class="w-full text-left text-sm border-collapse">
-                    <thead>
-                        <tr class="bg-gray-100 border-b">
-                            <th class="p-2">তারিখ</th>
-                            <th class="p-2">খাত</th>
-                            <th class="p-2">টাইপ</th>
-                            <th class="p-2">পরিমাণ</th>
-                            <th class="p-2">নোট</th>
-                            <th class="p-2">অ্যাকশন</th>
-                        </tr>
-                    </thead>
-                    <tbody id="transaction-table-body"></tbody>
-                </table>
-            </div>
-        </section>
+            </section>
 
-        <!-- Suppliers Tab -->
-        <section id="tab-suppliers" class="hidden space-y-4 bg-white p-4 rounded-xl shadow">
-            <h2 class="text-lg font-bold border-b pb-2">সাপ্লাইয়ার ম্যানেজমেন্ট</h2>
-            <div class="flex gap-2">
-                <input type="text" id="supplier-name" placeholder="সাপ্লাইয়ারের নাম" class="border p-2 rounded w-full text-sm">
-                <button onclick="addSupplier()" class="bg-emerald-600 text-white px-4 rounded text-sm">যোগ করুন</button>
-            </div>
-            <div id="supplier-container" class="space-y-3"></div>
-        </section>
+            <!-- Income & Expense Tab -->
+            <section id="tab-income-expense" class="hidden space-y-4 bg-white p-4 rounded-xl shadow">
+                <h2 class="text-lg font-bold border-b pb-2">আয় ও ব্যয় হিসাব ব্যবস্থাপনা</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <h3 class="font-semibold text-sm">নতুন খাত তৈরি করুন</h3>
+                        <div class="flex gap-2">
+                            <input type="text" id="new-category-name" placeholder="খাতের নাম (যেমন: বিদ্যুৎ বিল)" class="border p-2 rounded w-full text-sm">
+                            <select id="new-category-type" class="border p-2 rounded text-sm">
+                                <option value="income">আয়</option>
+                                <option value="expense">ব্যয়</option>
+                            </select>
+                            <button onclick="addCategory()" class="bg-emerald-600 text-white px-4 rounded text-sm">যোগ</button>
+                        </div>
+                        <div id="category-list" class="flex flex-wrap gap-2 pt-2"></div>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="font-semibold text-sm">দৈনিক লেনদেন এন্ট্রি</h3>
+                        <input type="date" id="ie-date" class="border p-2 rounded w-full text-sm">
+                        <select id="ie-category" class="border p-2 rounded w-full text-sm"></select>
+                        <input type="number" id="ie-amount" placeholder="টাকার পরিমাণ" class="border p-2 rounded w-full text-sm">
+                        <input type="text" id="ie-note" placeholder="নোট (ঐচ্ছিক)" class="border p-2 rounded w-full text-sm">
+                        <button onclick="addTransaction()" class="bg-blue-600 text-white w-full py-2 rounded text-sm font-semibold">এন্ট্রি সেভ করুন</button>
+                    </div>
+                </div>
+                <div class="pt-4 overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 border-b">
+                                <th class="p-2">তারিখ</th>
+                                <th class="p-2">খাত</th>
+                                <th class="p-2">টাইপ</th>
+                                <th class="p-2">পরিমাণ</th>
+                                <th class="p-2">নোট</th>
+                                <th class="p-2">অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaction-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
 
-        <!-- Parties Tab -->
-        <section id="tab-parties" class="hidden space-y-4 bg-white p-4 rounded-xl shadow">
-            <h2 class="text-lg font-bold border-b pb-2">পার্টি ম্যানেজমেন্ট (কাস্টমার)</h2>
-            <div class="flex gap-2">
-                <input type="text" id="party-name" placeholder="পার্টির নাম" class="border p-2 rounded w-full text-sm">
-                <button onclick="addParty()" class="bg-emerald-600 text-white px-4 rounded text-sm">যোগ করুন</button>
-            </div>
-            <div id="party-container" class="space-y-3"></div>
-        </section>
+            <!-- Suppliers Tab -->
+            <section id="tab-suppliers" class="hidden space-y-4 bg-white p-4 rounded-xl shadow">
+                <h2 class="text-lg font-bold border-b pb-2">সাপ্লাইয়ার ম্যানেজমেন্ট</h2>
+                <div class="flex gap-2">
+                    <input type="text" id="supplier-name" placeholder="সাপ্লাইয়ারের নাম" class="border p-2 rounded w-full text-sm">
+                    <button onclick="addSupplier()" class="bg-emerald-600 text-white px-4 rounded text-sm">যোগ করুন</button>
+                </div>
+                <div id="supplier-container" class="space-y-3"></div>
+            </section>
 
-        <!-- Balance Sheet Tab -->
-        <section id="tab-balance-sheet" class="hidden space-y-4 bg-white p-4 rounded-xl shadow">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h2 class="text-lg font-bold">ব্যালেন্স শীট ও মাসিক স্টেটমেন্ট</h2>
-                <button onclick="downloadPDF()" class="bg-rose-600 text-white px-3 py-1.5 rounded text-sm font-semibold">PDF ডাউনলোড</button>
-            </div>
-            <div id="pdf-content" class="space-y-4 p-2">
-                <div class="text-center">
-                    <h3 class="font-bold text-xl">ফাস্টল্যাব ইউনানী</h3>
-                    <p class="text-xs text-gray-500">মাসিক লাভ ও লস স্টেটমেন্ট</p>
+            <!-- Parties Tab -->
+            <section id="tab-parties" class="hidden space-y-4 bg-white p-4 rounded-xl shadow">
+                <h2 class="text-lg font-bold border-b pb-2">পার্টি ম্যানেজমেন্ট (কাস্টমার)</h2>
+                <div class="flex gap-2">
+                    <input type="text" id="party-name" placeholder="পার্টির নাম" class="border p-2 rounded w-full text-sm">
+                    <button onclick="addParty()" class="bg-emerald-600 text-white px-4 rounded text-sm">যোগ করুন</button>
                 </div>
-                <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded">
-                    <div> মোট আয়: <span id="bs-income" class="font-bold text-emerald-600">৳ ০</span></div>
-                    <div> মোট ব্যয়: <span id="bs-expense" class="font-bold text-rose-600">৳ ০</span></div>
+                <div id="party-container" class="space-y-3"></div>
+            </section>
+
+            <!-- Balance Sheet Tab -->
+            <section id="tab-balance-sheet" class="hidden space-y-4 bg-white p-4 rounded-xl shadow">
+                <div class="flex justify-between items-center border-b pb-2">
+                    <h2 class="text-lg font-bold">ব্যালেন্স শীট ও মাসিক স্টেটমেন্ট</h2>
+                    <button onclick="downloadPDF()" class="bg-rose-600 text-white px-3 py-1.5 rounded text-sm font-semibold">PDF ডাউনলোড</button>
                 </div>
-                <div class="p-4 rounded text-center bg-emerald-50 border border-emerald-200">
-                    <h4 class="text-sm font-semibold text-gray-600">নিট লাভ / ক্ষতি</h4>
-                    <span id="bs-net-profit" class="text-2xl font-bold text-emerald-700">৳ ০</span>
+                <div id="pdf-content" class="space-y-4 p-2">
+                    <div class="text-center">
+                        <h3 class="font-bold text-xl">ফাস্টল্যাব ইউনানী</h3>
+                        <p class="text-xs text-gray-500">মাসিক লাভ ও লস স্টেটমেন্ট</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded">
+                        <div> মোট আয়: <span id="bs-income" class="font-bold text-emerald-600">৳ ০</span></div>
+                        <div> মোট ব্যয়: <span id="bs-expense" class="font-bold text-rose-600">৳ ০</span></div>
+                    </div>
+                    <div class="p-4 rounded text-center bg-emerald-50 border border-emerald-200">
+                        <h4 class="text-sm font-semibold text-gray-600">নিট লাভ / ক্ষতি</h4>
+                        <span id="bs-net-profit" class="text-2xl font-bold text-emerald-700">৳ ০</span>
+                    </div>
                 </div>
-            </div>
-        </section>
-    </main>
+            </section>
+        </main>
+    </div>
 
     <script>
+        // Default Login Credentials
+        const AUTH = {
+            user: "admin",
+            pass: "1234"
+        };
+
+        function checkLogin() {
+            const u = document.getElementById('login-user').value;
+            const p = document.getElementById('login-pass').value;
+            const err = document.getElementById('login-error');
+
+            if(u === AUTH.user && p === AUTH.pass) {
+                sessionStorage.setItem('fastlab_login', 'true');
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('app-content').classList.remove('hidden');
+                updateUI();
+            } else {
+                err.classList.remove('hidden');
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('fastlab_login');
+            location.reload();
+        }
+
+        // Auto Login Check on Load
+        if(sessionStorage.getItem('fastlab_login') === 'true') {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-content').classList.remove('hidden');
+        }
+
         // Data Store setup via localStorage
         let db = JSON.parse(localStorage.getItem('fastlab_db')) || {
             categories: [
@@ -232,7 +295,6 @@
         }
 
         function updateUI() {
-            // Categories render
             let catList = document.getElementById('category-list');
             let catSelect = document.getElementById('ie-category');
             catList.innerHTML = '';
@@ -242,7 +304,6 @@
                 catSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
             });
 
-            // Transactions render
             let tBody = document.getElementById('transaction-table-body');
             tBody.innerHTML = '';
             let totalInc = 0, totalExp = 0;
@@ -251,7 +312,6 @@
                 tBody.innerHTML += `<tr class="border-b"><td class="p-2">${t.date}</td><td class="p-2">${t.category}</td><td class="p-2 ${t.type==='income'?'text-emerald-600':'text-rose-600'}">${t.type==='income'?'আয়':'ব্যয়'}</td><td class="p-2">৳${t.amount}</td><td class="p-2">${t.note||''}</td><td class="p-2"><button onclick="deleteTransaction(${t.id})" class="text-red-500 text-xs">ডিলিট</button></td></tr>`;
             });
 
-            // Suppliers render
             let supContainer = document.getElementById('supplier-container');
             supContainer.innerHTML = '';
             let totalSupDue = 0;
@@ -263,7 +323,6 @@
                 supContainer.innerHTML += `<div class="border p-3 rounded bg-gray-50 flex justify-between items-center text-sm"><div><strong>${s.name}</strong><p class="text-xs text-gray-500">বকেয়া: ৳${due}</p></div><div class="flex gap-1"><button onclick="addSupplierTx(${s.id}, 'purchase')" class="bg-blue-500 text-white px-2 py-1 rounded text-xs">+ মাল ক্রয়</button><button onclick="addSupplierTx(${s.id}, 'payment')" class="bg-emerald-500 text-white px-2 py-1 rounded text-xs">+ পেমেন্ট</button></div></div>`;
             });
 
-            // Parties render
             let partyContainer = document.getElementById('party-container');
             partyContainer.innerHTML = '';
             let totalPartyDue = 0;
@@ -275,13 +334,11 @@
                 partyContainer.innerHTML += `<div class="border p-3 rounded bg-gray-50 flex justify-between items-center text-sm"><div><strong>${p.name}</strong><p class="text-xs text-gray-500">পাওনা: ৳${due}</p></div><div class="flex gap-1"><button onclick="addPartyTx(${p.id}, 'sale')" class="bg-blue-500 text-white px-2 py-1 rounded text-xs">+ বিক্রি</button><button onclick="addPartyTx(${p.id}, 'collection')" class="bg-emerald-500 text-white px-2 py-1 rounded text-xs">+ টাকা আদায়</button></div></div>`;
             });
 
-            // Dashboard values
             document.getElementById('dash-total-income').innerText = `৳ ${totalInc}`;
             document.getElementById('dash-total-expense').innerText = `৳ ${totalExp}`;
             document.getElementById('dash-supplier-due').innerText = `৳ ${totalSupDue}`;
             document.getElementById('dash-party-due').innerText = `৳ ${totalPartyDue}`;
 
-            // Balance sheet values
             document.getElementById('bs-income').innerText = `৳ ${totalInc}`;
             document.getElementById('bs-expense').innerText = `৳ ${totalExp}`;
             let net = totalInc - totalExp;
@@ -295,8 +352,9 @@
             html2pdf().from(element).save('Fastlab-Unani-Statement.pdf');
         }
 
-        updateUI();
+        if(sessionStorage.getItem('fastlab_login') === 'true') {
+            updateUI();
+        }
     </script>
 </body>
 </html>
-                      
