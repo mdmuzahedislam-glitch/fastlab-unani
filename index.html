@@ -106,20 +106,22 @@
                         <button onclick="addTransaction()" class="bg-blue-600 text-white w-full py-2 rounded text-sm font-semibold">এন্ট্রি সেভ করুন</button>
                     </div>
                 </div>
-                <div class="pt-4 overflow-x-auto">
-                    <table class="w-full text-left text-sm border-collapse">
-                        <thead>
-                            <tr class="bg-gray-100 border-b">
-                                <th class="p-2">তারিখ</th>
-                                <th class="p-2">খাত</th>
-                                <th class="p-2">টাইপ</th>
-                                <th class="p-2">পরিমাণ</th>
-                                <th class="p-2">নোট</th>
-                                <th class="p-2">অ্যাকশন</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transaction-table-body"></tbody>
-                    </table>
+
+                <div class="pt-4">
+                    <h3 class="font-semibold text-sm mb-2 text-slate-700">খাতভিত্তিক মোট হিসাব (সামারি)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100 border-b">
+                                    <th class="p-2">খাতের নাম</th>
+                                    <th class="p-2">টাইপ</th>
+                                    <th class="p-2">মোট পরিমাণ</th>
+                                    <th class="p-2 text-center">অ্যাকশন</th>
+                                </tr>
+                            </thead>
+                            <tbody id="summary-table-body"></tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
@@ -167,12 +169,31 @@
         </main>
     </div>
 
+    <!-- History Modal -->
+    <div id="history-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-4 space-y-4">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 id="modal-cat-name" class="font-bold text-lg text-slate-800"></h3>
+                <button onclick="closeModal()" class="text-gray-500 font-bold text-xl">&times;</button>
+            </div>
+            <div class="max-h-60 overflow-y-auto">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 border-b">
+                            <th class="p-2">তারিখ</th>
+                            <th class="p-2">পরিমাণ</th>
+                            <th class="p-2">নোট</th>
+                            <th class="p-2">অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Default Login Credentials
-        const AUTH = {
-            user: "admin",
-            pass: "1234"
-        };
+        const AUTH = { user: "admin", pass: "1234" };
 
         function checkLogin() {
             const u = document.getElementById('login-user').value;
@@ -194,18 +215,15 @@
             location.reload();
         }
 
-        // Auto Login Check on Load
         if(sessionStorage.getItem('fastlab_login') === 'true') {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-content').classList.remove('hidden');
         }
 
-        // Data Store setup via localStorage
         let db = JSON.parse(localStorage.getItem('fastlab_db')) || {
             categories: [
-                {id: 1, name: 'ঔষধ বিক্রি', type: 'income'},
-                {id: 2, name: 'কাঁচামাল ক্রয়', type: 'expense'},
-                {id: 3, name: 'দোকান ভাড়া', type: 'expense'}
+                {id: 1, name: 'Biddut bill', type: 'expense'},
+                {id: 2, name: 'ঔষধ বিক্রি', type: 'income'}
             ],
             transactions: [],
             suppliers: [],
@@ -294,6 +312,27 @@
             saveData();
         }
 
+        function showCategoryHistory(catName) {
+            document.getElementById('modal-cat-name').innerText = `${catName} - লেনদেনের হিস্ট্রি`;
+            let txs = db.transactions.filter(t => t.category === catName);
+            let mBody = document.getElementById('modal-table-body');
+            mBody.innerHTML = '';
+            if(txs.length === 0) {
+                mBody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-gray-500">কোনো লেনদেন পাওয়া যায়নি</td></tr>`;
+            } else {
+                txs.forEach(t => {
+                    mBody.innerHTML += `<tr class="border-b"><td class="p-2">${t.date}</td><td class="p-2 font-semibold">৳${t.amount}</td><td class="p-2 text-gray-500">${t.note||'-'}</td><td class="p-2"><button onclick="deleteTransaction(${t.id}); showCategoryHistory('${catName}');" class="text-red-500 text-xs">ডিলিট</button></td></tr>`;
+                });
+            }
+            document.getElementById('history-modal').classList.remove('hidden');
+            document.getElementById('history-modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('history-modal').classList.add('hidden');
+            document.getElementById('history-modal').classList.remove('flex');
+        }
+
         function updateUI() {
             let catList = document.getElementById('category-list');
             let catSelect = document.getElementById('ie-category');
@@ -304,14 +343,31 @@
                 catSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
             });
 
-            let tBody = document.getElementById('transaction-table-body');
-            tBody.innerHTML = '';
+            // Summary rendering
+            let summaryBody = document.getElementById('summary-table-body');
+            summaryBody.innerHTML = '';
             let totalInc = 0, totalExp = 0;
-            db.transactions.forEach(t => {
-                if(t.type === 'income') totalInc += t.amount; else totalExp += t.amount;
-                tBody.innerHTML += `<tr class="border-b"><td class="p-2">${t.date}</td><td class="p-2">${t.category}</td><td class="p-2 ${t.type==='income'?'text-emerald-600':'text-rose-600'}">${t.type==='income'?'আয়':'ব্যয়'}</td><td class="p-2">৳${t.amount}</td><td class="p-2">${t.note||''}</td><td class="p-2"><button onclick="deleteTransaction(${t.id})" class="text-red-500 text-xs">ডিলিট</button></td></tr>`;
+
+            db.categories.forEach(c => {
+                let catTxs = db.transactions.filter(t => t.category === c.name);
+                let catTotal = catTxs.reduce((sum, t) => sum + t.amount, 0);
+                
+                if(c.type === 'income') totalInc += catTotal;
+                else totalExp += catTotal;
+
+                summaryBody.innerHTML += `
+                    <tr class="border-b">
+                        <td class="p-2 font-semibold">${c.name}</td>
+                        <td class="p-2 ${c.type==='income'?'text-emerald-600':'text-rose-600'}">${c.type==='income'?'আয়':'ব্যয়'}</td>
+                        <td class="p-2 font-bold">৳ ${catTotal}</td>
+                        <td class="p-2 text-center">
+                            <button onclick="showCategoryHistory('${c.name}')" class="bg-blue-50 text-blue-600 border border-blue-200 px-2 py-1 rounded text-xs hover:bg-blue-100">ডিটেইলস (${catTxs.length})</button>
+                        </td>
+                    </tr>
+                `;
             });
 
+            // Suppliers render
             let supContainer = document.getElementById('supplier-container');
             supContainer.innerHTML = '';
             let totalSupDue = 0;
@@ -323,6 +379,7 @@
                 supContainer.innerHTML += `<div class="border p-3 rounded bg-gray-50 flex justify-between items-center text-sm"><div><strong>${s.name}</strong><p class="text-xs text-gray-500">বকেয়া: ৳${due}</p></div><div class="flex gap-1"><button onclick="addSupplierTx(${s.id}, 'purchase')" class="bg-blue-500 text-white px-2 py-1 rounded text-xs">+ মাল ক্রয়</button><button onclick="addSupplierTx(${s.id}, 'payment')" class="bg-emerald-500 text-white px-2 py-1 rounded text-xs">+ পেমেন্ট</button></div></div>`;
             });
 
+            // Parties render
             let partyContainer = document.getElementById('party-container');
             partyContainer.innerHTML = '';
             let totalPartyDue = 0;
@@ -334,11 +391,13 @@
                 partyContainer.innerHTML += `<div class="border p-3 rounded bg-gray-50 flex justify-between items-center text-sm"><div><strong>${p.name}</strong><p class="text-xs text-gray-500">পাওনা: ৳${due}</p></div><div class="flex gap-1"><button onclick="addPartyTx(${p.id}, 'sale')" class="bg-blue-500 text-white px-2 py-1 rounded text-xs">+ বিক্রি</button><button onclick="addPartyTx(${p.id}, 'collection')" class="bg-emerald-500 text-white px-2 py-1 rounded text-xs">+ টাকা আদায়</button></div></div>`;
             });
 
+            // Dashboard values
             document.getElementById('dash-total-income').innerText = `৳ ${totalInc}`;
             document.getElementById('dash-total-expense').innerText = `৳ ${totalExp}`;
             document.getElementById('dash-supplier-due').innerText = `৳ ${totalSupDue}`;
             document.getElementById('dash-party-due').innerText = `৳ ${totalPartyDue}`;
 
+            // Balance sheet values
             document.getElementById('bs-income').innerText = `৳ ${totalInc}`;
             document.getElementById('bs-expense').innerText = `৳ ${totalExp}`;
             let net = totalInc - totalExp;
