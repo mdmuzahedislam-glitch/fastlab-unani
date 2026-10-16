@@ -9,6 +9,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/bundle.min.js"></script>
     <style>
         body { font-family: 'Hind Siliguri', sans-serif; }
+        @media print {
+            .no-print { display: none !important; }
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
@@ -42,7 +45,7 @@
     <!-- Main Content (Hidden until Login) -->
     <div id="app-content" class="hidden">
         <!-- Header -->
-        <header class="bg-emerald-700 text-white shadow-md p-4 text-center relative">
+        <header class="bg-emerald-700 text-white shadow-md p-4 text-center relative no-print">
             <h1 class="text-2xl font-bold">ফাস্টল্যাব ইউনানী</h1>
             <p class="text-xs text-emerald-100">আফুরিয়া, হেমাইতপুর, পাবনা | মোবাইল: 01335-097460</p>
             <button onclick="logout()" class="absolute right-4 top-4 bg-emerald-900 hover:bg-rose-700 text-xs text-white px-3 py-1.5 rounded-lg transition">লগআউট</button>
@@ -51,7 +54,7 @@
         <!-- Main Container -->
         <main class="max-w-4xl mx-auto p-4 space-y-6">
             <!-- Navigation Tabs -->
-            <div class="flex overflow-x-auto bg-white p-2 rounded-xl shadow gap-2 text-sm font-medium">
+            <div class="flex overflow-x-auto bg-white p-2 rounded-xl shadow gap-2 text-sm font-medium no-print">
                 <button onclick="switchTab('dashboard')" id="btn-dashboard" class="px-4 py-2 bg-emerald-600 text-white rounded-lg whitespace-nowrap">ড্যাশবোর্ড</button>
                 <button onclick="switchTab('income-expense')" id="btn-income-expense" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">আয় ও ব্যয়</button>
                 <button onclick="switchTab('suppliers')" id="btn-suppliers" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">সাপ্লাইয়ার</button>
@@ -82,11 +85,16 @@
             </section>
 
             <!-- Income & Expense Tab -->
-            <section id="tab-income-expense" class="hidden space-y-4 bg-white p-4 rounded-xl shadow">
-                <h2 class="text-lg font-bold border-b pb-2">আয় ও ব্যয় হিসাব ব্যবস্থাপনা</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <section id="tab-income-expense" class="hidden space-y-6 bg-white p-6 rounded-xl shadow">
+                <div class="flex justify-between items-center border-b pb-3 no-print">
+                    <h2 class="text-lg font-bold">আয় ও ব্যয় হিসাব ব্যবস্থাপনা</h2>
+                    <button onclick="downloadPDF()" class="bg-rose-600 text-white px-3 py-1.5 rounded text-sm font-semibold">A4 PDF ডাউনলোড</button>
+                </div>
+
+                <!-- Input Controls -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 no-print bg-slate-50 p-4 rounded-xl border">
                     <div class="space-y-2">
-                        <h3 class="font-semibold text-sm">নতুন খাত তৈরি করুন</h3>
+                        <h3 class="font-semibold text-sm text-slate-700">নতুন খাত তৈরি করুন</h3>
                         <div class="flex gap-2">
                             <input type="text" id="new-category-name" placeholder="খাতের নাম (যেমন: বিদ্যুৎ বিল)" class="border p-2 rounded w-full text-sm">
                             <select id="new-category-type" class="border p-2 rounded text-sm">
@@ -98,29 +106,58 @@
                         <div id="category-list" class="flex flex-wrap gap-2 pt-2"></div>
                     </div>
                     <div class="space-y-2">
-                        <h3 class="font-semibold text-sm">দৈনিক লেনদেন এন্ট্রি</h3>
+                        <h3 class="font-semibold text-sm text-slate-700">দৈনিক লেনদেন এন্ট্রি</h3>
                         <input type="date" id="ie-date" class="border p-2 rounded w-full text-sm">
                         <select id="ie-category" class="border p-2 rounded w-full text-sm"></select>
                         <input type="number" id="ie-amount" placeholder="টাকার পরিমাণ" class="border p-2 rounded w-full text-sm">
-                        <input type="text" id="ie-note" placeholder="নোট (ঐচ্ছিক)" class="border p-2 rounded w-full text-sm">
+                        <input type="text" id="ie-note" placeholder="মন্তব্য (ঐচ্ছিক)" class="border p-2 rounded w-full text-sm">
                         <button onclick="addTransaction()" class="bg-blue-600 text-white w-full py-2 rounded text-sm font-semibold">এন্ট্রি সেভ করুন</button>
                     </div>
                 </div>
 
-                <div class="pt-4">
-                    <h3 class="font-semibold text-sm mb-2 text-slate-700">খাতভিত্তিক মোট হিসাব (সামারি)</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm border-collapse">
-                            <thead>
-                                <tr class="bg-gray-100 border-b">
-                                    <th class="p-2">খাতের নাম</th>
-                                    <th class="p-2">টাইপ</th>
-                                    <th class="p-2">মোট পরিমাণ</th>
-                                    <th class="p-2 text-center">অ্যাকশন</th>
-                                </tr>
-                            </thead>
-                            <tbody id="summary-table-body"></tbody>
-                        </table>
+                <!-- Printable Area for A4 Statements -->
+                <div id="printable-statement" class="space-y-6 bg-white p-2">
+                    <div class="text-center hidden print:block mb-4">
+                        <h2 class="text-xl font-bold">ফাস্টল্যাব ইউনানী</h2>
+                        <p class="text-xs text-gray-500">আফুরিয়া, হেমাইতপুর, পাবনা | মোবাইল: 01335-097460</p>
+                        <h3 class="text-md font-semibold mt-2 underline">আয় ও ব্যয়ের মাসিক স্টেটমেন্ট রিপোর্ট</h3>
+                    </div>
+
+                    <!-- Income Table -->
+                    <div class="space-y-2">
+                        <h3 class="font-bold text-emerald-700 text-sm border-l-4 border-emerald-600 pl-2">আয়ের খাতসমূহ</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm border border-slate-200">
+                                <thead>
+                                    <tr class="bg-emerald-50 border-b">
+                                        <th class="p-2 border-r">ক্রমিক নং</th>
+                                        <th class="p-2 border-r">খাতের নাম</th>
+                                        <th class="p-2 border-r">মোট ব্যালেন্স</th>
+                                        <th class="p-2 border-r">মন্তব্য</th>
+                                        <th class="p-2 text-center no-print">অ্যাকশন</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="income-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div
+                            <!-- Expense Table -->
+                    <div class="space-y-2 pt-4">
+                        <h3 class="font-bold text-rose-700 text-sm border-l-4 border-rose-600 pl-2">ব্যয়ের খাতসমূহ</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm border border-slate-200">
+                                <thead>
+                                    <tr class="bg-rose-50 border-b">
+                                        <th class="p-2 border-r">ক্রমিক নং</th>
+                                        <th class="p-2 border-r">খাতের নাম</th>
+                                        <th class="p-2 border-r">মোট ব্যালেন্স</th>
+                                        <th class="p-2 border-r">মন্তব্য</th>
+                                        <th class="p-2 text-center no-print">অ্যাকশন</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="expense-table-body"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -182,7 +219,7 @@
                         <tr class="bg-gray-100 border-b">
                             <th class="p-2">তারিখ</th>
                             <th class="p-2">পরিমাণ</th>
-                            <th class="p-2">নোট</th>
+                            <th class="p-2">মন্তব্য</th>
                             <th class="p-2">অ্যাকশন</th>
                         </tr>
                     </thead>
@@ -219,7 +256,6 @@
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-content').classList.remove('hidden');
         }
-
         let db = JSON.parse(localStorage.getItem('fastlab_db')) || {
             categories: [
                 {id: 1, name: 'Biddut bill', type: 'expense'},
@@ -332,7 +368,6 @@
             document.getElementById('history-modal').classList.add('hidden');
             document.getElementById('history-modal').classList.remove('flex');
         }
-
         function updateUI() {
             let catList = document.getElementById('category-list');
             let catSelect = document.getElementById('ie-category');
@@ -343,29 +378,42 @@
                 catSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
             });
 
-            // Summary rendering
-            let summaryBody = document.getElementById('summary-table-body');
-            summaryBody.innerHTML = '';
+            let incomeBody = document.getElementById('income-table-body');
+            let expenseBody = document.getElementById('expense-table-body');
+            incomeBody.innerHTML = '';
+            expenseBody.innerHTML = '';
+
             let totalInc = 0, totalExp = 0;
+            let incCount = 1, expCount = 1;
 
             db.categories.forEach(c => {
                 let catTxs = db.transactions.filter(t => t.category === c.name);
                 let catTotal = catTxs.reduce((sum, t) => sum + t.amount, 0);
-                
-                if(c.type === 'income') totalInc += catTotal;
-                else totalExp += catTotal;
+                let notes = [...new Set(catTxs.map(t => t.note).filter(n => n))].join(', ') || '-';
 
-                summaryBody.innerHTML += `
-                    <tr class="border-b">
-                        <td class="p-2 font-semibold">${c.name}</td>
-                        <td class="p-2 ${c.type==='income'?'text-emerald-600':'text-rose-600'}">${c.type==='income'?'আয়':'ব্যয়'}</td>
-                        <td class="p-2 font-bold">৳ ${catTotal}</td>
-                        <td class="p-2 text-center">
+                let rowHTML = `
+                    <tr class="border-b hover:bg-slate-50">
+                        <td class="p-2 border-r text-center">${c.type === 'income' ? incCount++ : expCount++}</td>
+                        <td class="p-2 border-r font-semibold">${c.name}</td>
+                        <td class="p-2 border-r font-bold">৳ ${catTotal}</td>
+                        <td class="p-2 border-r text-gray-600">${notes}</td>
+                        <td class="p-2 text-center no-print">
                             <button onclick="showCategoryHistory('${c.name}')" class="bg-blue-50 text-blue-600 border border-blue-200 px-2 py-1 rounded text-xs hover:bg-blue-100">ডিটেইলস (${catTxs.length})</button>
                         </td>
                     </tr>
                 `;
+
+                if(c.type === 'income') {
+                    totalInc += catTotal;
+                    incomeBody.innerHTML += rowHTML;
+                } else {
+                    totalExp += catTotal;
+                    expenseBody.innerHTML += rowHTML;
+                }
             });
+
+            if(incomeBody.innerHTML === '') incomeBody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-gray-400">কোনো আয়ের খাত নেই</td></tr>`;
+            if(expenseBody.innerHTML === '') expenseBody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-gray-400">কোনো ব্যয়ের খাত নেই</td></tr>`;
 
             // Suppliers render
             let supContainer = document.getElementById('supplier-container');
@@ -407,8 +455,15 @@
         }
 
         function downloadPDF() {
-            const element = document.getElementById('pdf-content');
-            html2pdf().from(element).save('Fastlab-Unani-Statement.pdf');
+            const element = document.getElementById('printable-statement');
+            const opt = {
+                margin:       0.3,
+                filename:     'Fastlab-Unani-Monthly-Statement.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().from(element).set(opt).save();
         }
 
         if(sessionStorage.getItem('fastlab_login') === 'true') {
