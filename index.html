@@ -99,7 +99,7 @@
                         <h3 class="font-semibold text-sm text-slate-700">নতুন খাত তৈরি করুন</h3>
                         <div class="flex gap-2">
                             <input type="text" id="new-category-name" placeholder="খাতের নাম (যেমন: বিদ্যুৎ বিল)" class="border p-2 rounded w-full text-sm">
-                            <select id="new-category-type" class="border p-2 rounded text-sm">
+                            <select id="new-category-type" onchange="renderCategoryChips()" class="border p-2 rounded text-sm">
                                 <option value="expense">ব্যয়</option>
                                 <option value="income">আয়</option>
                             </select>
@@ -203,12 +203,40 @@
         </main>
     </div>
 
-    <!-- Edit Transaction Details Modal -->
+    <!-- 1. DETAILS HISTORY MODAL (Show List First) -->
+    <div id="details-modal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white p-6 rounded-2xl max-w-lg w-full space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="font-bold text-slate-800 text-base" id="details-modal-title">খাতের বিবরণ ও ইতিহাস</h3>
+                <button onclick="closeDetailsModal()" class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
+            </div>
+            
+            <div class="max-h-60 overflow-y-auto">
+                <table class="w-full text-left text-xs border-collapse border border-slate-200">
+                    <thead class="bg-slate-100">
+                        <tr>
+                            <th class="border p-2">তারিখ</th>
+                            <th class="border p-2">বিবরণ/মন্তব্য</th>
+                            <th class="border p-2 text-right">টাকা</th>
+                            <th class="border p-2 text-center">অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="details-modal-tbody"></tbody>
+                </table>
+            </div>
+
+            <div class="flex justify-end pt-2 border-t">
+                <button onclick="closeDetailsModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-slate-700 text-xs font-semibold rounded-lg">বন্ধ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. EDIT SINGLE TRANSACTION MODAL -->
     <div id="edit-modal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center p-4 z-50">
         <div class="bg-white p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl">
             <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-slate-800 text-base" id="modal-category-title">খাত এডিট</h3>
-                <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">✕</button>
+                <h3 class="font-bold text-slate-800 text-base">লেনদেন সংশোধন</h3>
+                <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 font-bold">✕</button>
             </div>
             
             <div class="space-y-3">
@@ -227,13 +255,13 @@
             </div>
 
             <div class="flex justify-end gap-3 pt-2">
-                <button onclick="closeEditModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-slate-700 text-xs font-semibold rounded-lg transition">Cancel</button>
-                <button onclick="saveTransactionEdit()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition">OK</button>
+                <button onclick="closeEditModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-slate-700 text-xs font-semibold rounded-lg">Cancel</button>
+                <button onclick="saveSingleTransactionEdit()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg">OK</button>
             </div>
         </div>
     </div>
 
-    <!-- Edit Month Name Modal -->
+    <!-- 3. EDIT MONTH NAME MODAL -->
     <div id="month-modal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center p-4 z-50">
         <div class="bg-white p-5 rounded-2xl max-w-xs w-full space-y-3 shadow-2xl">
             <h3 class="font-bold text-slate-800 text-sm">মাসের নাম সংশোধন</h3>
@@ -274,7 +302,9 @@
 
         let transactions = JSON.parse(localStorage.getItem('fl_transactions')) || [];
         let currentMonthName = localStorage.getItem('fl_month_name') || 'অক্টোবর ২০২৬';
-        let selectedCategoryForEdit = null;
+        
+        let currentSelectedCategory = null;
+        let activeEditTxIndex = null;
 
         function saveData() {
             localStorage.setItem('fl_categories', JSON.stringify(categories));
@@ -282,7 +312,7 @@
             localStorage.setItem('fl_month_name', currentMonthName);
         }
 
-        // Login System
+           // Auth Systems
         function checkLogin() {
             const u = document.getElementById('login-user').value;
             const p = document.getElementById('login-pass').value;
@@ -316,7 +346,7 @@
             });
         }
 
-            // Add Category
+        // Category Filter & Add
         function addCategory() {
             const name = document.getElementById('new-category-name').value.trim();
             const type = document.getElementById('new-category-type').value;
@@ -326,7 +356,22 @@
             saveData();
             document.getElementById('new-category-name').value = '';
             filterCategoryDropdown();
+            renderCategoryChips();
             renderApp();
+        }
+
+        // নতুন খাতের ড্রপডাউন পরিবর্তন অনুযায়ী চিপস ফিল্টার
+        function renderCategoryChips() {
+            const selectedType = document.getElementById('new-category-type').value;
+            const catContainer = document.getElementById('category-list');
+            
+            const filteredCategories = categories.filter(c => c.type === selectedType);
+            
+            catContainer.innerHTML = filteredCategories.map(c => `
+                <span class="text-xs px-2 py-1 rounded ${c.type === 'income' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'} border">
+                    ${c.name} (${c.type === 'income' ? 'আয়' : 'ব্যয়'})
+                </span>
+            `).join('');
         }
 
         function filterCategoryDropdown() {
@@ -338,7 +383,7 @@
             });
         }
 
-        // Add Transaction
+        // Transaction Add
         function addTransaction() {
             const date = document.getElementById('ie-date').value;
             const type = document.getElementById('ie-type-selector').value;
@@ -378,22 +423,59 @@
             closeMonthModal();
         }
 
-        // Edit Category Entry Handlers
-        function openCategoryEditModal(catName, catType) {
-            selectedCategoryForEdit = { name: catName, type: catType };
-            document.getElementById('modal-category-title').innerText = `${catName} - এডিট`;
+        // --- DETAILS HISTORY MODAL LOGIC ---
+        function openDetailsModal(catName) {
+            currentSelectedCategory = catName;
+            document.getElementById('details-modal-title').innerText = `${catName} - লেনদেনের বিবরণ`;
+            
+            renderDetailsHistoryTable();
+            
+            document.getElementById('details-modal').classList.remove('hidden');
+            document.getElementById('details-modal').classList.add('flex');
+        }
 
-            // Find existing entry or set defaults
-            const existing = transactions.find(t => t.category === catName);
-            if (existing) {
-                document.getElementById('edit-modal-date').value = existing.date;
-                document.getElementById('edit-modal-amount').value = existing.amount;
-                document.getElementById('edit-modal-note').value = existing.note || '';
-            } else {
-                document.getElementById('edit-modal-date').value = new Date().toISOString().split('T')[0];
-                document.getElementById('edit-modal-amount').value = '';
-                document.getElementById('edit-modal-note').value = '';
+        function closeDetailsModal() {
+            document.getElementById('details-modal').classList.add('hidden');
+            document.getElementById('details-modal').classList.remove('flex');
+            currentSelectedCategory = null;
+        }
+
+        function renderDetailsHistoryTable() {
+            const tbody = document.getElementById('details-modal-tbody');
+            tbody.innerHTML = '';
+
+            const catTxList = transactions
+                .map((t, originalIndex) => ({ ...t, originalIndex }))
+                .filter(t => t.category === currentSelectedCategory);
+
+            if (catTxList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="border p-4 text-center text-gray-400">কোনো লেনদেনের ইতিহাস পাওয়া যায়নি।</td></tr>`;
+                return;
             }
+
+            catTxList.forEach(item => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 border-b">
+                        <td class="border p-2">${item.date}</td>
+                        <td class="border p-2">${item.note || '-'}</td>
+                        <td class="border p-2 text-right font-bold">৳ ${item.amount}</td>
+                        <td class="border p-2 text-center space-x-1">
+                            <button onclick="openSingleEditModal(${item.originalIndex})" class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs px-2 py-0.5 rounded">এডিট</button>
+                            <button onclick="deleteSingleTransaction(${item.originalIndex})" class="bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs px-1.5 py-0.5 rounded">✕</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // --- EDIT MODAL LOGIC (Called from History) ---
+        function openSingleEditModal(index) {
+            activeEditTxIndex = index;
+            const item = transactions[index];
+
+            document.getElementById('edit-modal-date').value = item.date;
+            document.getElementById('edit-modal-amount').value = item.amount;
+            document.getElementById('edit-modal-note').value = item.note || '';
 
             document.getElementById('edit-modal').classList.remove('hidden');
             document.getElementById('edit-modal').classList.add('flex');
@@ -402,45 +484,44 @@
         function closeEditModal() {
             document.getElementById('edit-modal').classList.add('hidden');
             document.getElementById('edit-modal').classList.remove('flex');
-            selectedCategoryForEdit = null;
+            activeEditTxIndex = null;
         }
 
-        function saveTransactionEdit() {
-            if (!selectedCategoryForEdit) return;
+        function saveSingleTransactionEdit() {
+            if (activeEditTxIndex !== null) {
+                const newDate = document.getElementById('edit-modal-date').value;
+                const newAmount = parseFloat(document.getElementById('edit-modal-amount').value);
+                const newNote = document.getElementById('edit-modal-note').value;
 
-            const newDate = document.getElementById('edit-modal-date').value;
-            const newAmount = parseFloat(document.getElementById('edit-modal-amount').value) || 0;
-            const newNote = document.getElementById('edit-modal-note').value;
+                if (!newDate || isNaN(newAmount) || newAmount <= 0) {
+                    return alert('সঠিক তারিখ ও টাকার পরিমাণ লিখুন!');
+                }
 
-            // Remove existing transactions for this category
-            transactions = transactions.filter(t => t.category !== selectedCategoryForEdit.name);
+                transactions[activeEditTxIndex].date = newDate;
+                transactions[activeEditTxIndex].amount = newAmount;
+                transactions[activeEditTxIndex].note = newNote;
 
-            if (newAmount > 0) {
-                transactions.push({
-                    date: newDate,
-                    type: selectedCategoryForEdit.type,
-                    category: selectedCategoryForEdit.name,
-                    amount: newAmount,
-                    note: newNote
-                });
+                saveData();
+                renderApp();
+                renderDetailsHistoryTable(); // লিস্ট আপডেট
+                closeEditModal();
             }
-
-            saveData();
-            renderApp();
-            closeEditModal();
         }
 
-        // Render Tables
+        function deleteSingleTransaction(index) {
+            if (confirm('আপনি কি নিশ্চিত যে এই লেনদেনটি মুছে ফেলতে চান?')) {
+                transactions.splice(index, 1);
+                saveData();
+                renderApp();
+                renderDetailsHistoryTable(); // লিস্ট আপডেট
+            }
+        }
+
+        // Render Application
         function renderApp() {
             document.getElementById('custom-month-display').innerText = currentMonthName;
 
-            // Category Chips List
-            const catContainer = document.getElementById('category-list');
-            catContainer.innerHTML = categories.map(c => `
-                <span class="text-xs px-2 py-1 rounded ${c.type === 'income' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'} border">
-                    ${c.name} (${c.type === 'income' ? 'আয়' : 'ব্যয়'})
-                </span>
-            `).join('');
+            renderCategoryChips();
 
             const incomeTbody = document.getElementById('income-table-body');
             const expenseTbody = document.getElementById('expense-table-body');
@@ -459,7 +540,7 @@
                 incCount++;
                 const catTx = transactions.filter(t => t.category === c.name);
                 const sum = catTx.reduce((acc, curr) => acc + curr.amount, 0);
-                const notes = catTx.map(t => t.note).filter(Boolean).join(', ');
+                const lastNote = catTx.length > 0 ? catTx[catTx.length - 1].note : '';
                 totalIncome += sum;
 
                 incomeTbody.innerHTML += `
@@ -467,9 +548,9 @@
                         <td class="border p-2 text-center">${incCount}</td>
                         <td class="border p-2 font-medium">${c.name}</td>
                         <td class="border p-2 text-right font-bold text-emerald-700">৳ ${sum}</td>
-                        <td class="border p-2 text-gray-500">${notes || ''}</td>
+                        <td class="border p-2 text-gray-500">${lastNote || ''}</td>
                         <td class="border p-2 text-center no-print">
-                            <button onclick="openCategoryEditModal('${c.name}', 'income')" class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded hover:bg-blue-200">ডিটেইলস (${catTx.length})</button>
+                            <button onclick="openDetailsModal('${c.name}')" class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded hover:bg-blue-200">ডিটেইলস (${catTx.length})</button>
                         </td>
                     </tr>
                 `;
@@ -480,7 +561,7 @@
                 expCount++;
                 const catTx = transactions.filter(t => t.category === c.name);
                 const sum = catTx.reduce((acc, curr) => acc + curr.amount, 0);
-                const notes = catTx.map(t => t.note).filter(Boolean).join(', ');
+                const lastNote = catTx.length > 0 ? catTx[catTx.length - 1].note : '';
                 totalExpense += sum;
 
                 expenseTbody.innerHTML += `
@@ -488,22 +569,22 @@
                         <td class="border p-2 text-center">${expCount}</td>
                         <td class="border p-2 font-medium">${c.name}</td>
                         <td class="border p-2 text-right font-bold text-rose-700">৳ ${sum}</td>
-                        <td class="border p-2 text-gray-500">${notes || ''}</td>
+                        <td class="border p-2 text-gray-500">${lastNote || ''}</td>
                         <td class="border p-2 text-center no-print">
-                            <button onclick="openCategoryEditModal('${c.name}', 'expense')" class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded hover:bg-blue-200">ডিটেইলস (${catTx.length})</button>
+                            <button onclick="openDetailsModal('${c.name}')" class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded hover:bg-blue-200">ডিটেইলস (${catTx.length})</button>
                         </td>
                     </tr>
                 `;
             });
 
-            // Totals
+            // Totals Display
             document.getElementById('income-section-total').innerText = `৳ ${totalIncome.toLocaleString('bn-BD')}`;
             document.getElementById('expense-section-total').innerText = `৳ ${totalExpense.toLocaleString('bn-BD')}`;
             document.getElementById('dash-total-income').innerText = `৳ ${totalIncome.toLocaleString('bn-BD')}`;
             document.getElementById('dash-total-expense').innerText = `৳ ${totalExpense.toLocaleString('bn-BD')}`;
         }
 
-        // PDF Generation
+        // PDF Download
         function downloadPDF() {
             const element = document.getElementById('printable-statement');
             const opt = {
@@ -516,7 +597,7 @@
             html2pdf().set(opt).from(element).save();
         }
 
-        // Init App
+        // Init Application
         function initApp() {
             document.getElementById('ie-date').value = new Date().toISOString().split('T')[0];
             filterCategoryDropdown();
