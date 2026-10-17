@@ -98,20 +98,36 @@
                         <div class="flex gap-2">
                             <input type="text" id="new-category-name" placeholder="খাতের নাম (যেমন: বিদ্যুৎ বিল)" class="border p-2 rounded w-full text-sm">
                             <select id="new-category-type" class="border p-2 rounded text-sm">
-                                <option value="income">আয়</option>
                                 <option value="expense">ব্যয়</option>
+                                <option value="income">আয়</option>
                             </select>
-                            <button onclick="addCategory()" class="bg-emerald-600 text-white px-4 rounded text-sm">যোগ</button>
+                            <button onclick="addCategory()" class="bg-emerald-600 text-white px-4 rounded text-sm font-semibold">যোগ</button>
                         </div>
                         <div id="category-list" class="flex flex-wrap gap-2 pt-2"></div>
                     </div>
+                    
                     <div class="space-y-2">
                         <h3 class="font-semibold text-sm text-slate-700">দৈনিক লেনদেন এন্ট্রি</h3>
                         <input type="date" id="ie-date" class="border p-2 rounded w-full text-sm">
-                        <select id="ie-category" class="border p-2 rounded w-full text-sm"></select>
+                        
+                        <!-- Type selector for entries -->
+                        <div class="flex gap-4 items-center bg-white p-2 rounded border text-sm">
+                            <span class="text-xs font-semibold text-gray-500">টাইপ:</span>
+                            <label class="flex items-center gap-1 cursor-pointer">
+                                <input type="radio" name="entry-type" value="expense" checked onchange="updateCategoryDropdown()">
+                                <span class="text-rose-600 font-semibold">ব্যয়</span>
+                            </label>
+                            <label class="flex items-center gap-1 cursor-pointer">
+                                <input type="radio" name="entry-type" value="income" onchange="updateCategoryDropdown()">
+                                <span class="text-emerald-600 font-semibold">আয়</span>
+                            </label>
+                        </div>
+
+                        <!-- Dynamic Dropdown -->
+                        <select id="ie-category" class="border p-2 rounded w-full text-sm font-medium"></select>
                         <input type="number" id="ie-amount" placeholder="টাকার পরিমাণ" class="border p-2 rounded w-full text-sm">
-                        <input type="text" id="ie-note" placeholder="মন্তব্য (ঐচ্ছিক)" class="border p-2 rounded w-full text-sm">
-                        <button onclick="addTransaction()" class="bg-blue-600 text-white w-full py-2 rounded text-sm font-semibold">এন্ট্রি সেভ করুন</button>
+                        <input type="text" id="ie-note" placeholder="বিবরণ / মন্তব্য (ঐচ্ছিক)" class="border p-2 rounded w-full text-sm">
+                        <button onclick="addTransaction()" class="bg-blue-600 text-white w-full py-2 rounded text-sm font-semibold hover:bg-blue-700 transition">এন্ট্রি সেভ করুন</button>
                     </div>
                 </div>
 
@@ -125,34 +141,38 @@
 
                     <!-- Income Table -->
                     <div class="space-y-2">
-                        <h3 class="font-bold text-emerald-700 text-sm border-l-4 border-emerald-600 pl-2">আয়ের খাতসমূহ</h3>
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-emerald-700 text-sm border-l-4 border-emerald-600 pl-2">আয়ের খাতসমূহ</h3>
+                        </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm border border-slate-200">
                                 <thead>
                                     <tr class="bg-emerald-50 border-b">
-                                        <th class="p-2 border-r">ক্রমিক নং</th>
+                                        <th class="p-2 border-r w-16 text-center">ক্রমিক নং</th>
                                         <th class="p-2 border-r">খাতের নাম</th>
-                                        <th class="p-2 border-r">মোট ব্যালেন্স</th>
+                                        <th class="p-2 border-r w-32">মোট ব্যালেন্স</th>
                                         <th class="p-2 border-r">মন্তব্য</th>
-                                        <th class="p-2 text-center no-print">অ্যাকশন</th>
+                                        <th class="p-2 text-center no-print w-28">অ্যাকশন</th>
                                     </tr>
                                 </thead>
                                 <tbody id="income-table-body"></tbody>
                             </table>
                         </div>
-                    </div
-                            <!-- Expense Table -->
+                    </div>
+ <!-- Expense Table -->
                     <div class="space-y-2 pt-4">
-                        <h3 class="font-bold text-rose-700 text-sm border-l-4 border-rose-600 pl-2">ব্যয়ের খাতসমূহ</h3>
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-rose-700 text-sm border-l-4 border-rose-600 pl-2">ব্যয়ের খাতসমূহ</h3>
+                        </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm border border-slate-200">
                                 <thead>
                                     <tr class="bg-rose-50 border-b">
-                                        <th class="p-2 border-r">ক্রমিক নং</th>
+                                        <th class="p-2 border-r w-16 text-center">ক্রমিক নং</th>
                                         <th class="p-2 border-r">খাতের নাম</th>
-                                        <th class="p-2 border-r">মোট ব্যালেন্স</th>
+                                        <th class="p-2 border-r w-32">মোট ব্যালেন্স</th>
                                         <th class="p-2 border-r">মন্তব্য</th>
-                                        <th class="p-2 text-center no-print">অ্যাকশন</th>
+                                        <th class="p-2 text-center no-print w-28">অ্যাকশন</th>
                                     </tr>
                                 </thead>
                                 <tbody id="expense-table-body"></tbody>
@@ -214,13 +234,14 @@
                 <button onclick="closeModal()" class="text-gray-500 font-bold text-xl">&times;</button>
             </div>
             <div class="max-h-60 overflow-y-auto">
-                <table class="w-full text-left text-sm border-collapse">
+                <table class="w-full text-left text-sm border-collapse border border-slate-200">
                     <thead>
-                        <tr class="bg-gray-100 border-b">
-                            <th class="p-2">তারিখ</th>
-                            <th class="p-2">পরিমাণ</th>
-                            <th class="p-2">মন্তব্য</th>
-                            <th class="p-2">অ্যাকশন</th>
+                        <tr class="bg-slate-100 border-b">
+                            <th class="p-2 border-r">তারিখ</th>
+                            <th class="p-2 border-r text-rose-600">বিবরণ</th>
+                            <th class="p-2 border-r">পরিমাণ</th>
+                            <th class="p-2 border-r">মন্তব্য</th>
+                            <th class="p-2 text-center">অ্যাকশন</th>
                         </tr>
                     </thead>
                     <tbody id="modal-table-body"></tbody>
@@ -256,10 +277,29 @@
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-content').classList.remove('hidden');
         }
+
         let db = JSON.parse(localStorage.getItem('fastlab_db')) || {
             categories: [
-                {id: 1, name: 'Biddut bill', type: 'expense'},
-                {id: 2, name: 'ঔষধ বিক্রি', type: 'income'}
+                {id: 1, name: 'Administration', type: 'expense'},
+                {id: 2, name: 'Mobile Banking charge', type: 'expense'},
+                {id: 3, name: 'Md Sir-Honor', type: 'expense'},
+                {id: 4, name: 'Chairman Mem Honor', type: 'expense'},
+                {id: 5, name: 'DMD Mem Honor', type: 'expense'},
+                {id: 6, name: 'Rabu Sir Honor', type: 'expense'},
+                {id: 7, name: 'Factory Worker Bill', type: 'expense'},
+                {id: 8, name: 'Office Staff Salary', type: 'expense'},
+                {id: 9, name: 'Purchase', type: 'expense'},
+                {id: 10, name: 'Supply Payment', type: 'expense'},
+                {id: 11, name: 'Office Expenses', type: 'expense'},
+                {id: 12, name: 'Utility bill', type: 'expense'},
+                {id: 13, name: 'Servicing & Repair', type: 'expense'},
+                {id: 14, name: 'Marketing Salary', type: 'expense'},
+                {id: 15, name: 'Travel', type: 'expense'},
+                {id: 16, name: 'Delivery 🚚', type: 'expense'},
+                {id: 17, name: 'Courier', type: 'expense'},
+                {id: 18, name: 'Stationery & photocopy', type: 'expense'},
+                {id: 19, name: 'Other', type: 'expense'},
+                {id: 20, name: 'Oil and fuel', type: 'expense'}
             ],
             transactions: [],
             suppliers: [],
@@ -271,7 +311,7 @@
             updateUI();
         }
 
-        function switchTab(tabId) {
+    function switchTab(tabId) {
             ['dashboard', 'income-expense', 'suppliers', 'parties', 'balance-sheet'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
                 document.getElementById(`btn-${t}`).classList.remove('bg-emerald-600', 'text-white');
@@ -280,6 +320,21 @@
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.getElementById(`btn-${tabId}`).classList.add('bg-emerald-600', 'text-white');
             document.getElementById(`btn-${tabId}`).classList.remove('bg-gray-100', 'text-gray-700');
+        }
+
+        function updateCategoryDropdown() {
+            let selectedType = document.querySelector('input[name="entry-type"]:checked').value;
+            let catSelect = document.getElementById('ie-category');
+            catSelect.innerHTML = '';
+            
+            let filteredCats = db.categories.filter(c => c.type === selectedType);
+            filteredCats.forEach(c => {
+                catSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+            });
+
+            if(filteredCats.length === 0) {
+                catSelect.innerHTML = `<option value="">কোনো খাত পাওয়া যায়নি</option>`;
+            }
         }
 
         function addCategory() {
@@ -301,9 +356,11 @@
             let catName = document.getElementById('ie-category').value;
             let amount = parseFloat(document.getElementById('ie-amount').value);
             let note = document.getElementById('ie-note').value;
+            let selectedType = document.querySelector('input[name="entry-type"]:checked').value;
+
             if(!amount || !catName) return alert('সঠিক তথ্য দিন');
-            let cat = db.categories.find(c => c.name === catName);
-            db.transactions.push({id: Date.now(), date, category: catName, type: cat ? cat.type : 'expense', amount, note});
+            
+            db.transactions.push({id: Date.now(), date, category: catName, type: selectedType, amount, note});
             document.getElementById('ie-amount').value = '';
             document.getElementById('ie-note').value = '';
             saveData();
@@ -312,6 +369,19 @@
         function deleteTransaction(id) {
             db.transactions = db.transactions.filter(t => t.id !== id);
             saveData();
+        }
+
+        function editTransaction(id, catName) {
+            let tx = db.transactions.find(t => t.id === id);
+            if(!tx) return;
+            let newAmount = prompt('নতুন টাকার পরিমাণ দিন:', tx.amount);
+            if(newAmount === null) return;
+            let newNote = prompt('নতুন বিবরণ দিন:', tx.note || '');
+            
+            tx.amount = parseFloat(newAmount) || tx.amount;
+            tx.note = newNote;
+            saveData();
+            showCategoryHistory(catName);
         }
 
         function addSupplier() {
@@ -354,10 +424,20 @@
             let mBody = document.getElementById('modal-table-body');
             mBody.innerHTML = '';
             if(txs.length === 0) {
-                mBody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-gray-500">কোনো লেনদেন পাওয়া যায়নি</td></tr>`;
+                mBody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-gray-500">কোনো লেনদেন পাওয়া যায়নি</td></tr>`;
             } else {
                 txs.forEach(t => {
-                    mBody.innerHTML += `<tr class="border-b"><td class="p-2">${t.date}</td><td class="p-2 font-semibold">৳${t.amount}</td><td class="p-2 text-gray-500">${t.note||'-'}</td><td class="p-2"><button onclick="deleteTransaction(${t.id}); showCategoryHistory('${catName}');" class="text-red-500 text-xs">ডিলিট</button></td></tr>`;
+                    mBody.innerHTML += `
+                        <tr class="border-b">
+                            <td class="p-2 border-r">${t.date}</td>
+                            <td class="p-2 border-r font-medium text-slate-700">${t.note || '-'}</td>
+                            <td class="p-2 border-r font-semibold">৳${t.amount}</td>
+                            <td class="p-2 border-r text-gray-400">-</td>
+                            <td class="p-2 text-center whitespace-nowrap">
+                                <button onclick="editTransaction(${t.id}, '${catName}')" class="text-blue-600 font-semibold text-xs mr-2">+এডিট</button>
+                                <button onclick="deleteTransaction(${t.id}); showCategoryHistory('${catName}');" class="text-rose-600 font-semibold text-xs">ডিলিট</button>
+                            </td>
+                        </tr>`;
                 });
             }
             document.getElementById('history-modal').classList.remove('hidden');
@@ -368,15 +448,15 @@
             document.getElementById('history-modal').classList.add('hidden');
             document.getElementById('history-modal').classList.remove('flex');
         }
+
         function updateUI() {
             let catList = document.getElementById('category-list');
-            let catSelect = document.getElementById('ie-category');
             catList.innerHTML = '';
-            catSelect.innerHTML = '';
             db.categories.forEach(c => {
                 catList.innerHTML += `<span class="bg-gray-100 px-2 py-1 rounded text-xs border flex items-center gap-1">${c.name} (${c.type === 'income' ? 'আয়' : 'ব্যয়'}) <button onclick="deleteCategory(${c.id})" class="text-red-500 font-bold">&times;</button></span>`;
-                catSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
             });
+
+            updateCategoryDropdown();
 
             let incomeBody = document.getElementById('income-table-body');
             let expenseBody = document.getElementById('expense-table-body');
@@ -389,21 +469,19 @@
             db.categories.forEach(c => {
                 let catTxs = db.transactions.filter(t => t.category === c.name);
                 let catTotal = catTxs.reduce((sum, t) => sum + t.amount, 0);
-                let notes = [...new Set(catTxs.map(t => t.note).filter(n => n))].join(', ') || '-';
 
                 let rowHTML = `
                     <tr class="border-b hover:bg-slate-50">
                         <td class="p-2 border-r text-center">${c.type === 'income' ? incCount++ : expCount++}</td>
                         <td class="p-2 border-r font-semibold">${c.name}</td>
                         <td class="p-2 border-r font-bold">৳ ${catTotal}</td>
-                        <td class="p-2 border-r text-gray-600">${notes}</td>
+                        <td class="p-2 border-r text-center text-gray-400">-</td>
                         <td class="p-2 text-center no-print">
                             <button onclick="showCategoryHistory('${c.name}')" class="bg-blue-50 text-blue-600 border border-blue-200 px-2 py-1 rounded text-xs hover:bg-blue-100">ডিটেইলস (${catTxs.length})</button>
                         </td>
                     </tr>
                 `;
-
-                if(c.type === 'income') {
+        if(c.type === 'income') {
                     totalInc += catTotal;
                     incomeBody.innerHTML += rowHTML;
                 } else {
@@ -472,3 +550,4 @@
     </script>
 </body>
 </html>
+          
