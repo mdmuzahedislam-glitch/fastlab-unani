@@ -11,6 +11,7 @@
         body { font-family: 'Hind Siliguri', sans-serif; }
         @media print {
             .no-print { display: none !important; }
+            .print-area { padding: 0; margin: 0; }
         }
     </style>
 </head>
@@ -93,6 +94,7 @@
 
                 <!-- Input Controls -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 no-print bg-slate-50 p-4 rounded-xl border">
+                    <!-- Create Category -->
                     <div class="space-y-2">
                         <h3 class="font-semibold text-sm text-slate-700">নতুন খাত তৈরি করুন</h3>
                         <div class="flex gap-2">
@@ -101,78 +103,74 @@
                                 <option value="expense">ব্যয়</option>
                                 <option value="income">আয়</option>
                             </select>
-                            <button onclick="addCategory()" class="bg-emerald-600 text-white px-4 rounded text-sm font-semibold">যোগ</button>
+                            <button onclick="addCategory()" class="bg-emerald-600 text-white px-4 rounded text-sm font-medium">যোগ</button>
                         </div>
-                        <div id="category-list" class="flex flex-wrap gap-2 pt-2"></div>
+                        <div id="category-list" class="flex flex-wrap gap-1.5 pt-2 max-h-36 overflow-y-auto"></div>
                     </div>
-                    
+
+                    <!-- Daily Posting Entry -->
                     <div class="space-y-2">
                         <h3 class="font-semibold text-sm text-slate-700">দৈনিক লেনদেন এন্ট্রি</h3>
-                        <input type="date" id="ie-date" class="border p-2 rounded w-full text-sm">
-                        
-                        <!-- Type selector for entries -->
-                        <div class="flex gap-4 items-center bg-white p-2 rounded border text-sm">
-                            <span class="text-xs font-semibold text-gray-500">টাইপ:</span>
-                            <label class="flex items-center gap-1 cursor-pointer">
-                                <input type="radio" name="entry-type" value="expense" checked onchange="updateCategoryDropdown()">
-                                <span class="text-rose-600 font-semibold">ব্যয়</span>
-                            </label>
-                            <label class="flex items-center gap-1 cursor-pointer">
-                                <input type="radio" name="entry-type" value="income" onchange="updateCategoryDropdown()">
-                                <span class="text-emerald-600 font-semibold">আয়</span>
-                            </label>
+                        <div class="flex gap-2">
+                            <input type="date" id="ie-date" class="border p-2 rounded w-1/2 text-sm">
+                            <select id="ie-type-selector" onchange="filterCategoryDropdown()" class="border p-2 rounded w-1/2 text-sm bg-white font-medium">
+                                <option value="expense">ব্যয় খাত</option>
+                                <option value="income">আয় খাত</option>
+                            </select>
                         </div>
-
-                        <!-- Dynamic Dropdown -->
-                        <select id="ie-category" class="border p-2 rounded w-full text-sm font-medium"></select>
+                        <select id="ie-category" class="border p-2 rounded w-full text-sm bg-white"></select>
                         <input type="number" id="ie-amount" placeholder="টাকার পরিমাণ" class="border p-2 rounded w-full text-sm">
-                        <input type="text" id="ie-note" placeholder="বিবরণ / মন্তব্য (ঐচ্ছিক)" class="border p-2 rounded w-full text-sm">
-                        <button onclick="addTransaction()" class="bg-blue-600 text-white w-full py-2 rounded text-sm font-semibold hover:bg-blue-700 transition">এন্ট্রি সেভ করুন</button>
+                        <input type="text" id="ie-note" placeholder="মন্তব্য / বিবরণ (ঐচ্ছিক)" class="border p-2 rounded w-full text-sm">
+                        <button onclick="addTransaction()" class="bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded text-sm font-semibold transition">এন্ট্রি সেভ করুন</button>
                     </div>
                 </div>
 
-                <!-- Printable Area for A4 Statements -->
-                <div id="printable-statement" class="space-y-6 bg-white p-2">
-                    <div class="text-center hidden print:block mb-4">
-                        <h2 class="text-xl font-bold">ফাস্টল্যাব ইউনানী</h2>
-                        <p class="text-xs text-gray-500">আফুরিয়া, হেমাইতপুর, পাবনা | মোবাইল: 01335-097460</p>
-                        <h3 class="text-md font-semibold mt-2 underline">আয় ও ব্যয়ের মাসিক স্টেটমেন্ট রিপোর্ট</h3>
-                    </div>
-
-                    <!-- Income Table -->
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center">
+                <!-- Printable Area for Statements -->
+                <div id="printable-statement" class="space-y-8 bg-white print-area">
+                    
+                    <!-- Income Table Section -->
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center border-b pb-1">
                             <h3 class="font-bold text-emerald-700 text-sm border-l-4 border-emerald-600 pl-2">আয়ের খাতসমূহ</h3>
+                            <div class="flex items-center gap-4">
+                                <span class="text-xs font-semibold text-amber-600" id="income-month-label">মাস: -</span>
+                                <button onclick="printSection('income')" class="no-print bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1 rounded font-medium shadow-sm">প্রিন্ট</button>
+                            </div>
                         </div>
                         <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm border border-slate-200">
+                            <table class="w-full text-left text-sm border border-slate-200 border-collapse">
                                 <thead>
-                                    <tr class="bg-emerald-50 border-b">
-                                        <th class="p-2 border-r w-16 text-center">ক্রমিক নং</th>
+                                    <tr class="bg-emerald-50 border-b text-slate-700">
+                                        <th class="p-2 border-r text-center w-16">ক্রমিক নং</th>
                                         <th class="p-2 border-r">খাতের নাম</th>
                                         <th class="p-2 border-r w-32">মোট ব্যালেন্স</th>
-                                        <th class="p-2 border-r">মন্তব্য</th>
-                                        <th class="p-2 text-center no-print w-28">অ্যাকশন</th>
+                                        <th class="p-2 border-r w-40">মন্তব্য</th>
+                                        <th class="p-2 text-center w-28 no-print">অ্যাকশন</th>
                                     </tr>
                                 </thead>
                                 <tbody id="income-table-body"></tbody>
                             </table>
                         </div>
                     </div>
- <!-- Expense Table -->
-                    <div class="space-y-2 pt-4">
-                        <div class="flex justify-between items-center">
+
+                    <!-- Expense Table Section -->
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center border-b pb-1">
                             <h3 class="font-bold text-rose-700 text-sm border-l-4 border-rose-600 pl-2">ব্যয়ের খাতসমূহ</h3>
+                            <div class="flex items-center gap-4">
+                                <span class="text-xs font-semibold text-amber-600" id="expense-month-label">মাস: -</span>
+                                <button onclick="printSection('expense')" class="no-print bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1 rounded font-medium shadow-sm">প্রিন্ট</button>
+                            </div>
                         </div>
                         <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm border border-slate-200">
+                            <table class="w-full text-left text-sm border border-slate-200 border-collapse">
                                 <thead>
-                                    <tr class="bg-rose-50 border-b">
-                                        <th class="p-2 border-r w-16 text-center">ক্রমিক নং</th>
+                                    <tr class="bg-rose-50 border-b text-slate-700">
+                                        <th class="p-2 border-r text-center w-16">ক্রমিক নং</th>
                                         <th class="p-2 border-r">খাতের নাম</th>
                                         <th class="p-2 border-r w-32">মোট ব্যালেন্স</th>
-                                        <th class="p-2 border-r">মন্তব্য</th>
-                                        <th class="p-2 text-center no-print w-28">অ্যাকশন</th>
+                                        <th class="p-2 border-r w-40">মন্তব্য</th>
+                                        <th class="p-2 text-center w-28 no-print">অ্যাকশন</th>
                                     </tr>
                                 </thead>
                                 <tbody id="expense-table-body"></tbody>
@@ -226,22 +224,22 @@
         </main>
     </div>
 
-    <!-- History Modal -->
+    <!-- History / Details Modal -->
     <div id="history-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-4 space-y-4">
+        <div class="bg-white rounded-xl shadow-xl max-w-xl w-full p-5 space-y-4">
             <div class="flex justify-between items-center border-b pb-2">
                 <h3 id="modal-cat-name" class="font-bold text-lg text-slate-800"></h3>
-                <button onclick="closeModal()" class="text-gray-500 font-bold text-xl">&times;</button>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-700 font-bold text-2xl">&times;</button>
             </div>
-            <div class="max-h-60 overflow-y-auto">
-                <table class="w-full text-left text-sm border-collapse border border-slate-200">
+            <div class="max-h-72 overflow-y-auto">
+                <table class="w-full text-left text-sm border-collapse border">
                     <thead>
-                        <tr class="bg-slate-100 border-b">
-                            <th class="p-2 border-r">তারিখ</th>
-                            <th class="p-2 border-r text-rose-600">বিবরণ</th>
-                            <th class="p-2 border-r">পরিমাণ</th>
-                            <th class="p-2 border-r">মন্তব্য</th>
-                            <th class="p-2 text-center">অ্যাকশন</th>
+                        <tr class="bg-slate-100 border-b text-slate-700">
+                            <th class="p-2 border">তারিখ</th>
+                            <th class="p-2 border text-rose-600">বিবরণ</th>
+                            <th class="p-2 border">পরিমাণ</th>
+                            <th class="p-2 border">মন্তব্য</th>
+                            <th class="p-2 border text-center text-rose-600">অ্যাকশন</th>
                         </tr>
                     </thead>
                     <tbody id="modal-table-body"></tbody>
@@ -262,7 +260,7 @@
                 sessionStorage.setItem('fastlab_login', 'true');
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app-content').classList.remove('hidden');
-                updateUI();
+                initData();
             } else {
                 err.classList.remove('hidden');
             }
@@ -271,11 +269,6 @@
         function logout() {
             sessionStorage.removeItem('fastlab_login');
             location.reload();
-        }
-
-        if(sessionStorage.getItem('fastlab_login') === 'true') {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('app-content').classList.remove('hidden');
         }
 
         let db = JSON.parse(localStorage.getItem('fastlab_db')) || {
@@ -299,7 +292,8 @@
                 {id: 17, name: 'Courier', type: 'expense'},
                 {id: 18, name: 'Stationery & photocopy', type: 'expense'},
                 {id: 19, name: 'Other', type: 'expense'},
-                {id: 20, name: 'Oil and fuel', type: 'expense'}
+                {id: 20, name: 'Oil and fuel', type: 'expense'},
+                {id: 21, name: 'ঔষধ বিক্রি', type: 'income'}
             ],
             transactions: [],
             suppliers: [],
@@ -311,7 +305,7 @@
             updateUI();
         }
 
-    function switchTab(tabId) {
+        function switchTab(tabId) {
             ['dashboard', 'income-expense', 'suppliers', 'parties', 'balance-sheet'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
                 document.getElementById(`btn-${t}`).classList.remove('bg-emerald-600', 'text-white');
@@ -322,44 +316,46 @@
             document.getElementById(`btn-${tabId}`).classList.remove('bg-gray-100', 'text-gray-700');
         }
 
-        function updateCategoryDropdown() {
-            let selectedType = document.querySelector('input[name="entry-type"]:checked').value;
-            let catSelect = document.getElementById('ie-category');
-            catSelect.innerHTML = '';
-            
-            let filteredCats = db.categories.filter(c => c.type === selectedType);
-            filteredCats.forEach(c => {
-                catSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
-            });
-
-            if(filteredCats.length === 0) {
-                catSelect.innerHTML = `<option value="">কোনো খাত পাওয়া যায়নি</option>`;
-            }
-        }
-
         function addCategory() {
-            let name = document.getElementById('new-category-name').value;
+            let name = document.getElementById('new-category-name').value.trim();
             let type = document.getElementById('new-category-type').value;
             if(!name) return alert('খাতের নাম দিন');
             db.categories.push({id: Date.now(), name, type});
             document.getElementById('new-category-name').value = '';
             saveData();
+            filterCategoryDropdown();
         }
 
         function deleteCategory(id) {
             db.categories = db.categories.filter(c => c.id !== id);
             saveData();
+            filterCategoryDropdown();
+        }
+
+        function filterCategoryDropdown() {
+            let selectedType = document.getElementById('ie-type-selector').value;
+            let catSelect = document.getElementById('ie-category');
+            catSelect.innerHTML = '';
+            
+            let filtered = db.categories.filter(c => c.type === selectedType);
+            if(filtered.length === 0) {
+                catSelect.innerHTML = `<option value="">কোনো খাত পাওয়া যায়নি</option>`;
+            } else {
+                filtered.forEach(c => {
+                    catSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+                });
+            }
         }
 
         function addTransaction() {
             let date = document.getElementById('ie-date').value || new Date().toISOString().split('T')[0];
             let catName = document.getElementById('ie-category').value;
             let amount = parseFloat(document.getElementById('ie-amount').value);
-            let note = document.getElementById('ie-note').value;
-            let selectedType = document.querySelector('input[name="entry-type"]:checked').value;
+            let note = document.getElementById('ie-note').value.trim();
+            let selectedType = document.getElementById('ie-type-selector').value;
 
             if(!amount || !catName) return alert('সঠিক তথ্য দিন');
-            
+
             db.transactions.push({id: Date.now(), date, category: catName, type: selectedType, amount, note});
             document.getElementById('ie-amount').value = '';
             document.getElementById('ie-note').value = '';
@@ -374,48 +370,14 @@
         function editTransaction(id, catName) {
             let tx = db.transactions.find(t => t.id === id);
             if(!tx) return;
-            let newAmount = prompt('নতুন টাকার পরিমাণ দিন:', tx.amount);
-            if(newAmount === null) return;
-            let newNote = prompt('নতুন বিবরণ দিন:', tx.note || '');
-            
-            tx.amount = parseFloat(newAmount) || tx.amount;
-            tx.note = newNote;
-            saveData();
-            showCategoryHistory(catName);
-        }
-
-        function addSupplier() {
-            let name = document.getElementById('supplier-name').value;
-            if(!name) return;
-            db.suppliers.push({id: Date.now(), name, purchases: [], payments: []});
-            document.getElementById('supplier-name').value = '';
-            saveData();
-        }
-
-        function addSupplierTx(supId, type) {
-            let amount = parseFloat(prompt(type === 'purchase' ? 'মালের দাম কত?' : 'পেমেন্ট কত টাকা?'));
-            if(!amount) return;
-            let sup = db.suppliers.find(s => s.id === supId);
-            if(type === 'purchase') sup.purchases.push({date: new Date().toLocaleDateString(), amount});
-            else sup.payments.push({date: new Date().toLocaleDateString(), amount});
-            saveData();
-        }
-
-        function addParty() {
-            let name = document.getElementById('party-name').value;
-            if(!name) return;
-            db.parties.push({id: Date.now(), name, sales: [], collections: []});
-            document.getElementById('party-name').value = '';
-            saveData();
-        }
-
-        function addPartyTx(partyId, type) {
-            let amount = parseFloat(prompt(type === 'sale' ? 'বিক্রয়মূল্য কত?' : 'জমা কত টাকা?'));
-            if(!amount) return;
-            let p = db.parties.find(x => x.id === partyId);
-            if(type === 'sale') p.sales.push({date: new Date().toLocaleDateString(), amount});
-            else p.collections.push({date: new Date().toLocaleDateString(), amount});
-            saveData();
+            let newAmount = prompt('নতুন টাকার পরিমাণ লিখুন:', tx.amount);
+            if(newAmount !== null && !isNaN(newAmount) && newAmount !== '') {
+                tx.amount = parseFloat(newAmount);
+                let newNote = prompt('নতুন বিবরণ/নোট লিখুন:', tx.note || '');
+                if(newNote !== null) tx.note = newNote;
+                saveData();
+                showCategoryHistory(catName);
+            }
         }
 
         function showCategoryHistory(catName) {
@@ -423,19 +385,21 @@
             let txs = db.transactions.filter(t => t.category === catName);
             let mBody = document.getElementById('modal-table-body');
             mBody.innerHTML = '';
+
             if(txs.length === 0) {
                 mBody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-gray-500">কোনো লেনদেন পাওয়া যায়নি</td></tr>`;
             } else {
                 txs.forEach(t => {
                     mBody.innerHTML += `
                         <tr class="border-b">
-                            <td class="p-2 border-r">${t.date}</td>
-                            <td class="p-2 border-r font-medium text-slate-700">${t.note || '-'}</td>
-                            <td class="p-2 border-r font-semibold">৳${t.amount}</td>
-                            <td class="p-2 border-r text-gray-400">-</td>
-                            <td class="p-2 text-center whitespace-nowrap">
-                                <button onclick="editTransaction(${t.id}, '${catName}')" class="text-blue-600 font-semibold text-xs mr-2">+এডিট</button>
-                                <button onclick="deleteTransaction(${t.id}); showCategoryHistory('${catName}');" class="text-rose-600 font-semibold text-xs">ডিলিট</button>
+                            <td class="p-2 border">${t.date}</td>
+                            <td class="p-2 border text-rose-600 font-medium">${t.note || '-'}</td>
+                            <td class="p-2 border font-bold">৳${t.amount}</td>
+                            <td class="p-2 border"></td>
+                            <td class="p-2 border text-center space-x-1">
+                                <button onclick="editTransaction(${t.id}, '${catName}')" class="text-blue-600 hover:underline text-xs font-semibold">এডিট</button>
+                                <span class="text-gray-300">|</span>
+                                <button onclick="deleteTransaction(${t.id}); showCategoryHistory('${catName}');" class="text-red-500 hover:underline text-xs font-semibold">ডিলিট</button>
                             </td>
                         </tr>`;
                 });
@@ -450,13 +414,21 @@
         }
 
         function updateUI() {
+            // Category badges render
             let catList = document.getElementById('category-list');
             catList.innerHTML = '';
             db.categories.forEach(c => {
-                catList.innerHTML += `<span class="bg-gray-100 px-2 py-1 rounded text-xs border flex items-center gap-1">${c.name} (${c.type === 'income' ? 'আয়' : 'ব্যয়'}) <button onclick="deleteCategory(${c.id})" class="text-red-500 font-bold">&times;</button></span>`;
+                catList.innerHTML += `
+                    <span class="bg-gray-100 text-slate-700 px-2 py-1 rounded text-xs border flex items-center gap-1 font-medium">
+                        ${c.name} <span class="text-[10px] text-gray-400">(${c.type === 'income' ? 'আয়' : 'ব্যয়'})</span>
+                        <button onclick="deleteCategory(${c.id})" class="text-rose-500 hover:text-rose-700 font-bold ml-1">&times;</button>
+                    </span>`;
             });
 
-            updateCategoryDropdown();
+            // Set current month label
+            const currentMonthStr = new Date().toLocaleString('bn-BD', { month: 'long', year: 'numeric' });
+            document.getElementById('income-month-label').innerText = `মাস: ${currentMonthStr}`;
+            document.getElementById('expense-month-label').innerText = `মাস: ${currentMonthStr}`;
 
             let incomeBody = document.getElementById('income-table-body');
             let expenseBody = document.getElementById('expense-table-body');
@@ -475,13 +447,14 @@
                         <td class="p-2 border-r text-center">${c.type === 'income' ? incCount++ : expCount++}</td>
                         <td class="p-2 border-r font-semibold">${c.name}</td>
                         <td class="p-2 border-r font-bold">৳ ${catTotal}</td>
-                        <td class="p-2 border-r text-center text-gray-400">-</td>
+                        <td class="p-2 border-r"></td>
                         <td class="p-2 text-center no-print">
-                            <button onclick="showCategoryHistory('${c.name}')" class="bg-blue-50 text-blue-600 border border-blue-200 px-2 py-1 rounded text-xs hover:bg-blue-100">ডিটেইলস (${catTxs.length})</button>
+                            <button onclick="showCategoryHistory('${c.name}')" class="bg-blue-50 text-blue-600 border border-blue-200 px-2 py-1 rounded text-xs hover:bg-blue-100 font-semibold">ডিটেইলস (${catTxs.length})</button>
                         </td>
                     </tr>
                 `;
-        if(c.type === 'income') {
+
+                if(c.type === 'income') {
                     totalInc += catTotal;
                     incomeBody.innerHTML += rowHTML;
                 } else {
@@ -490,10 +463,10 @@
                 }
             });
 
-            if(incomeBody.innerHTML === '') incomeBody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-gray-400">কোনো আয়ের খাত নেই</td></tr>`;
-            if(expenseBody.innerHTML === '') expenseBody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-gray-400">কোনো ব্যয়ের খাত নেই</td></tr>`;
+            if(incomeBody.innerHTML === '') incomeBody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-gray-400 text-xs">কোনো আয়ের খাত নেই</td></tr>`;
+            if(expenseBody.innerHTML === '') expenseBody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-gray-400 text-xs">কোনো ব্যয়ের খাত নেই</td></tr>`;
 
-            // Suppliers render
+            // Suppliers & Parties render
             let supContainer = document.getElementById('supplier-container');
             supContainer.innerHTML = '';
             let totalSupDue = 0;
@@ -505,7 +478,6 @@
                 supContainer.innerHTML += `<div class="border p-3 rounded bg-gray-50 flex justify-between items-center text-sm"><div><strong>${s.name}</strong><p class="text-xs text-gray-500">বকেয়া: ৳${due}</p></div><div class="flex gap-1"><button onclick="addSupplierTx(${s.id}, 'purchase')" class="bg-blue-500 text-white px-2 py-1 rounded text-xs">+ মাল ক্রয়</button><button onclick="addSupplierTx(${s.id}, 'payment')" class="bg-emerald-500 text-white px-2 py-1 rounded text-xs">+ পেমেন্ট</button></div></div>`;
             });
 
-            // Parties render
             let partyContainer = document.getElementById('party-container');
             partyContainer.innerHTML = '';
             let totalPartyDue = 0;
@@ -532,6 +504,10 @@
             netEl.className = `text-2xl font-bold ${net >= 0 ? 'text-emerald-700' : 'text-rose-700'}`;
         }
 
+        function printSection(type) {
+            window.print();
+        }
+
         function downloadPDF() {
             const element = document.getElementById('printable-statement');
             const opt = {
@@ -544,10 +520,16 @@
             html2pdf().from(element).set(opt).save();
         }
 
-        if(sessionStorage.getItem('fastlab_login') === 'true') {
+        function initData() {
+            filterCategoryDropdown();
             updateUI();
+        }
+
+        if(sessionStorage.getItem('fastlab_login') === 'true') {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-content').classList.remove('hidden');
+            initData();
         }
     </script>
 </body>
 </html>
-          
