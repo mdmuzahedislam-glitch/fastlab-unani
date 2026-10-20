@@ -314,21 +314,24 @@
 
            // Auth Systems
         function checkLogin() {
-            const u = document.getElementById('login-user').value;
-            const p = document.getElementById('login-pass').value;
-            if (u === 'admin' && p === 'admin') {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('app-content').classList.remove('hidden');
-                initApp();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        }
+    const u = document.getElementById('login-user').value;
+    const p = document.getElementById('login-pass').value;
+    if (u === 'admin' && p === 'admin') {
+        localStorage.setItem('isLoggedIn', 'true'); // <--- এই লাইনটি যোগ করবেন
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('app-content').classList.remove('hidden');
+        initApp();
+    } else {
+        document.getElementById('login-error').classList.remove('hidden');
+    }
+}
+
 
         function logout() {
-            document.getElementById('app-content').classList.add('hidden');
-            document.getElementById('login-screen').classList.remove('hidden');
-        }
+    localStorage.removeItem('isLoggedIn'); // <--- এই লাইনটি যোগ করবেন
+    document.getElementById('app-content').classList.add('hidden');
+    document.getElementById('login-screen').classList.remove('hidden');
+}
 
         function switchTab(tab) {
             ['dashboard', 'income-expense', 'suppliers', 'parties', 'balance-sheet'].forEach(t => {
@@ -597,12 +600,16 @@
             html2pdf().set(opt).from(element).save();
         }
 
-        // Init Application
-        function initApp() {
-            document.getElementById('ie-date').value = new Date().toISOString().split('T')[0];
-            filterCategoryDropdown();
-            renderApp();
-        }
+// পেজ লোড হলে অটোমেটিক চেক করবে লগইন করা আছে কি না
+window.addEventListener('DOMContentLoaded', () => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn === 'true') {
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('app-content').classList.remove('hidden');
+        initApp();
+    }
+});
+        
     </script>
 </body>
 </html>
