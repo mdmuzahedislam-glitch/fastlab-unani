@@ -363,20 +363,36 @@
             renderApp();
         }
 
-        // নতুন খাতের ড্রপডাউন পরিবর্তন অনুযায়ী চিপস ফিল্টার
+                // নতুন খাতের চিপস এবং ডিলিট অপশন রেন্ডার করার ফাংশন
         function renderCategoryChips() {
             const selectedType = document.getElementById('new-category-type').value;
             const catContainer = document.getElementById('category-list');
             
-            const filteredCategories = categories.filter(c => c.type === selectedType);
+            catContainer.innerHTML = '';
             
-            catContainer.innerHTML = filteredCategories.map(c => `
-                <span class="text-xs px-2 py-1 rounded ${c.type === 'income' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'} border">
-                    ${c.name} (${c.type === 'income' ? 'আয়' : 'ব্যয়'})
-                </span>
-            `).join('');
+            categories.forEach((c, index) => {
+                if (c.type === selectedType) {
+                    catContainer.innerHTML += `
+                        <span class="text-xs px-2 py-1 rounded ${c.type === 'income' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'} border flex items-center gap-1">
+                            ${c.name} (${c.type === 'income' ? 'আয়' : 'ব্যয়'})
+                            <button onclick="deleteCategory(${index})" class="text-red-600 font-bold hover:text-red-800 ml-1">✕</button>
+                        </span>
+                    `;
+                }
+            });
         }
 
+        // নির্দিষ্ট খাত ডিলিট করার ফাংশন
+        function deleteCategory(index) {
+            if (confirm('আপনি কি এই খাতটি মুছে ফেলতে চান?')) {
+                categories.splice(index, 1);
+                saveData();
+                renderCategoryChips();
+                filterCategoryDropdown();
+                renderApp();
+            }
+        }
+        
         function filterCategoryDropdown() {
             const type = document.getElementById('ie-type-selector').value;
             const select = document.getElementById('ie-category');
