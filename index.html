@@ -563,17 +563,34 @@
                 `;
             });
 
-            // Render Expense Categories
-            categories.filter(c => c.type === 'expense').forEach(c => {
-                expCount++;
+                        // Render Income Categories
+            categories.filter(c => c.type === 'income').forEach((c, idx) => {
                 const catTx = transactions.filter(t => t.category === c.name);
                 const sum = catTx.reduce((acc, curr) => acc + curr.amount, 0);
-                const lastNote = catTx.length > 0 ? catTx[catTx.length - 1].note : '';
+                totalIncome += sum;
+
+                incomeTbody.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="border p-2 text-center">${idx + 1}</td>
+                        <td class="border p-2 font-medium">${c.name}</td>
+                        <td class="border p-2 text-right font-bold text-emerald-700">৳ ${sum}</td>
+                        <td class="border p-2"></td>
+                        <td class="border p-2 text-center no-print">
+                            <button onclick="openDetailsModal('${c.name}')" class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded hover:bg-blue-200">ডিটেইলস (${catTx.length})</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // Render Expense Categories
+            categories.filter(c => c.type === 'expense').forEach((c, idx) => {
+                const catTx = transactions.filter(t => t.category === c.name);
+                const sum = catTx.reduce((acc, curr) => acc + curr.amount, 0);
                 totalExpense += sum;
 
                 expenseTbody.innerHTML += `
                     <tr class="hover:bg-slate-50">
-                        <td class="border p-2 text-center">${expCount}</td>
+                        <td class="border p-2 text-center">${idx + 1}</td>
                         <td class="border p-2 font-medium">${c.name}</td>
                         <td class="border p-2 text-right font-bold text-rose-700">৳ ${sum}</td>
                         <td class="border p-2"></td>
@@ -583,6 +600,7 @@
                     </tr>
                 `;
             });
+
 
             // Totals Display
             document.getElementById('income-section-total').innerText = `৳ ${totalIncome.toLocaleString('bn-BD')}`;
