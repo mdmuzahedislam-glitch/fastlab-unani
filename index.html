@@ -504,10 +504,14 @@
                 transactions[activeEditTxIndex].amount = newAmount;
                 transactions[activeEditTxIndex].note = newNote;
 
-                saveData();
-                renderApp();
-                renderDetailsHistoryTable(); // লিস্ট আপডেট
-                closeEditModal();
+                    saveData();
+                    renderApp();
+                // বর্তমান সিলেক্ট করা ক্যাটাগরি দিয়ে হিস্ট্রি টেবিল রিফ্রেশ করুন
+    if (currentSelectedCategory) {
+        renderDetailsHistoryTable();
+    }
+    
+    closeEditModal();
             }
         }
 
