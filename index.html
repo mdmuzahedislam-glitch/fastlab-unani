@@ -28,11 +28,11 @@
             
             <div class="space-y-3 text-left">
                 <div>
-                    <label class="text-xs font-semibold text-gray-600">ইউজারনেম (admin বা officer)</label>
+                    <label class="text-xs font-semibold text-gray-600">ইউজারনেম (admin বা অফিসার আইডি)</label>
                     <input type="text" id="login-user" value="admin" class="w-full border p-2 rounded-lg text-sm mt-1 focus:outline-none focus:border-emerald-600">
                 </div>
                 <div>
-                    <label class="text-xs font-semibold text-gray-600">পাসওয়ার্ড (admin বা officer)</label>
+                    <label class="text-xs font-semibold text-gray-600">পাসওয়ার্ড</label>
                     <input type="password" id="login-pass" value="admin" class="w-full border p-2 rounded-lg text-sm mt-1 focus:outline-none focus:border-emerald-600">
                 </div>
             </div>
@@ -63,7 +63,7 @@
                 <button onclick="switchTab('income-expense')" id="btn-income-expense" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap admin-nav">আয় ও ব্যয়</button>
                 <button onclick="switchTab('suppliers')" id="btn-suppliers" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap admin-nav">সাপ্লাইয়ার</button>
                 <button onclick="switchTab('parties')" id="btn-parties" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">পার্টি ম্যানেজমেন্ট</button>
-                <button onclick="switchTab('balance-sheet')" id="btn-balance-sheet" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap admin-nav">ব্যালেন্স শীট</button>
+                <button onclick="switchTab('balance-sheet')" id="btn-balance-sheet" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap admin-nav">লাভ-ক্ষতি ও ব্যালেন্স শীট</button>
             </div>
 
             <!-- Dashboard Tab -->
@@ -95,13 +95,11 @@
                     <button onclick="downloadPDF()" class="bg-rose-600 text-white px-3 py-1.5 rounded text-sm font-semibold hover:bg-rose-700">A4 PDF ডাউনলোড</button>
                 </div>
 
-                <!-- Input Controls -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 no-print bg-slate-50 p-4 rounded-xl border">
-                    <!-- Create Category -->
                     <div class="space-y-2">
                         <h3 class="font-semibold text-sm text-slate-700">নতুন খাত তৈরি করুন</h3>
                         <div class="flex gap-2">
-                            <input type="text" id="new-category-name" placeholder="খাতের নাম (যেমন: বিদ্যুৎ বিল)" class="border p-2 rounded w-full text-sm">
+                            <input type="text" id="new-category-name" placeholder="খাতের নাম" class="border p-2 rounded w-full text-sm">
                             <select id="new-category-type" onchange="renderCategoryChips()" class="border p-2 rounded text-sm">
                                 <option value="expense">ব্যয়</option>
                                 <option value="income">আয়</option>
@@ -111,7 +109,6 @@
                         <div id="category-list" class="flex flex-wrap gap-1.5 pt-2 max-h-36 overflow-y-auto"></div>
                     </div>
 
-                    <!-- Daily Posting Entry -->
                     <div class="space-y-2">
                         <h3 class="font-semibold text-sm text-slate-700">দৈনিক লেনদেন এন্ট্রি</h3>
                         <div class="flex gap-2">
@@ -123,19 +120,15 @@
                         </div>
                         <select id="ie-category" class="border p-2 rounded w-full text-sm bg-white"></select>
                         <input type="number" id="ie-amount" placeholder="টাকার পরিমাণ" class="border p-2 rounded w-full text-sm">
-                        <input type="text" id="ie-note" placeholder="মন্তব্য / বিবরণ (ঐচ্ছিক)" class="border p-2 rounded w-full text-sm">
+                        <input type="text" id="ie-note" placeholder="মন্তব্য / বিবরণ" class="border p-2 rounded w-full text-sm">
                         <button onclick="addTransaction()" class="bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded text-sm font-semibold transition">এন্ট্রি সেভ করুন</button>
                     </div>
                 </div>
 
-                <!-- Printable Statement -->
                 <div id="printable-statement" class="space-y-8 bg-white print-area">
-                    
-                    <!-- 1. INCOME TABLE SECTION -->
                     <div class="space-y-3">
                         <div class="flex justify-between items-center border-b pb-1">
                             <h3 class="font-bold text-emerald-700 text-sm border-l-4 border-emerald-600 pl-2">আয়ের খাতসমূহ</h3>
-                            
                             <div class="flex items-center gap-2">
                                 <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded border border-amber-200">
                                     মাস: <span id="custom-month-display">অক্টোবর ২০২৬</span>
@@ -144,12 +137,11 @@
                                 <button onclick="window.print()" class="no-print bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1 rounded font-medium shadow-sm">প্রিন্ট</button>
                             </div>
                         </div>
-
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs border-collapse border border-slate-200">
                                 <thead class="bg-emerald-50 text-emerald-900">
                                     <tr>
-                                        <th class="border p-2 w-12 text-center">ক্রমিক নং</th>
+                                        <th class="border p-2 w-12 text-center">ক্রমিক</th>
                                         <th class="border p-2">খাতের নাম</th>
                                         <th class="border p-2 w-28 text-right">মোট ব্যালেন্স</th>
                                         <th class="border p-2">মন্তব্য</th>
@@ -159,24 +151,21 @@
                                 <tbody id="income-table-body"></tbody>
                             </table>
                         </div>
-
                         <div class="flex justify-between items-center p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
                             <span class="font-bold text-emerald-800 text-sm">মোট আয়:</span>
                             <span id="income-section-total" class="font-extrabold text-emerald-700 text-base">৳ ০</span>
                         </div>
                     </div>
 
-                    <!-- 2. EXPENSE TABLE SECTION -->
                     <div class="space-y-3 pt-4">
                         <div class="flex justify-between items-center border-b pb-1">
                             <h3 class="font-bold text-rose-700 text-sm border-l-4 border-rose-600 pl-2">ব্যয়ের খাতসমূহ</h3>
                         </div>
-
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs border-collapse border border-slate-200">
                                 <thead class="bg-rose-50 text-rose-900">
                                     <tr>
-                                        <th class="border p-2 w-12 text-center">ক্রমিক নং</th>
+                                        <th class="border p-2 w-12 text-center">ক্রমিক</th>
                                         <th class="border p-2">খাতের নাম</th>
                                         <th class="border p-2 w-28 text-right">মোট ব্যালেন্স</th>
                                         <th class="border p-2">মন্তব্য</th>
@@ -186,29 +175,43 @@
                                 <tbody id="expense-table-body"></tbody>
                             </table>
                         </div>
-
                         <div class="flex justify-between items-center p-3 bg-rose-50 border border-rose-200 rounded-lg">
                             <span class="font-bold text-rose-800 text-sm">মোট ব্যয়:</span>
                             <span id="expense-section-total" class="font-extrabold text-rose-700 text-base">৳ ০</span>
                         </div>
                     </div>
-
                 </div>
             </section>
 
             <!-- Suppliers Tab (Admin Only) -->
-            <section id="tab-suppliers" class="hidden bg-white p-6 rounded-xl shadow admin-section">
-                <h2 class="font-bold text-lg mb-3">সাপ্লাইয়ার ম্যানেজমেন্ট</h2>
-                <p class="text-xs text-gray-500">এখানে সাপ্লাইয়ারদের বকেয়া ও লেনদেনের হিসাব থাকবে।</p>
+            <section id="tab-suppliers" class="hidden bg-white p-6 rounded-xl shadow admin-section space-y-4">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h2 class="font-bold text-lg">সাপ্লাইয়ার ম্যানেজমেন্ট ও ক্রয় হিসাব</h2>
+                    <button onclick="openAddSupplierModal()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded-lg font-semibold">+ নতুন সাপ্লাইয়ার যোগ করুন</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse border border-slate-200">
+                        <thead class="bg-slate-100 text-slate-700">
+                            <tr>
+                                <th class="border p-2 text-center">ক্রমিক</th>
+                                <th class="border p-2">সাপ্লাইয়ারের নাম</th>
+                                <th class="border p-2 text-right">পণ্য ক্রয় (Debit)</th>
+                                <th class="border p-2 text-right">পরিশোধিত পেমেন্ট (Credit)</th>
+                                <th class="border p-2 text-right">বর্তমান বকেয়া পাওনা</th>
+                                <th class="border p-2 text-center">অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="supplier-table-body"></tbody>
+                    </table>
+                </div>
             </section>
 
-            <!-- Parties Tab (Accessible by both Admin and Area Officers) -->
+            <!-- Parties Tab (Accessible by both Admin & Officers) -->
             <section id="tab-parties" class="hidden bg-white p-6 rounded-xl shadow space-y-4">
                 <div class="flex justify-between items-center border-b pb-3">
-                    <h2 class="font-bold text-lg">পার্টি ম্যানেজমেন্ট ও লেজার</h2>
-                    <button onclick="openAddPartyModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-2 rounded-lg font-semibold">+ নতুন পার্টি যোগ করুন</button>
+                    <h2 class="font-bold text-lg">পার্টি ম্যানেজমেন্ট ও ডিলার লেজার</h2>
+                    <button onclick="openAddPartyModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-2 rounded-lg font-semibold admin-only-btn">+ নতুন পার্টি/ডিলার যোগ</button>
                 </div>
-
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs border-collapse border border-slate-200">
                         <thead class="bg-slate-100 text-slate-700">
@@ -216,8 +219,9 @@
                                 <th class="border p-2 text-center">ক্রমিক</th>
                                 <th class="border p-2">পার্টির নাম</th>
                                 <th class="border p-2">এরিয়া / এলাকা</th>
-                                <th class="border p-2 text-right">মাল নেওয়া (ডিপোজিট/ডেবিট)</th>
-                                <th class="border p-2 text-right">টাকা পরিশোধ (ক্রেডিট)</th>
+                                <th class="border p-2">অ্যাসাইনড অফিসার</th>
+                                <th class="border p-2 text-right">মাল নেওয়া (ডিপোজিট)</th>
+                                <th class="border p-2 text-right">টাকা পরিশোধ (কালেকশন)</th>
                                 <th class="border p-2 text-right">বর্তমান বকেয়া</th>
                                 <th class="border p-2 text-center">অ্যাকশন</th>
                             </tr>
@@ -227,10 +231,50 @@
                 </div>
             </section>
 
-            <!-- Balance Sheet Tab (Admin Only) -->
-            <section id="tab-balance-sheet" class="hidden bg-white p-6 rounded-xl shadow admin-section">
-                <h2 class="font-bold text-lg mb-3">ব্যালেন্স শীট</h2>
-                <p class="text-xs text-gray-500">প্রতিষ্ঠানের সামগ্রিক আর্থিক সারসংক্ষেপ।</p>
+            <!-- Balance Sheet & Profit/Loss Tab (Admin Only) -->
+            <section id="tab-balance-sheet" class="hidden bg-white p-6 rounded-xl shadow admin-section space-y-6">
+                <div class="border-b pb-3 flex justify-between items-center">
+                    <div>
+                        <h2 class="font-bold text-lg text-slate-800">ব্যালেন্স শীট ও লাভ-ক্ষতি (Profit & Loss) হিসাব</h2>
+                        <p class="text-xs text-gray-500">মাসিক কোম্পানির সার্বিক আর্থিক সারসংক্ষেপ</p>
+                    </div>
+                    <button onclick="window.print()" class="no-print bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg">রিপোর্ট প্রিন্ট</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+                        <p class="text-xs font-semibold text-emerald-800">মোট পণ্য ক্রয় (Supplier Cost)</p>
+                        <h3 id="bs-total-purchase" class="text-xl font-bold text-emerald-700 mt-1">৳ ০</h3>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+                        <p class="text-xs font-semibold text-emerald-800">মোট পণ্য বিক্রি / সেলস (Total Sales)</p>
+                        <h3 id="bs-total-sales" class="text-xl font-bold text-emerald-700 mt-1">৳ ০</h3>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+                        <p class="text-xs font-semibold text-emerald-800">মোট কালেকশন (Total Collection)</p>
+                        <h3 id="bs-total-collection" class="text-xl font-bold text-emerald-700 mt-1">৳ ০</h3>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 border p-5 rounded-2xl space-y-3">
+                    <h3 class="font-bold text-sm text-slate-700 border-b pb-2">লাভ ও ক্ষতির হিসাব বিবরণী (<span id="bs-month-label">অক্টোবর ২০২৬</span>)</h3>
+                    <div class="flex justify-between text-sm">
+                        <span>মোট আয় / সেলস:</span>
+                        <span id="bs-calc-income" class="font-bold text-emerald-600">৳ ০</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span>বাদ: মোট অপারেশনাল ব্যয় (Expenses):</span>
+                        <span id="bs-calc-expense" class="font-bold text-rose-600">৳ ০</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span>বাদ: মোট পণ্য ক্রয় খরচ (Purchase):</span>
+                        <span id="bs-calc-purchase" class="font-bold text-blue-600">৳ ০</span>
+                    </div>
+                    <div class="border-t pt-3 flex justify-between items-center">
+                        <span class="font-bold text-base">নিট লাভ / (ক্ষতি):</span>
+                        <span id="bs-net-profit" class="text-xl font-extrabold">৳ ০</span>
+                    </div>
+                </div>
             </section>
         </main>
     </div>
@@ -243,7 +287,6 @@
                 <h3 class="font-bold text-slate-800 text-base" id="details-modal-title">খাতের বিবরণ ও ইতিহাস</h3>
                 <button onclick="closeDetailsModal()" class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
             </div>
-            
             <div class="max-h-60 overflow-y-auto">
                 <table class="w-full text-left text-xs border-collapse border border-slate-200">
                     <thead class="bg-slate-100">
@@ -257,7 +300,6 @@
                     <tbody id="details-modal-tbody"></tbody>
                 </table>
             </div>
-
             <div class="flex justify-end pt-2 border-t">
                 <button onclick="closeDetailsModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-slate-700 text-xs font-semibold rounded-lg">বন্ধ করুন</button>
             </div>
@@ -271,34 +313,32 @@
                 <h3 class="font-bold text-slate-800 text-base">লেনদেন সংশোধন</h3>
                 <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 font-bold">✕</button>
             </div>
-            
             <div class="space-y-3">
                 <div>
                     <label class="text-xs text-gray-600 font-semibold">তারিখ:</label>
-                    <input type="date" id="edit-modal-date" class="border p-2 rounded-lg w-full text-sm mt-1 focus:outline-none focus:border-blue-600">
+                    <input type="date" id="edit-modal-date" class="border p-2 rounded-lg w-full text-sm mt-1">
                 </div>
                 <div>
-                    <label class="text-xs text-gray-600 font-semibold">নতুন টাকার পরিমাণ লিখুন:</label>
-                    <input type="number" id="edit-modal-amount" placeholder="500" class="border p-2 rounded-lg w-full text-sm mt-1 focus:outline-none focus:border-blue-600">
+                    <label class="text-xs text-gray-600 font-semibold">টাকার পরিমাণ:</label>
+                    <input type="number" id="edit-modal-amount" class="border p-2 rounded-lg w-full text-sm mt-1">
                 </div>
                 <div>
-                    <label class="text-xs text-gray-600 font-semibold">মন্তব্য / বিবরণ:</label>
-                    <input type="text" id="edit-modal-note" placeholder="বিবরণ লিখুন" class="border p-2 rounded-lg w-full text-sm mt-1 focus:outline-none focus:border-blue-600">
+                    <label class="text-xs text-gray-600 font-semibold">মন্তব্য:</label>
+                    <input type="text" id="edit-modal-note" class="border p-2 rounded-lg w-full text-sm mt-1">
                 </div>
             </div>
-
             <div class="flex justify-end gap-3 pt-2">
-                <button onclick="closeEditModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-slate-700 text-xs font-semibold rounded-lg">Cancel</button>
-                <button onclick="saveSingleTransactionEdit()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg">OK</button>
+                <button onclick="closeEditModal()" class="px-4 py-2 bg-gray-200 text-xs font-semibold rounded-lg">বাতিল</button>
+                <button onclick="saveSingleTransactionEdit()" class="px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-lg">সংরক্ষণ</button>
             </div>
         </div>
     </div>
 
-    <!-- 3. EDIT MONTH NAME MODAL -->
+    <!-- 3. MONTH NAME MODAL -->
     <div id="month-modal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center p-4 z-50">
         <div class="bg-white p-5 rounded-2xl max-w-xs w-full space-y-3 shadow-2xl">
             <h3 class="font-bold text-slate-800 text-sm">মাসের নাম সংশোধন</h3>
-            <input type="text" id="month-input" placeholder="যেমন: অক্টোবর ২০২৬" class="border p-2 rounded-lg w-full text-sm">
+            <input type="text" id="month-input" class="border p-2 rounded-lg w-full text-sm">
             <div class="flex justify-end gap-2 pt-2">
                 <button onclick="closeMonthModal()" class="px-3 py-1.5 bg-gray-200 text-xs font-semibold rounded-lg">বাতিল</button>
                 <button onclick="saveMonthName()" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg">সেভ</button>
@@ -306,33 +346,63 @@
         </div>
     </div>
 
-  <!-- 4. ADD PARTY MODAL -->
+    <!-- 4. ADD PARTY MODAL -->
     <div id="party-modal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center p-4 z-50">
         <div class="bg-white p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl">
             <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-slate-800 text-base">নতুন পার্টি যোগ করুন</h3>
+                <h3 class="font-bold text-slate-800 text-base">নতুন পার্টি/ডিলার যোগ</h3>
                 <button onclick="closeAddPartyModal()" class="text-gray-400 hover:text-gray-600 font-bold">✕</button>
             </div>
             <div class="space-y-3">
                 <div>
                     <label class="text-xs text-gray-600 font-semibold">পার্টির নাম:</label>
-                    <input type="text" id="party-name" placeholder="দোকান বা পার্টির নাম" class="border p-2 rounded-lg w-full text-sm mt-1">
+                    <input type="text" id="party-name" class="border p-2 rounded-lg w-full text-sm mt-1">
                 </div>
                 <div>
                     <label class="text-xs text-gray-600 font-semibold">এরিয়া / এলাকা:</label>
-                    <input type="text" id="party-area" placeholder="যেমন: পাবনা সদর" class="border p-2 rounded-lg w-full text-sm mt-1">
+                    <input type="text" id="party-area" class="border p-2 rounded-lg w-full text-sm mt-1">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-600 font-semibold">অ্যাসাইনড অফিসার (ইউজারনেম):</label>
+                    <input type="text" id="party-officer" placeholder="যেমন: officer1" class="border p-2 rounded-lg w-full text-sm mt-1">
                 </div>
             </div>
             <div class="flex justify-end gap-2 pt-2">
                 <button onclick="closeAddPartyModal()" class="px-3 py-1.5 bg-gray-200 text-xs font-semibold rounded-lg">বাতিল</button>
-                <button onclick="saveParty()" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg">সেভ করুন</button>
+                <button onclick="saveParty()" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg">সেভ</button>
+            </div>
+        </div>
+    </div>
+     <!-- 5. ADD SUPPLIER MODAL -->
+    <div id="supplier-modal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="font-bold text-slate-800 text-base">নতুন সাপ্লাইয়ার যোগ করুন</h3>
+                <button onclick="closeAddSupplierModal()" class="text-gray-400 hover:text-gray-600 font-bold">✕</button>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs text-gray-600 font-semibold">সাপ্লাইয়ারের নাম:</label>
+                    <input type="text" id="sup-name" class="border p-2 rounded-lg w-full text-sm mt-1">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-600 font-semibold">পণ্য ক্রয়ের পরিমাণ (Debit):</label>
+                    <input type="number" id="sup-debit" value="0" class="border p-2 rounded-lg w-full text-sm mt-1">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-600 font-semibold">পরিশোধিত পেমেন্ট (Credit):</label>
+                    <input type="number" id="sup-credit" value="0" class="border p-2 rounded-lg w-full text-sm mt-1">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeAddSupplierModal()" class="px-3 py-1.5 bg-gray-200 text-xs font-semibold rounded-lg">বাতিল</button>
+                <button onclick="saveSupplier()" class="px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg">সেভ</button>
             </div>
         </div>
     </div>
 
     <!-- Script Block -->
     <script>
-        // State Management
         let categories = JSON.parse(localStorage.getItem('fl_categories')) || [
             { name: 'Administration', type: 'expense' },
             { name: 'Mobile Banking charge', type: 'expense' },
@@ -359,11 +429,15 @@
 
         let transactions = JSON.parse(localStorage.getItem('fl_transactions')) || [];
         let parties = JSON.parse(localStorage.getItem('fl_parties')) || [
-            { id: 1, name: 'মেসার্স ভাই ভাই স্টোর', area: 'পাবনা সদর', debit: 15000, credit: 5000 }
+            { id: 1, name: 'মেসার্স ভাই ভাই স্টোর', area: 'পাবনা সদর', officer: 'officer1', debit: 15000, credit: 5000 }
+        ];
+        let suppliers = JSON.parse(localStorage.getItem('fl_suppliers')) || [
+            { id: 1, name: 'মেসার্স হার্বাল সাপ্লাইয়ার্স', debit: 50000, credit: 30000 }
         ];
 
         let currentMonthName = localStorage.getItem('fl_month_name') || 'অক্টোবর ২০২৬';
         let currentUserRole = localStorage.getItem('fl_user_role') || 'admin';
+        let currentUsername = localStorage.getItem('fl_username') || 'admin';
         
         let currentSelectedCategory = null;
         let activeEditTxIndex = null;
@@ -372,22 +446,25 @@
             localStorage.setItem('fl_categories', JSON.stringify(categories));
             localStorage.setItem('fl_transactions', JSON.stringify(transactions));
             localStorage.setItem('fl_parties', JSON.stringify(parties));
+            localStorage.setItem('fl_suppliers', JSON.stringify(suppliers));
             localStorage.setItem('fl_month_name', currentMonthName);
             localStorage.setItem('fl_user_role', currentUserRole);
+            localStorage.setItem('fl_username', currentUsername);
         }
 
-        // Auth Systems
         function checkLogin() {
             const u = document.getElementById('login-user').value.trim();
             const p = document.getElementById('login-pass').value.trim();
             
             if (u === 'admin' && p === 'admin') {
                 currentUserRole = 'admin';
+                currentUsername = 'admin';
                 localStorage.setItem('isLoggedIn', 'true');
                 saveData();
                 startAppSession();
-            } else if (u === 'officer' && p === 'officer') {
+            } else if (u.startsWith('officer') && p === 'officer') {
                 currentUserRole = 'area_officer';
+                currentUsername = u; // যেমন officer1
                 localStorage.setItem('isLoggedIn', 'true');
                 saveData();
                 startAppSession();
@@ -406,24 +483,27 @@
         function logout() {
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('fl_user_role');
+            localStorage.removeItem('fl_username');
             document.getElementById('app-content').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
         }
-
         function applyRolePermissions() {
             const adminNavs = document.querySelectorAll('.admin-nav');
             const adminSections = document.querySelectorAll('.admin-section');
+            const adminOnlyBtns = document.querySelectorAll('.admin-only-btn');
             const roleBadge = document.getElementById('user-role-badge');
 
             if (currentUserRole === 'area_officer') {
-                roleBadge.innerText = 'রোল: এরিয়া অফিসার';
+                roleBadge.innerText = `অফিসার: ${currentUsername}`;
                 adminNavs.forEach(el => el.style.display = 'none');
                 adminSections.forEach(el => el.style.display = 'none');
+                adminOnlyBtns.forEach(el => el.style.display = 'none');
                 switchTab('parties');
             } else {
                 roleBadge.innerText = 'রোল: অ্যাডমিন';
                 adminNavs.forEach(el => el.style.display = 'block');
                 adminSections.forEach(el => el.style.display = 'block');
+                adminOnlyBtns.forEach(el => el.style.display = 'block');
                 switchTab('dashboard');
             }
         }
@@ -446,12 +526,11 @@
             });
         }
 
-        // Category Filter & Add
+        // Category & Transaction Functions
         function addCategory() {
             const name = document.getElementById('new-category-name').value.trim();
             const type = document.getElementById('new-category-type').value;
             if (!name) return alert('খাতের নাম লিখুন!');
-            
             categories.push({ name, type });
             saveData();
             document.getElementById('new-category-name').value = '';
@@ -464,13 +543,12 @@
             const selectedType = document.getElementById('new-category-type').value;
             const catContainer = document.getElementById('category-list');
             catContainer.innerHTML = '';
-            
             categories.forEach((c, index) => {
                 if (c.type === selectedType) {
                     catContainer.innerHTML += `
                         <span class="text-xs px-2 py-1 rounded ${c.type === 'income' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'} border flex items-center gap-1">
-                            ${c.name} (${c.type === 'income' ? 'আয়' : 'ব্যয়'})
-                            <button onclick="deleteCategory(${index})" class="text-red-600 font-bold hover:text-red-800 ml-1">✕</button>
+                            ${c.name}
+                            <button onclick="deleteCategory(${index})" class="text-red-600 font-bold ml-1">✕</button>
                         </span>
                     `;
                 }
@@ -478,7 +556,7 @@
         }
 
         function deleteCategory(index) {
-            if (confirm('আপনি কি এই খাতটি মুছে ফেলতে চান?')) {
+            if (confirm('মুছে ফেলতে চান?')) {
                 categories.splice(index, 1);
                 saveData();
                 renderCategoryChips();
@@ -496,7 +574,6 @@
             });
         }
 
-              // Transaction Add
         function addTransaction() {
             const date = document.getElementById('ie-date').value;
             const type = document.getElementById('ie-type-selector').value;
@@ -504,57 +581,83 @@
             const amount = parseFloat(document.getElementById('ie-amount').value);
             const note = document.getElementById('ie-note').value;
 
-            if (!date || isNaN(amount) || amount <= 0) return alert('তারিখ এবং সঠিক টাকার পরিমাণ লিখুন!');
-
+            if (!date || isNaN(amount) || amount <= 0) return alert('সঠিক তথ্য দিন!');
             transactions.push({ date, type, category, amount, note });
             saveData();
-
             document.getElementById('ie-amount').value = '';
             document.getElementById('ie-note').value = '';
             renderApp();
         }
 
-        // Month Name Handlers
-        function editMonthName() {
-            document.getElementById('month-input').value = currentMonthName;
-            document.getElementById('month-modal').classList.remove('hidden');
-            document.getElementById('month-modal').classList.add('flex');
+        // Supplier Functions
+        function openAddSupplierModal() {
+            document.getElementById('sup-name').value = '';
+            document.getElementById('sup-debit').value = '0';
+            document.getElementById('sup-credit').value = '0';
+            document.getElementById('supplier-modal').classList.remove('hidden');
+            document.getElementById('supplier-modal').classList.add('flex');
+        }
+        function closeAddSupplierModal() {
+            document.getElementById('supplier-modal').classList.add('hidden');
+            document.getElementById('supplier-modal').classList.remove('flex');
+        }
+        function saveSupplier() {
+            const name = document.getElementById('sup-name').value.trim();
+            const debit = parseFloat(document.getElementById('sup-debit').value) || 0;
+            const credit = parseFloat(document.getElementById('sup-credit').value) || 0;
+            if (!name) return alert('সাপ্লাইয়ারের নাম দিন!');
+            suppliers.push({ id: Date.now(), name, debit, credit });
+            saveData();
+            closeAddSupplierModal();
+            renderSuppliersTable();
+            renderBalanceSheet();
         }
 
-        function closeMonthModal() {
-            document.getElementById('month-modal').classList.add('hidden');
-            document.getElementById('month-modal').classList.remove('flex');
+        function renderSuppliersTable() {
+            const tbody = document.getElementById('supplier-table-body');
+            tbody.innerHTML = '';
+            suppliers.forEach((s, idx) => {
+                const due = s.debit - s.credit;
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="border p-2 text-center">${idx + 1}</td>
+                        <td class="border p-2 font-medium">${s.name}</td>
+                        <td class="border p-2 text-right text-emerald-700">৳ ${s.debit.toLocaleString('bn-BD')}</td>
+                        <td class="border p-2 text-right text-rose-700">৳ ${s.credit.toLocaleString('bn-BD')}</td>
+                        <td class="border p-2 text-right font-bold text-amber-700">৳ ${due.toLocaleString('bn-BD')}</td>
+                        <td class="border p-2 text-center">
+                            <button onclick="deleteSupplier(${idx})" class="bg-rose-100 text-rose-700 text-xs px-2 py-0.5 rounded">✕</button>
+                        </td>
+                    </tr>
+                `;
+            });
         }
-
-        function saveMonthName() {
-            const val = document.getElementById('month-input').value.trim();
-            if (val) {
-                currentMonthName = val;
+        function deleteSupplier(idx) {
+            if (confirm('মুছে ফেলতে চান?')) {
+                suppliers.splice(idx, 1);
                 saveData();
-                document.getElementById('custom-month-display').innerText = currentMonthName;
+                renderSuppliersTable();
+                renderBalanceSheet();
             }
-            closeMonthModal();
         }
-
-        // Party Management Functions
+           // Party Management
         function openAddPartyModal() {
             document.getElementById('party-name').value = '';
             document.getElementById('party-area').value = '';
+            document.getElementById('party-officer').value = currentUsername;
             document.getElementById('party-modal').classList.remove('hidden');
             document.getElementById('party-modal').classList.add('flex');
         }
-
         function closeAddPartyModal() {
             document.getElementById('party-modal').classList.add('hidden');
             document.getElementById('party-modal').classList.remove('flex');
         }
-
         function saveParty() {
             const name = document.getElementById('party-name').value.trim();
             const area = document.getElementById('party-area').value.trim();
+            const officer = document.getElementById('party-officer').value.trim();
             if (!name) return alert('পার্টির নাম লিখুন!');
-
-            parties.push({ id: Date.now(), name, area: area || 'সাধারণ', debit: 0, credit: 0 });
+            parties.push({ id: Date.now(), name, area: area || 'সাধারণ', officer: officer || 'admin', debit: 0, credit: 0 });
             saveData();
             closeAddPartyModal();
             renderPartiesTable();
@@ -564,142 +667,160 @@
             const tbody = document.getElementById('party-table-body');
             tbody.innerHTML = '';
 
-            if (parties.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="border p-4 text-center text-gray-400">কোনো পার্টির তথ্য পাওয়া যায়নি।</td></tr>`;
+            let filteredParties = parties;
+            if (currentUserRole === 'area_officer') {
+                filteredParties = parties.filter(p => p.officer === currentUsername);
+            }
+
+            if (filteredParties.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="border p-4 text-center text-gray-400">কোনো পার্টি পাওয়া যায়নি।</td></tr>`;
                 return;
             }
 
-            parties.forEach((p, index) => {
+            filteredParties.forEach((p, index) => {
                 const due = p.debit - p.credit;
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-50">
                         <td class="border p-2 text-center">${index + 1}</td>
                         <td class="border p-2 font-medium">${p.name}</td>
                         <td class="border p-2">${p.area}</td>
+                        <td class="border p-2">${p.officer}</td>
                         <td class="border p-2 text-right text-emerald-700">৳ ${p.debit.toLocaleString('bn-BD')}</td>
                         <td class="border p-2 text-right text-rose-700">৳ ${p.credit.toLocaleString('bn-BD')}</td>
                         <td class="border p-2 text-right font-bold text-amber-700">৳ ${due.toLocaleString('bn-BD')}</td>
                         <td class="border p-2 text-center">
-                            <button onclick="alert('পার্টি লেজার ও ট্রানজেকশন আপডেট শিট আসছে...')" class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs px-2 py-1 rounded">লেজার</button>
+                            <button onclick="alert('লেজার স্টেটমেন্ট শীট')" class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">ডিটেইলস</button>
                         </td>
                     </tr>
                 `;
             });
         }
 
-        // --- DETAILS HISTORY MODAL LOGIC ---
+        // Month & Details Modal
+        function editMonthName() {
+            document.getElementById('month-input').value = currentMonthName;
+            document.getElementById('month-modal').classList.remove('hidden');
+            document.getElementById('month-modal').classList.add('flex');
+        }
+        function closeMonthModal() {
+            document.getElementById('month-modal').classList.add('hidden');
+            document.getElementById('month-modal').classList.remove('flex');
+        }
+        function saveMonthName() {
+            const val = document.getElementById('month-input').value.trim();
+            if (val) {
+                currentMonthName = val;
+                saveData();
+                document.getElementById('custom-month-display').innerText = currentMonthName;
+                document.getElementById('bs-month-label').innerText = currentMonthName;
+            }
+            closeMonthModal();
+        }
+
         function openDetailsModal(catName) {
             currentSelectedCategory = catName;
-            document.getElementById('details-modal-title').innerText = `${catName} - লেনদেনের বিবরণ`;
+            document.getElementById('details-modal-title').innerText = `${catName} - ইতিহাস`;
             renderDetailsHistoryTable();
             document.getElementById('details-modal').classList.remove('hidden');
             document.getElementById('details-modal').classList.add('flex');
         }
-
         function closeDetailsModal() {
             document.getElementById('details-modal').classList.add('hidden');
             document.getElementById('details-modal').classList.remove('flex');
-            currentSelectedCategory = null;
         }
-
         function renderDetailsHistoryTable() {
             const tbody = document.getElementById('details-modal-tbody');
             tbody.innerHTML = '';
-
-            const catTxList = transactions
-                .map((t, originalIndex) => ({ ...t, originalIndex }))
-                .filter(t => t.category === currentSelectedCategory);
-
-            if (catTxList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="border p-4 text-center text-gray-400">কোনো লেনদেনের ইতিহাস পাওয়া যায়নি।</td></tr>`;
+            const list = transactions.map((t, i) => ({...t, i})).filter(t => t.category === currentSelectedCategory);
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="border p-3 text-center text-gray-400">রেকর্ড নেই</td></tr>`;
                 return;
             }
-
-            catTxList.forEach(item => {
+            list.forEach(item => {
                 tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b">
+                    <tr class="border-b">
                         <td class="border p-2">${item.date}</td>
                         <td class="border p-2">${item.note || '-'}</td>
                         <td class="border p-2 text-right font-bold">৳ ${item.amount}</td>
-                        <td class="border p-2 text-center space-x-1">
-                            <button onclick="openSingleEditModal(${item.originalIndex})" class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs px-2 py-0.5 rounded">এডিট</button>
-                            <button onclick="deleteSingleTransaction(${item.originalIndex})" class="bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs px-1.5 py-0.5 rounded">✕</button>
+                        <td class="border p-2 text-center">
+                            <button onclick="deleteSingleTransaction(${item.i})" class="bg-rose-100 text-rose-700 text-xs px-2 py-0.5 rounded">✕</button>
                         </td>
                     </tr>
                 `;
             });
         }
-
-        function openSingleEditModal(index) {
-            activeEditTxIndex = index;
-            const item = transactions[index];
-
-            document.getElementById('edit-modal-date').value = item.date;
-            document.getElementById('edit-modal-amount').value = item.amount;
-            document.getElementById('edit-modal-note').value = item.note || '';
-
-            document.getElementById('edit-modal').classList.remove('hidden');
-            document.getElementById('edit-modal').classList.add('flex');
-        }
-
-        function closeEditModal() {
-            document.getElementById('edit-modal').classList.add('hidden');
-            document.getElementById('edit-modal').classList.remove('flex');
-            activeEditTxIndex = null;
-        }
-
-        function saveSingleTransactionEdit() {
-            if (activeEditTxIndex !== null) {
-                const newDate = document.getElementById('edit-modal-date').value;
-                const newAmount = parseFloat(document.getElementById('edit-modal-amount').value);
-                const newNote = document.getElementById('edit-modal-note').value;
-
-                if (!newDate || isNaN(newAmount) || newAmount <= 0) {
-                    return alert('সঠিক তারিখ ও টাকার পরিমাণ লিখুন!');
-                }
-
-                transactions[activeEditTxIndex].date = newDate;
-                transactions[activeEditTxIndex].amount = newAmount;
-                transactions[activeEditTxIndex].note = newNote;
-
-                saveData();
-                renderApp();
-                if (currentSelectedCategory) {
-                    renderDetailsHistoryTable();
-                }
-                closeEditModal();
-            }
-        }
-        function deleteSingleTransaction(index) {
-            if (confirm('আপনি কি নিশ্চিত যে এই লেনদেনটি মুছে ফেলতে চান?')) {
-                transactions.splice(index, 1);
+        function deleteSingleTransaction(i) {
+            if (confirm('মুছে ফেলতে চান?')) {
+                transactions.splice(i, 1);
                 saveData();
                 renderApp();
                 renderDetailsHistoryTable();
             }
         }
 
+        // Balance Sheet & Profit Loss Calculation
+        function renderBalanceSheet() {
+            let totalIncome = 0;
+            let totalExpense = 0;
+            let totalPurchaseCost = 0;
+
+            transactions.forEach(t => {
+                if (t.type === 'income') totalIncome += t.amount;
+                if (t.type === 'expense') {
+                    totalExpense += t.amount;
+                    if (t.category.toLowerCase().includes('purchase')) {
+                        totalPurchaseCost += t.amount;
+                    }
+                }
+            });
+
+            // সাপ্লাইয়ার থেকে ক্রয়ের হিসাব
+            let totalSupplierPurchase = suppliers.reduce((acc, curr) => acc + curr.debit, 0);
+            let totalSupplierPaid = suppliers.reduce((acc, curr) => acc + curr.credit, 0);
+            let combinedPurchase = totalPurchaseCost + totalSupplierPurchase;
+
+            document.getElementById('bs-total-purchase').innerText = `৳ ${combinedPurchase.toLocaleString('bn-BD')}`;
+            document.getElementById('bs-total-sales').innerText = `৳ ${totalIncome.toLocaleString('bn-BD')}`;
+            document.getElementById('bs-total-collection').innerText = `৳ ${totalSupplierPaid.toLocaleString('bn-BD')}`;
+
+            document.getElementById('bs-calc-income').innerText = `৳ ${totalIncome.toLocaleString('bn-BD')}`;
+            document.getElementById('bs-calc-expense').innerText = `৳ ${totalExpense.toLocaleString('bn-BD')}`;
+            document.getElementById('bs-calc-purchase').innerText = `৳ ${combinedPurchase.toLocaleString('bn-BD')}`;
+
+            // নিট লাভ বা ক্ষতি হিসাব: মোট আয় - (মোট খরচ + মোট ক্রয়)
+            let netProfit = totalIncome - (totalExpense + combinedPurchase);
+            const netProfitEl = document.getElementById('bs-net-profit');
+            
+            if (netProfit >= 0) {
+                netProfitEl.className = "text-xl font-extrabold text-emerald-600";
+                netProfitEl.innerText = `৳ ${netProfit.toLocaleString('bn-BD')} (লাভ 🟢)`;
+            } else {
+                netProfitEl.className = "text-xl font-extrabold text-rose-600";
+                netProfitEl.innerText = `৳ ${Math.abs(netProfit).toLocaleString('bn-BD')} (ক্ষতি 🔴)`;
+            }
+        }
+
         // Render Application
         function renderApp() {
             document.getElementById('custom-month-display').innerText = currentMonthName;
+            document.getElementById('bs-month-label').innerText = currentMonthName;
+            
             renderCategoryChips();
+            renderSuppliersTable();
             renderPartiesTable();
 
             if (currentUserRole === 'area_officer') return;
 
             const incomeTbody = document.getElementById('income-table-body');
             const expenseTbody = document.getElementById('expense-table-body');
-            
             incomeTbody.innerHTML = '';
             expenseTbody.innerHTML = '';
 
             let totalIncome = 0;
             let totalExpense = 0;
-            let incCount = 0;
-            let expCount = 0;
+            let incCount = 0, expCount = 0;
 
-            // Render Income Categories
-            categories.filter(c => c.type === 'income').forEach((c) => {
+            categories.filter(c => c.type === 'income').forEach(c => {
                 incCount++;
                 const catTx = transactions.filter(t => t.category === c.name);
                 const sum = catTx.reduce((acc, curr) => acc + curr.amount, 0);
@@ -712,14 +833,13 @@
                         <td class="border p-2 text-right font-bold text-emerald-700">৳ ${sum}</td>
                         <td class="border p-2"></td>
                         <td class="border p-2 text-center no-print">
-                            <button onclick="openDetailsModal('${c.name}')" class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded hover:bg-blue-200">ডিটেইলস (${catTx.length})</button>
+                            <button onclick="openDetailsModal('${c.name}')" class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">ডিটেইলস</button>
                         </td>
                     </tr>
                 `;
             });
 
-            // Render Expense Categories
-            categories.filter(c => c.type === 'expense').forEach((c) => {
+            categories.filter(c => c.type === 'expense').forEach(c => {
                 expCount++;
                 const catTx = transactions.filter(t => t.category === c.name);
                 const sum = catTx.reduce((acc, curr) => acc + curr.amount, 0);
@@ -732,36 +852,27 @@
                         <td class="border p-2 text-right font-bold text-rose-700">৳ ${sum}</td>
                         <td class="border p-2"></td>
                         <td class="border p-2 text-center no-print">
-                            <button onclick="openDetailsModal('${c.name}')" class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded hover:bg-blue-200">ডিটেইলস (${catTx.length})</button>
+                            <button onclick="openDetailsModal('${c.name}')" class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">ডিটেইলস</button>
                         </td>
                     </tr>
                 `;
             });
 
-            // Totals Display
             document.getElementById('income-section-total').innerText = `৳ ${totalIncome.toLocaleString('bn-BD')}`;
             document.getElementById('expense-section-total').innerText = `৳ ${totalExpense.toLocaleString('bn-BD')}`;
             document.getElementById('dash-total-income').innerText = `৳ ${totalIncome.toLocaleString('bn-BD')}`;
             document.getElementById('dash-total-expense').innerText = `৳ ${totalExpense.toLocaleString('bn-BD')}`;
+
+            renderBalanceSheet();
         }
 
-        // PDF Download
         function downloadPDF() {
             const element = document.getElementById('printable-statement');
-            const opt = {
-                margin:       0.3,
-                filename:     `FastLab_Statement_${currentMonthName}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
+            html2pdf().from(element).save(`FastLab_Statement_${currentMonthName}.pdf`);
         }
 
-        // Auto Login Check on Page Load
         window.addEventListener('DOMContentLoaded', () => {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (isLoggedIn === 'true') {
+            if (localStorage.getItem('isLoggedIn') === 'true') {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app-content').classList.remove('hidden');
                 applyRolePermissions();
