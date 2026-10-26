@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>অ্যাডমিন প্যানেল - ফাস্টল্যাব ইউনানী</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/bundle.min.js"></script>
+    <style>
+        body { font-family: 'Hind Siliguri', sans-serif; }
+        @media print { .no-print { display: none !important; } }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
+
+    <header class="bg-emerald-700 text-white shadow-md p-4 text-center relative no-print">
+        <h1 class="text-2xl font-bold">ফাস্টল্যাব ইউনানী - অ্যাডমিন প্যানেল</h1>
+        <p class="text-xs text-emerald-100">আফুরিয়া, হেমাইতপুর, পাবনা</p>
+        <button onclick="logout()" class="absolute right-4 top-4 bg-rose-800 hover:bg-rose-700 text-xs text-white px-3 py-1.5 rounded-lg transition">লগআউট</button>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-4 space-y-6">
+        <!-- Navigation Tabs -->
+        <div class="flex overflow-x-auto bg-white p-2 rounded-xl shadow gap-2 text-sm font-medium no-print">
+            <button onclick="switchTab('income-expense')" id="btn-income-expense" class="px-4 py-2 bg-emerald-600 text-white rounded-lg whitespace-nowrap">আয় ও ব্যয়</button>
+            <button onclick="switchTab('suppliers')" id="btn-suppliers" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">সাপ্লাইয়ার ম্যানেজমেন্ট</button>
+            <button onclick="switchTab('parties')" id="btn-parties" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">পার্টি ম্যানেজমেন্ট</button>
+            <button onclick="switchTab('balance-sheet')" id="btn-balance-sheet" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">ব্যালেন্স শীট ও লাভ-ক্ষতি</button>
+        </div>
+
+        <!-- 1. Income & Expense Tab -->
+        <section id="tab-income-expense" class="space-y-6 bg-white p-6 rounded-xl shadow">
+            <div class="flex justify-between items-center border-b pb-3 no-print">
+                <h2 class="text-lg font-bold">আয় ও ব্যয় হিসাব ব্যবস্থাপনা</h2>
+                <button onclick="downloadPDF()" class="bg-rose-600 text-white px-3 py-1.5 rounded text-sm font-semibold">PDF ডাউনলোড</button>
+            </div>
+            <!-- আয়া-ব্যয়ের ফরম ও টেবিল এখানে থাকবে -->
+            <div class="space-y-4">
+                <div class="flex gap-2">
+                    <input type="text" id="inc-cat" placeholder="নতুন খাত" class="border p-2 rounded text-sm w-full">
+                    <button onclick="addCat()" class="bg-emerald-600 text-white px-4 rounded text-sm">যোগ</button>
+                </div>
+                <div id="cat-list" class="flex flex-wrap gap-2"></div>
+            </div>
+        </section>
+
+        <!-- 2. Suppliers Tab -->
+        <section id="tab-suppliers" class="hidden bg-white p-6 rounded-xl shadow space-y-4">
+            <h2 class="font-bold text-lg">সাপ্লাইয়ার ম্যানেজমেন্ট ও ক্রয় হিসাব</h2>
+            <p class="text-xs text-gray-500">এখানে সাপ্লাইয়ারদের পণ্য ক্রয় এবং পেমেন্ট হিসাব থাকবে।</p>
+        </section>
+
+        <!-- 3. Parties Tab (Admin Full Access) -->
+        <section id="tab-parties" class="hidden bg-white p-6 rounded-xl shadow space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h2 class="font-bold text-lg">পার্টি ম্যানেজমেন্ট (অ্যাডমিন কন্ট্রোল)</h2>
+                <button onclick="alert('নতুন পার্টি যোগ ফরম')" class="bg-emerald-600 text-white text-xs px-3 py-2 rounded-lg">+ নতুন পার্টি</button>
+            </div>
+            <div id="admin-party-list" class="text-sm">সব পার্টির লিস্ট এবং এডিট অপশন এখানে থাকবে।</div>
+        </section>
+
+        <!-- 4. Balance Sheet & Profit/Loss Tab -->
+        <section id="tab-balance-sheet" class="hidden bg-white p-6 rounded-xl shadow space-y-6">
+            <h2 class="font-bold text-lg">মাসিক লাভ-ক্ষতি ও ব্যালেন্স শীট</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+                    <p class="text-xs font-semibold text-emerald-800">মোট ক্রয় (Purchase)</p>
+                    <h3 class="text-xl font-bold text-emerald-700 mt-1">৳ ০</h3>
+                </div>
+                <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+                    <p class="text-xs font-semibold text-emerald-800">মোট বিক্রি (Sales)</p>
+                    <h3 class="text-xl font-bold text-emerald-700 mt-1">৳ ০</h3>
+                </div>
+                <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+                    <p class="text-xs font-semibold text-emerald-800">নিট লাভ / (ক্ষতি)</p>
+                    <h3 class="text-xl font-bold text-emerald-700 mt-1">৳ ০</h3>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        if (localStorage.getItem('isLoggedIn') !== 'true' || localStorage.getItem('role') !== 'admin') {
+            window.location.href = 'index.html';
+        }
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'index.html';
+        }
+        function switchTab(tab) {
+            ['income-expense', 'suppliers', 'parties', 'balance-sheet'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tab);
+                document.getElementById(`btn-${t}`).className = t === tab ? "px-4 py-2 bg-emerald-600 text-white rounded-lg whitespace-nowrap" : "px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap";
+            });
+        }
+        function addCat() {}
+        function downloadPDF() {}
+    </script>
+</body>
+</html>
