@@ -28,11 +28,11 @@
             
             <div class="space-y-3 text-left">
                 <div>
-                    <label class="text-xs font-semibold text-gray-600">ইউজারনেম</label>
+                    <label class="text-xs font-semibold text-gray-600">ইউজারনেম (admin বা officer)</label>
                     <input type="text" id="login-user" value="admin" class="w-full border p-2 rounded-lg text-sm mt-1 focus:outline-none focus:border-emerald-600">
                 </div>
                 <div>
-                    <label class="text-xs font-semibold text-gray-600">পাসওয়ার্ড</label>
+                    <label class="text-xs font-semibold text-gray-600">পাসওয়ার্ড (admin বা officer)</label>
                     <input type="password" id="login-pass" value="admin" class="w-full border p-2 rounded-lg text-sm mt-1 focus:outline-none focus:border-emerald-600">
                 </div>
             </div>
@@ -49,22 +49,25 @@
         <header class="bg-emerald-700 text-white shadow-md p-4 text-center relative no-print">
             <h1 class="text-2xl font-bold">ফাস্টল্যাব ইউনানী</h1>
             <p class="text-xs text-emerald-100">আফুরিয়া, হেমাইতপুর, পাবনা | মোবাইল: 01335-097460</p>
-            <button onclick="logout()" class="absolute right-4 top-4 bg-emerald-900 hover:bg-rose-700 text-xs text-white px-3 py-1.5 rounded-lg transition">লগআউট</button>
+            <div class="absolute right-4 top-4 flex items-center gap-2">
+                <span id="user-role-badge" class="bg-emerald-900 text-xs px-2 py-1 rounded text-emerald-200"></span>
+                <button onclick="logout()" class="bg-rose-800 hover:bg-rose-700 text-xs text-white px-3 py-1.5 rounded-lg transition">লগআউট</button>
+            </div>
         </header>
 
         <!-- Main Container -->
         <main class="max-w-4xl mx-auto p-4 space-y-6">
             <!-- Navigation Tabs -->
             <div class="flex overflow-x-auto bg-white p-2 rounded-xl shadow gap-2 text-sm font-medium no-print">
-                <button onclick="switchTab('dashboard')" id="btn-dashboard" class="px-4 py-2 bg-emerald-600 text-white rounded-lg whitespace-nowrap">ড্যাশবোর্ড</button>
-                <button onclick="switchTab('income-expense')" id="btn-income-expense" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">আয় ও ব্যয়</button>
-                <button onclick="switchTab('suppliers')" id="btn-suppliers" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">সাপ্লাইয়ার</button>
+                <button onclick="switchTab('dashboard')" id="btn-dashboard" class="px-4 py-2 bg-emerald-600 text-white rounded-lg whitespace-nowrap admin-nav">ড্যাশবোর্ড</button>
+                <button onclick="switchTab('income-expense')" id="btn-income-expense" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap admin-nav">আয় ও ব্যয়</button>
+                <button onclick="switchTab('suppliers')" id="btn-suppliers" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap admin-nav">সাপ্লাইয়ার</button>
                 <button onclick="switchTab('parties')" id="btn-parties" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">পার্টি ম্যানেজমেন্ট</button>
-                <button onclick="switchTab('balance-sheet')" id="btn-balance-sheet" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap">ব্যালেন্স শীট</button>
+                <button onclick="switchTab('balance-sheet')" id="btn-balance-sheet" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap admin-nav">ব্যালেন্স শীট</button>
             </div>
 
             <!-- Dashboard Tab -->
-            <section id="tab-dashboard" class="space-y-4">
+            <section id="tab-dashboard" class="space-y-4 admin-section">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-white p-4 rounded-xl shadow border-l-4 border-emerald-500">
                         <p class="text-xs text-gray-500">চলতি মাসের মোট আয়</p>
@@ -86,7 +89,7 @@
             </section>
 
             <!-- Income & Expense Tab -->
-            <section id="tab-income-expense" class="hidden space-y-6 bg-white p-6 rounded-xl shadow">
+            <section id="tab-income-expense" class="hidden space-y-6 bg-white p-6 rounded-xl shadow admin-section">
                 <div class="flex justify-between items-center border-b pb-3 no-print">
                     <h2 class="text-lg font-bold">আয় ও ব্যয় হিসাব ব্যবস্থাপনা</h2>
                     <button onclick="downloadPDF()" class="bg-rose-600 text-white px-3 py-1.5 rounded text-sm font-semibold hover:bg-rose-700">A4 PDF ডাউনলোড</button>
@@ -133,7 +136,6 @@
                         <div class="flex justify-between items-center border-b pb-1">
                             <h3 class="font-bold text-emerald-700 text-sm border-l-4 border-emerald-600 pl-2">আয়ের খাতসমূহ</h3>
                             
-                            <!-- শুধুমাত্র আয়ের খাতের উপরেই মাসের নাম থাকবে -->
                             <div class="flex items-center gap-2">
                                 <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded border border-amber-200">
                                     মাস: <span id="custom-month-display">অক্টোবর ২০২৬</span>
@@ -158,7 +160,6 @@
                             </table>
                         </div>
 
-                        <!-- মোট আয় সামারি বক্স -->
                         <div class="flex justify-between items-center p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
                             <span class="font-bold text-emerald-800 text-sm">মোট আয়:</span>
                             <span id="income-section-total" class="font-extrabold text-emerald-700 text-base">৳ ০</span>
@@ -186,7 +187,6 @@
                             </table>
                         </div>
 
-                        <!-- মোট ব্যয় সামারি বক্স -->
                         <div class="flex justify-between items-center p-3 bg-rose-50 border border-rose-200 rounded-lg">
                             <span class="font-bold text-rose-800 text-sm">মোট ব্যয়:</span>
                             <span id="expense-section-total" class="font-extrabold text-rose-700 text-base">৳ ০</span>
@@ -196,14 +196,47 @@
                 </div>
             </section>
 
-            <!-- Placeholder Tabs -->
-            <section id="tab-suppliers" class="hidden bg-white p-6 rounded-xl shadow"><h2 class="font-bold">সাপ্লাইয়ার পৃষ্ঠা</h2></section>
-            <section id="tab-parties" class="hidden bg-white p-6 rounded-xl shadow"><h2 class="font-bold">পার্টি ম্যানেজমেন্ট পৃষ্ঠা</h2></section>
-            <section id="tab-balance-sheet" class="hidden bg-white p-6 rounded-xl shadow"><h2 class="font-bold">ব্যালেন্স শীট পৃষ্ঠা</h2></section>
+            <!-- Suppliers Tab (Admin Only) -->
+            <section id="tab-suppliers" class="hidden bg-white p-6 rounded-xl shadow admin-section">
+                <h2 class="font-bold text-lg mb-3">সাপ্লাইয়ার ম্যানেজমেন্ট</h2>
+                <p class="text-xs text-gray-500">এখানে সাপ্লাইয়ারদের বকেয়া ও লেনদেনের হিসাব থাকবে।</p>
+            </section>
+
+            <!-- Parties Tab (Accessible by both Admin and Area Officers) -->
+            <section id="tab-parties" class="hidden bg-white p-6 rounded-xl shadow space-y-4">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h2 class="font-bold text-lg">পার্টি ম্যানেজমেন্ট ও লেজার</h2>
+                    <button onclick="openAddPartyModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-2 rounded-lg font-semibold">+ নতুন পার্টি যোগ করুন</button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse border border-slate-200">
+                        <thead class="bg-slate-100 text-slate-700">
+                            <tr>
+                                <th class="border p-2 text-center">ক্রমিক</th>
+                                <th class="border p-2">পার্টির নাম</th>
+                                <th class="border p-2">এরিয়া / এলাকা</th>
+                                <th class="border p-2 text-right">মাল নেওয়া (ডিপোজিট/ডেবিট)</th>
+                                <th class="border p-2 text-right">টাকা পরিশোধ (ক্রেডিট)</th>
+                                <th class="border p-2 text-right">বর্তমান বকেয়া</th>
+                                <th class="border p-2 text-center">অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="party-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Balance Sheet Tab (Admin Only) -->
+            <section id="tab-balance-sheet" class="hidden bg-white p-6 rounded-xl shadow admin-section">
+                <h2 class="font-bold text-lg mb-3">ব্যালেন্স শীট</h2>
+                <p class="text-xs text-gray-500">প্রতিষ্ঠানের সামগ্রিক আর্থিক সারসংক্ষেপ।</p>
+            </section>
         </main>
     </div>
 
-    <!-- 1. DETAILS HISTORY MODAL (Show List First) -->
+    <!-- Modals -->
+    <!-- 1. DETAILS HISTORY MODAL -->
     <div id="details-modal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center p-4 z-50">
         <div class="bg-white p-6 rounded-2xl max-w-lg w-full space-y-4 shadow-2xl">
             <div class="flex justify-between items-center border-b pb-2">
@@ -273,6 +306,30 @@
         </div>
     </div>
 
+  <!-- 4. ADD PARTY MODAL -->
+    <div id="party-modal" class="fixed inset-0 bg-slate-900/60 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="font-bold text-slate-800 text-base">নতুন পার্টি যোগ করুন</h3>
+                <button onclick="closeAddPartyModal()" class="text-gray-400 hover:text-gray-600 font-bold">✕</button>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs text-gray-600 font-semibold">পার্টির নাম:</label>
+                    <input type="text" id="party-name" placeholder="দোকান বা পার্টির নাম" class="border p-2 rounded-lg w-full text-sm mt-1">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-600 font-semibold">এরিয়া / এলাকা:</label>
+                    <input type="text" id="party-area" placeholder="যেমন: পাবনা সদর" class="border p-2 rounded-lg w-full text-sm mt-1">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeAddPartyModal()" class="px-3 py-1.5 bg-gray-200 text-xs font-semibold rounded-lg">বাতিল</button>
+                <button onclick="saveParty()" class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg">সেভ করুন</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Script Block -->
     <script>
         // State Management
@@ -301,7 +358,12 @@
         ];
 
         let transactions = JSON.parse(localStorage.getItem('fl_transactions')) || [];
+        let parties = JSON.parse(localStorage.getItem('fl_parties')) || [
+            { id: 1, name: 'মেসার্স ভাই ভাই স্টোর', area: 'পাবনা সদর', debit: 15000, credit: 5000 }
+        ];
+
         let currentMonthName = localStorage.getItem('fl_month_name') || 'অক্টোবর ২০২৬';
+        let currentUserRole = localStorage.getItem('fl_user_role') || 'admin';
         
         let currentSelectedCategory = null;
         let activeEditTxIndex = null;
@@ -309,29 +371,62 @@
         function saveData() {
             localStorage.setItem('fl_categories', JSON.stringify(categories));
             localStorage.setItem('fl_transactions', JSON.stringify(transactions));
+            localStorage.setItem('fl_parties', JSON.stringify(parties));
             localStorage.setItem('fl_month_name', currentMonthName);
+            localStorage.setItem('fl_user_role', currentUserRole);
         }
 
-           // Auth Systems
+        // Auth Systems
         function checkLogin() {
-    const u = document.getElementById('login-user').value;
-    const p = document.getElementById('login-pass').value;
-    if (u === 'admin' && p === 'admin') {
-        localStorage.setItem('isLoggedIn', 'true'); // <--- এই লাইনটি যোগ করবেন
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('app-content').classList.remove('hidden');
-        initApp();
-    } else {
-        document.getElementById('login-error').classList.remove('hidden');
-    }
-}
+            const u = document.getElementById('login-user').value.trim();
+            const p = document.getElementById('login-pass').value.trim();
+            
+            if (u === 'admin' && p === 'admin') {
+                currentUserRole = 'admin';
+                localStorage.setItem('isLoggedIn', 'true');
+                saveData();
+                startAppSession();
+            } else if (u === 'officer' && p === 'officer') {
+                currentUserRole = 'area_officer';
+                localStorage.setItem('isLoggedIn', 'true');
+                saveData();
+                startAppSession();
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+        }
 
+        function startAppSession() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-content').classList.remove('hidden');
+            applyRolePermissions();
+            initApp();
+        }
 
         function logout() {
-    localStorage.removeItem('isLoggedIn'); // <--- এই লাইনটি যোগ করবেন
-    document.getElementById('app-content').classList.add('hidden');
-    document.getElementById('login-screen').classList.remove('hidden');
-}
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('fl_user_role');
+            document.getElementById('app-content').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        function applyRolePermissions() {
+            const adminNavs = document.querySelectorAll('.admin-nav');
+            const adminSections = document.querySelectorAll('.admin-section');
+            const roleBadge = document.getElementById('user-role-badge');
+
+            if (currentUserRole === 'area_officer') {
+                roleBadge.innerText = 'রোল: এরিয়া অফিসার';
+                adminNavs.forEach(el => el.style.display = 'none');
+                adminSections.forEach(el => el.style.display = 'none');
+                switchTab('parties');
+            } else {
+                roleBadge.innerText = 'রোল: অ্যাডমিন';
+                adminNavs.forEach(el => el.style.display = 'block');
+                adminSections.forEach(el => el.style.display = 'block');
+                switchTab('dashboard');
+            }
+        }
 
         function switchTab(tab) {
             ['dashboard', 'income-expense', 'suppliers', 'parties', 'balance-sheet'].forEach(t => {
@@ -343,7 +438,9 @@
                         btn.className = "px-4 py-2 bg-emerald-600 text-white rounded-lg whitespace-nowrap";
                     } else {
                         el.classList.add('hidden');
-                        btn.className = "px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap";
+                        if (currentUserRole === 'admin') {
+                            btn.className = "px-4 py-2 bg-gray-100 text-gray-700 rounded-lg whitespace-nowrap";
+                        }
                     }
                 }
             });
@@ -363,11 +460,9 @@
             renderApp();
         }
 
-                // নতুন খাতের চিপস এবং ডিলিট অপশন রেন্ডার করার ফাংশন
         function renderCategoryChips() {
             const selectedType = document.getElementById('new-category-type').value;
             const catContainer = document.getElementById('category-list');
-            
             catContainer.innerHTML = '';
             
             categories.forEach((c, index) => {
@@ -382,7 +477,6 @@
             });
         }
 
-        // নির্দিষ্ট খাত ডিলিট করার ফাংশন
         function deleteCategory(index) {
             if (confirm('আপনি কি এই খাতটি মুছে ফেলতে চান?')) {
                 categories.splice(index, 1);
@@ -402,7 +496,7 @@
             });
         }
 
-        // Transaction Add
+              // Transaction Add
         function addTransaction() {
             const date = document.getElementById('ie-date').value;
             const type = document.getElementById('ie-type-selector').value;
@@ -442,13 +536,62 @@
             closeMonthModal();
         }
 
+        // Party Management Functions
+        function openAddPartyModal() {
+            document.getElementById('party-name').value = '';
+            document.getElementById('party-area').value = '';
+            document.getElementById('party-modal').classList.remove('hidden');
+            document.getElementById('party-modal').classList.add('flex');
+        }
+
+        function closeAddPartyModal() {
+            document.getElementById('party-modal').classList.add('hidden');
+            document.getElementById('party-modal').classList.remove('flex');
+        }
+
+        function saveParty() {
+            const name = document.getElementById('party-name').value.trim();
+            const area = document.getElementById('party-area').value.trim();
+            if (!name) return alert('পার্টির নাম লিখুন!');
+
+            parties.push({ id: Date.now(), name, area: area || 'সাধারণ', debit: 0, credit: 0 });
+            saveData();
+            closeAddPartyModal();
+            renderPartiesTable();
+        }
+
+        function renderPartiesTable() {
+            const tbody = document.getElementById('party-table-body');
+            tbody.innerHTML = '';
+
+            if (parties.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="border p-4 text-center text-gray-400">কোনো পার্টির তথ্য পাওয়া যায়নি।</td></tr>`;
+                return;
+            }
+
+            parties.forEach((p, index) => {
+                const due = p.debit - p.credit;
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="border p-2 text-center">${index + 1}</td>
+                        <td class="border p-2 font-medium">${p.name}</td>
+                        <td class="border p-2">${p.area}</td>
+                        <td class="border p-2 text-right text-emerald-700">৳ ${p.debit.toLocaleString('bn-BD')}</td>
+                        <td class="border p-2 text-right text-rose-700">৳ ${p.credit.toLocaleString('bn-BD')}</td>
+                        <td class="border p-2 text-right font-bold text-amber-700">৳ ${due.toLocaleString('bn-BD')}</td>
+                        <td class="border p-2 text-center">
+                            <button onclick="alert('পার্টি লেজার ও ট্রানজেকশন আপডেট শিট আসছে...')" class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs px-2 py-1 rounded">লেজার</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
         // --- DETAILS HISTORY MODAL LOGIC ---
         function openDetailsModal(catName) {
             currentSelectedCategory = catName;
             document.getElementById('details-modal-title').innerText = `${catName} - লেনদেনের বিবরণ`;
-            
             renderDetailsHistoryTable();
-            
             document.getElementById('details-modal').classList.remove('hidden');
             document.getElementById('details-modal').classList.add('flex');
         }
@@ -487,7 +630,6 @@
             });
         }
 
-        // --- EDIT MODAL LOGIC (Called from History) ---
         function openSingleEditModal(index) {
             activeEditTxIndex = index;
             const item = transactions[index];
@@ -520,31 +662,30 @@
                 transactions[activeEditTxIndex].amount = newAmount;
                 transactions[activeEditTxIndex].note = newNote;
 
-                    saveData();
-                    renderApp();
-                // বর্তমান সিলেক্ট করা ক্যাটাগরি দিয়ে হিস্ট্রি টেবিল রিফ্রেশ করুন
-    if (currentSelectedCategory) {
-        renderDetailsHistoryTable();
-    }
-    
-    closeEditModal();
+                saveData();
+                renderApp();
+                if (currentSelectedCategory) {
+                    renderDetailsHistoryTable();
+                }
+                closeEditModal();
             }
         }
-
         function deleteSingleTransaction(index) {
             if (confirm('আপনি কি নিশ্চিত যে এই লেনদেনটি মুছে ফেলতে চান?')) {
                 transactions.splice(index, 1);
                 saveData();
                 renderApp();
-                renderDetailsHistoryTable(); // লিস্ট আপডেট
+                renderDetailsHistoryTable();
             }
         }
 
         // Render Application
         function renderApp() {
             document.getElementById('custom-month-display').innerText = currentMonthName;
-
             renderCategoryChips();
+            renderPartiesTable();
+
+            if (currentUserRole === 'area_officer') return;
 
             const incomeTbody = document.getElementById('income-table-body');
             const expenseTbody = document.getElementById('expense-table-body');
@@ -554,62 +695,39 @@
 
             let totalIncome = 0;
             let totalExpense = 0;
-
             let incCount = 0;
             let expCount = 0;
 
-                    // Render Income Categories
-        let incCount = 0;
-        categories.filter(c => c.type === 'income').forEach((c) => {
-            incCount++;
-            const catTx = transactions.filter(t => t.category === c.name);
-            const sum = catTx.reduce((acc, curr) => acc + curr.amount, 0);
-            totalIncome += sum;
+            // Render Income Categories
+            categories.filter(c => c.type === 'income').forEach((c) => {
+                incCount++;
+                const catTx = transactions.filter(t => t.category === c.name);
+                const sum = catTx.reduce((acc, curr) => acc + curr.amount, 0);
+                totalIncome += sum;
 
-            incomeTbody.innerHTML += `
-                <tr class="hover:bg-slate-50">
-                    <td class="border p-2 text-center">${incCount}</td>
-                    <td class="border p-2 font-medium">${c.name}</td>
-                    <td class="border p-2 text-right font-bold text-emerald-700">৳ ${sum}</td>
-                    <td class="border p-2"></td>
-                    <td class="border p-2 text-center no-print">
-                        <button onclick="openDetailsModal('${c.name}')" class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded hover:bg-blue-200">ডিটেইলস (${catTx.length})</button>
-                    </td>
-                </tr>
-            `;
-        });
-
-        // Render Expense Categories
-        let expCount = 0;
-        categories.filter(c => c.type === 'expense').forEach((c) => {
-            expCount++;
-            const catTx = transactions.filter(t => t.category === c.name);
-            const sum = catTx.reduce((acc, curr) => acc + curr.amount, 0);
-            totalExpense += sum;
-
-            expenseTbody.innerHTML += `
-                <tr class="hover:bg-slate-50">
-                    <td class="border p-2 text-center">${expCount}</td>
-                    <td class="border p-2 font-medium">${c.name}</td>
-                    <td class="border p-2 text-right font-bold text-rose-700">৳ ${sum}</td>
-                    <td class="border p-2"></td>
-                    <td class="border p-2 text-center no-print">
-                        <button onclick="openDetailsModal('${c.name}')" class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded hover:bg-blue-200">ডিটেইলস (${catTx.length})</button>
-                    </td>
-                </tr>
-            `;
-        });
-
+                incomeTbody.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="border p-2 text-center">${incCount}</td>
+                        <td class="border p-2 font-medium">${c.name}</td>
+                        <td class="border p-2 text-right font-bold text-emerald-700">৳ ${sum}</td>
+                        <td class="border p-2"></td>
+                        <td class="border p-2 text-center no-print">
+                            <button onclick="openDetailsModal('${c.name}')" class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded hover:bg-blue-200">ডিটেইলস (${catTx.length})</button>
+                        </td>
+                    </tr>
+                `;
+            });
 
             // Render Expense Categories
-            categories.filter(c => c.type === 'expense').forEach((c, idx) => {
+            categories.filter(c => c.type === 'expense').forEach((c) => {
+                expCount++;
                 const catTx = transactions.filter(t => t.category === c.name);
                 const sum = catTx.reduce((acc, curr) => acc + curr.amount, 0);
                 totalExpense += sum;
 
                 expenseTbody.innerHTML += `
                     <tr class="hover:bg-slate-50">
-                        <td class="border p-2 text-center">${idx + 1}</td>
+                        <td class="border p-2 text-center">${expCount}</td>
                         <td class="border p-2 font-medium">${c.name}</td>
                         <td class="border p-2 text-right font-bold text-rose-700">৳ ${sum}</td>
                         <td class="border p-2"></td>
@@ -619,7 +737,6 @@
                     </tr>
                 `;
             });
-
 
             // Totals Display
             document.getElementById('income-section-total').innerText = `৳ ${totalIncome.toLocaleString('bn-BD')}`;
@@ -641,16 +758,21 @@
             html2pdf().set(opt).from(element).save();
         }
 
-// পেজ লোড হলে অটোমেটিক চেক করবে লগইন করা আছে কি না
-window.addEventListener('DOMContentLoaded', () => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    if (isLoggedIn === 'true') {
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('app-content').classList.remove('hidden');
-        initApp();
-    }
-});
-        
+        // Auto Login Check on Page Load
+        window.addEventListener('DOMContentLoaded', () => {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('app-content').classList.remove('hidden');
+                applyRolePermissions();
+                initApp();
+            }
+        });
+
+        function initApp() {
+            filterCategoryDropdown();
+            renderApp();
+        }
     </script>
 </body>
 </html>
