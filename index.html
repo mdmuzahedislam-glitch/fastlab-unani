@@ -1,57 +1,313 @@
+```html
 <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ফাস্টল্যাব ইউনানী - লগইন</title>
+    <title>ফাস্টল্যাব ইউনানী - আফুরিয়া, হিমািতপুর, পাবনা</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Hind Siliguri', sans-serif; }</style>
-</head>
-<body class="bg-slate-900 flex items-center justify-center min-h-screen">
-
-    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-sm space-y-4 text-center">
-        <div class="bg-emerald-100 p-3 rounded-full w-16 h-16 mx-auto flex items-center justify-center text-emerald-700 font-bold text-2xl">
-            🔒
-        </div>
-        <h2 class="text-xl font-bold text-slate-800">ফাস্টল্যাব ইউনানী</h2>
-        <p class="text-xs text-gray-500">ম্যানেজমেন্ট সিস্টেমে প্রবেশ করতে লগইন করুন</p>
-        
-        <div class="space-y-3 text-left">
-            <div>
-                <label class="text-xs font-semibold text-gray-600">ইউজারনেম (admin বা officer1)</label>
-                <input type="text" id="login-user" value="admin" class="w-full border p-2 rounded-lg text-sm mt-1 focus:outline-none focus:border-emerald-600">
-            </div>
-            <div>
-                <label class="text-xs font-semibold text-gray-600">পাসওয়ার্ড (admin বা officer)</label>
-                <input type="password" id="login-pass" value="admin" class="w-full border p-2 rounded-lg text-sm mt-1 focus:outline-none focus:border-emerald-600">
-            </div>
-        </div>
-
-        <p id="login-error" class="text-xs text-rose-600 hidden font-semibold">ভুল ইউজারনেম বা পাসওয়ার্ড!</p>
-
-        <button onclick="checkLogin()" class="w-full bg-emerald-700 text-white py-2 rounded-lg font-semibold hover:bg-emerald-800 transition">লগইন করুন</button>
-    </div>
-
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
-        function checkLogin() {
-            const u = document.getElementById('login-user').value.trim();
-            const p = document.getElementById('login-pass').value.trim();
-            
-            if (u === 'admin' && p === 'admin') {
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('role', 'admin');
-                localStorage.setItem('username', 'admin');
-                window.location.href = 'admin-dashboard.html';
-            } else if (u.startsWith('officer') && p === 'officer') {
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('role', 'officer');
-                localStorage.setItem('username', u);
-                window.location.href = 'officer-dashboard.html';
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forest: {
+                            DEFAULT: '#0a5c36',
+                            dark: '#064225',
+                            light: '#12824e',
+                            bg: '#f0f4f1'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Hind Siliguri"', 'sans-serif']
+                    }
+                }
             }
         }
     </script>
+</head>
+<body class="bg-forest-bg text-gray-800 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Wrapper -->
+    <div class="w-full max-w-[1360px] mx-auto bg-white shadow-2xl flex flex-col min-h-screen my-0 md:my-4 rounded-none md:rounded-xl overflow-hidden">
+
+        <!-- Header Section -->
+        <header class="relative bg-gradient-to-r from-forest-dark via-forest to-forest-light text-white p-4 sm:p-6 shadow-md overflow-hidden">
+            <!-- Background herbal pattern overlay simulated via opacity -->
+            <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+            
+            <div class="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <!-- Logo & Title -->
+                <div class="flex items-center gap-4 text-center sm:text-left">
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center p-2 shadow-inner border-2 border-green-200 shrink-0">
+                        <!-- Leaf SVG Logo -->
+                        <svg viewBox="0 0 100 100" class="w-full h-full text-forest fill-current">
+                            <path d="M50 10 C30 30, 20 50, 50 90 C80 50, 70 30, 50 10 Z" opacity="0.15"/>
+                            <path d="M50 15 C35 35, 28 55, 50 85 C72 55, 65 35, 50 15 Z"/>
+                            <path d="M50 30 L50 75 M35 45 C42 40, 48 45, 50 55 C52 45, 58 40, 65 45" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl sm:text-4xl font-bold tracking-wide drop-shadow">ফাস্টল্যাব ইউনানী</h1>
+                        <p class="text-sm sm:text-lg text-green-100 font-medium">আফুরিয়া, হিমািতপুর, পাবনা</p>
+                    </div>
+                </div>
+
+                <!-- Top Right Herbal Decorative Banner (Hidden on mobile) -->
+                <div class="hidden lg:flex items-center gap-2 bg-black/20 px-4 py-2 rounded-full border border-white/10 text-sm">
+                    <i class="fa-solid fa-mortar-pestle text-green-300"></i>
+                    <span>প্রাকৃতিক উপাদানে প্রস্তুত ইউনানী ওষুধ</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Body Layout: Content + Sidebar -->
+        <div class="flex flex-col lg:flex-row flex-1">
+            
+            <!-- Left Main Content Area -->
+            <main class="flex-1 p-4 sm:p-6 space-y-6">
+
+                <!-- 1. Notice Board Section -->
+                <section class="border-2 border-forest rounded-lg overflow-hidden shadow-sm bg-white">
+                    <div class="bg-forest text-white px-4 py-3 flex items-center gap-3">
+                        <i class="fa-solid fa-bullhorn text-lg"></i>
+                        <h2 class="text-lg sm:text-xl font-bold tracking-wide">নোটিশ বোর্ড</h2>
+                    </div>
+                    <div class="p-4 space-y-3 bg-green-50/50">
+                        <!-- Notice Item 1 -->
+                        <div class="flex items-center gap-3 bg-white p-3 rounded-md border border-green-200 shadow-xs hover:shadow transition">
+                            <span class="w-7 h-7 bg-forest text-white rounded-full flex items-center justify-center font-bold text-sm shrink-0">১.</span>
+                            <p class="text-sm sm:text-base text-gray-700 font-medium">আগামী ২৫ তারিখের মধ্যে সকল পার্টির বকেয়া পরিশোধের জন্য অনুরোধ করা হলো। <span class="text-xs text-gray-500 block sm:inline">২০ জানুয়ারি ২০২৬</span></p>
+                        </div>
+                        <!-- Notice Item 2 -->
+                        <div class="flex items-center gap-3 bg-white p-3 rounded-md border border-green-200 shadow-xs hover:shadow transition">
+                            <span class="w-7 h-7 bg-forest text-white rounded-full flex items-center justify-center font-bold text-sm shrink-0">২.</span>
+                            <p class="text-sm sm:text-base text-gray-700 font-medium">নতুন পণ্য সংক্রান্ত একটি বিশেষ অফার আগামী মাস থেকে কার্যকর হবে। <span class="text-xs text-gray-500 block sm:inline">১৮ জানুয়ারি ২০২৬</span></p>
+                        </div>
+                        <!-- Notice Item 3 -->
+                        <div class="flex items-center gap-3 bg-white p-3 rounded-md border border-green-200 shadow-xs hover:shadow transition">
+                            <span class="w-7 h-7 bg-forest text-white rounded-full flex items-center justify-center font-bold text-sm shrink-0">৩.</span>
+                            <p class="text-sm sm:text-base text-gray-700 font-medium">মাসিক রিপোর্ট ৩০ তারিখের মধ্যে জমা দেওয়ার জন্য অনুরোধ রইলো। <span class="text-xs text-gray-500 block sm:inline">১৫ জানুয়ারি ২০২৬</span></p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Board of Directors Section -->
+                <section class="border-2 border-forest rounded-lg overflow-hidden shadow-sm bg-white">
+                    <div class="bg-forest text-white px-4 py-3 flex items-center gap-3">
+                        <i class="fa-solid fa-users text-lg"></i>
+                        <h2 class="text-lg sm:text-xl font-bold tracking-wide">পরিচালক মণ্ডলীগণ</h2>
+                    </div>
+                    <div class="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                        
+                        <!-- Director 1 -->
+                        <div class="bg-white border border-green-200 rounded-lg p-4 text-center shadow-xs hover:shadow-md transition flex flex-col items-center">
+                            <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 border-forest mb-3 shadow-inner bg-gray-100">
+                                <img src="https://placehold.co/150x150/0a5c36/ffffff?text=মিরাজ" alt="মিরাজ হাসান" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150/0a5c36/ffffff?text=Chairman'">
+                            </div>
+                            <h3 class="font-bold text-lg text-gray-900">মিরাজ হাসান</h3>
+                            <span class="mt-2 inline-block bg-forest text-white text-xs sm:text-sm px-4 py-1 rounded-full font-medium shadow-xs">চেয়ারম্যান</span>
+                        </div>
+
+                        <!-- Director 2 -->
+                        <div class="bg-white border border-green-200 rounded-lg p-4 text-center shadow-xs hover:shadow-md transition flex flex-col items-center">
+                            <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 border-forest mb-3 shadow-inner bg-gray-100">
+                                <img src="https://placehold.co/150x150/0a5c36/ffffff?text=রফিকুল" alt="মোঃ রফিকুল ইসলাম" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150/0a5c36/ffffff?text=MD'">
+                            </div>
+                            <h3 class="font-bold text-lg text-gray-900">মোঃ রফিকুল ইসলাম</h3>
+                            <span class="mt-2 inline-block bg-forest text-white text-xs sm:text-sm px-4 py-1 rounded-full font-medium shadow-xs">ব্যবস্থাপনা পরিচালক</span>
+                        </div>
+
+                        <!-- Director 3 -->
+                        <div class="bg-white border border-green-200 rounded-lg p-4 text-center shadow-xs hover:shadow-md transition flex flex-col items-center">
+                            <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 border-forest mb-3 shadow-inner bg-gray-100">
+                                <img src="https://placehold.co/150x150/0a5c36/ffffff?text=আসলাম" alt="এস এম আসলাম" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150/0a5c36/ffffff?text=Director'">
+                            </div>
+                            <h3 class="font-bold text-lg text-gray-900">এস এম আসলাম</h3>
+                            <span class="mt-2 inline-block bg-forest text-white text-xs sm:text-sm px-4 py-1 rounded-full font-medium shadow-xs">পরিচালক</span>
+                        </div>
+
+                        <!-- Director 4 -->
+                        <div class="bg-white border border-green-200 rounded-lg p-4 text-center shadow-xs hover:shadow-md transition flex flex-col items-center">
+                            <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 border-forest mb-3 shadow-inner bg-gray-100">
+                                <img src="https://placehold.co/150x150/0a5c36/ffffff?text=নূর" alt="মোহাম্মদ নূর ইসলাম" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150/0a5c36/ffffff?text=Director'">
+                            </div>
+                            <h3 class="font-bold text-lg text-gray-900">মোহাম্মদ নূর ইসলাম</h3>
+                            <span class="mt-2 inline-block bg-forest text-white text-xs sm:text-sm px-4 py-1 rounded-full font-medium shadow-xs">পরিচালক</span>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- 3. About Company Section -->
+                <section class="border-2 border-forest rounded-lg overflow-hidden shadow-sm bg-white">
+                    <div class="bg-forest text-white px-4 py-3 flex items-center gap-3">
+                        <i class="fa-solid fa-file-lines text-lg"></i>
+                        <h2 class="text-lg sm:text-xl font-bold tracking-wide">কোম্পানির সম্পর্কে</h2>
+                    </div>
+                    <div class="p-4 sm:p-6 text-gray-700 leading-relaxed text-justify text-sm sm:text-base font-medium">
+                        <p>ফাস্টল্যাব ইউনানী একটি প্রাচীন ও ঐতিহ্যবাহী ইউনানী চিকিৎসা নির্ভর প্রতিষ্ঠান। আমরা প্রাচীন ইউনানী চিকিৎসা পদ্ধতিকে আধুনিক বিজ্ঞানসম্মত গবেষণার মাধ্যমে মানুষের সুস্বাস্থ্য ও সুস্থ জীবন নিশ্চিত করতে কাজ করে যাচ্ছি। আমাদের লক্ষ্য হলো প্রাকৃতিক উপাদান ও ইউনানী চিকিৎসার মাধ্যমে সকলের জন্য নিরাপদ ও কার্যকর স্বাস্থ্যসেবা নিশ্চিত করা।</p>
+                    </div>
+                </section>
+
+            </main>
+
+            <!-- Right Sidebar / Menu Bar -->
+            <aside class="w-full lg:w-80 bg-white border-t lg:border-t-0 lg:border-l border-green-200 p-4 sm:p-6 flex flex-col gap-3 shrink-0">
+                <div class="bg-forest text-white px-4 py-3 rounded-md flex items-center gap-3 mb-2 shadow-xs">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                    <h2 class="text-lg font-bold tracking-wide">মেনুবার</h2>
+                </div>
+
+                <nav class="space-y-1.5 flex flex-col">
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-forest hover:text-white text-gray-700 font-medium transition group border border-transparent hover:border-forest/20">
+                        <i class="fa-solid fa-house text-forest group-hover:text-white"></i>
+                        <span>হোম পেজ</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-forest hover:text-white text-gray-700 font-medium transition group border border-transparent hover:border-forest/20">
+                        <i class="fa-solid fa-bell text-forest group-hover:text-white"></i>
+                        <span>নোটিশ বোর্ড</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-forest hover:text-white text-gray-700 font-medium transition group border border-transparent hover:border-forest/20">
+                        <i class="fa-solid fa-users text-forest group-hover:text-white"></i>
+                        <span>পরিচালক মণ্ডলীগণ</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-forest hover:text-white text-gray-700 font-medium transition group border border-transparent hover:border-forest/20">
+                        <i class="fa-solid fa-building text-forest group-hover:text-white"></i>
+                        <span>কোম্পানির সম্পর্কে</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-forest hover:text-white text-gray-700 font-medium transition group border border-transparent hover:border-forest/20">
+                        <i class="fa-solid fa-user-tie text-forest group-hover:text-white"></i>
+                        <span>সরবরাহ অফিসার/ইউজার লগইন</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-md hover:bg-forest hover:text-white text-gray-700 font-medium transition group border border-transparent hover:border-forest/20">
+                        <i class="fa-solid fa-user text-forest group-hover:text-white"></i>
+                        <span>অফিসার/ইউজার লগইন</span>
+                    </a>
+                    
+                    <!-- Highlighted Admin Login Button -->
+                    <a href="#" onclick="openAdminLoginModal(event)" class="mt-2 flex items-center justify-center gap-3 px-4 py-3.5 rounded-md bg-red-600 hover:bg-red-700 text-white font-bold transition shadow-md hover:shadow-lg transform active:scale-95">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>অফিস/এডমিন লগইন</span>
+                    </a>
+                </nav>
+            </aside>
+
+        </div>
+
+        <!-- Footer Section -->
+        <footer class="bg-forest-dark text-white pt-6 pb-4 px-4 sm:px-8 border-t border-forest-light">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-6 border-b border-white/10 text-sm">
+                
+                <!-- Head Office Address -->
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 bg-forest p-2 rounded-full text-green-300">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-green-200 mb-1">হেড অফিস ঠিকানা</h4>
+                        <p class="text-gray-300">আফুরিয়া, হিমািতপুর, পাবনা</p>
+                    </div>
+                </div>
+
+                <!-- Mobile Number -->
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 bg-forest p-2 rounded-full text-green-300">
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-green-200 mb-1">মোবাইল নাম্বার</h4>
+                        <p class="text-gray-300 font-mono">০১৩৩৫০১৯৭৬০</p>
+                    </div>
+                </div>
+
+                <!-- Email Address -->
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 bg-forest p-2 rounded-full text-green-300">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-green-200 mb-1">ইমেইল নাম্বার</h4>
+                        <p class="text-gray-300 break-all">fatlabumani.pabna@gmail.com</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Sub-footer: Quick links & Copyright -->
+            <div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-gray-300">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-link text-green-300"></i>
+                    <span class="font-semibold text-white">দ্রুত লিংক:</span>
+                    <a href="#" class="hover:underline text-green-200">অফিসার/ইউজার লগইন</a> | 
+                    <a href="#" class="hover:underline text-green-200" onclick="openAdminLoginModal(event)">অফিস/এডমিন লগইন</a>
+                </div>
+                <div>
+                    <p>&copy; ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Custom Modal for Admin Login (to avoid using alert()) -->
+    <div id="adminLoginModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-fade-in border-t-4 border-red-600">
+            <div class="bg-forest text-white p-4 flex items-center justify-between">
+                <div class="flex items-center gap-2 font-bold text-lg">
+                    <i class="fa-solid fa-shield-halved text-red-400"></i>
+                    <span>অফিস/এডমিন লগইন প্যানেল</span>
+                </div>
+                <button onclick="closeAdminLoginModal()" class="text-gray-300 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">ইউজার আইডি / ইমেইল</label>
+                    <input type="text" placeholder="এডমিন আইডি লিখুন" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">পাসওয়ার্ড</label>
+                    <input type="password" placeholder="••••••••" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:outline-none">
+                </div>
+                <button onclick="handleAdminLogin(event)" class="w-full bg-forest hover:bg-forest-dark text-white font-bold py-3 rounded-lg shadow transition">
+                    প্রবেশ করুন
+                </button>
+                <div id="loginMsg" class="text-center text-sm font-medium text-green-600 hidden">
+                    সফলভাবে লগইন হয়েছে! ড্যাশবোর্ডে রিডাইরেক্ট করা হচ্ছে...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Interactive UI -->
+    <script>
+        function openAdminLoginModal(e) {
+            e.preventDefault();
+            document.getElementById('adminLoginModal').classList.remove('hidden');
+        }
+
+        function closeAdminLoginModal() {
+            document.getElementById('adminLoginModal').classList.add('hidden');
+            document.getElementById('loginMsg').classList.add('hidden');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const msg = document.getElementById('loginMsg');
+            msg.classList.remove('hidden');
+            setTimeout(() => {
+                closeAdminLoginModal();
+                alert('এডমিন প্যানেলে স্বাগতম!'); // Or custom message box
+            }, 1000);
+        }
+    </script>
+
 </body>
 </html>
