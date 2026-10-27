@@ -26,7 +26,7 @@
 </head>
 <body class="bg-[#14532d] font-sans antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- Main Container matching the exact design -->
+    <!-- Main Container -->
     <div class="max-w-6xl mx-auto w-full bg-[#064e3b] shadow-2xl my-4 rounded-xl overflow-hidden border-4 border-[#166534]">
         
         <!-- Header Section -->
@@ -40,9 +40,9 @@
                     <p class="text-emerald-200 text-sm mt-1">আফুরিয়া, হিমাইতপুর, পাবনা</p>
                 </div>
             </div>
-            <!-- Top Right Menu Toggle Button -->
+            <!-- Top Right Menu Toggle Button for Sidebar -->
             <div class="mt-4 md:mt-0">
-                <button onclick="toggleSidebarMobile()" class="bg-[#14532d] hover:bg-forest-600 px-4 py-2.5 rounded-lg flex items-center space-x-2 text-white font-semibold shadow transition">
+                <button onclick="toggleSidebar()" class="bg-[#14532d] hover:bg-forest-600 px-4 py-2.5 rounded-lg flex items-center space-x-2 text-white font-semibold shadow transition border border-emerald-600">
                     <i class="fa-solid fa-bars"></i>
                     <span>মেনুবার</span>
                 </button>
@@ -56,7 +56,7 @@
             <div class="lg:col-span-3 p-6 space-y-8">
                 
                 <!-- Notice Board Section -->
-                <section class="bg-emerald-50/50 rounded-xl p-5 border border-emerald-100 shadow-sm">
+                <section id="notice-section" class="bg-emerald-50/50 rounded-xl p-5 border border-emerald-100 shadow-sm">
                     <div class="flex items-center space-x-2 text-[#064e3b] font-bold text-xl mb-4 border-b pb-2 border-emerald-200">
                         <i class="fa-solid fa-bullhorn"></i>
                         <h2>নোটিশ বোর্ড</h2>
@@ -78,7 +78,7 @@
                 </section>
 
                 <!-- Board of Directors Section -->
-                <section class="bg-emerald-50/50 rounded-xl p-5 border border-emerald-100 shadow-sm">
+                <section id="directors-section" class="bg-emerald-50/50 rounded-xl p-5 border border-emerald-100 shadow-sm">
                     <div class="flex items-center space-x-2 text-[#064e3b] font-bold text-xl mb-4 border-b pb-2 border-emerald-200">
                         <i class="fa-solid fa-users"></i>
                         <h2>পরিচালক মণ্ডলীগণ</h2>
@@ -118,8 +118,9 @@
                         </div>
                     </div>
                 </section>
+
                 <!-- About Company Section -->
-                <section class="bg-emerald-50/50 rounded-xl p-5 border border-emerald-100 shadow-sm">
+                <section id="about-section" class="bg-emerald-50/50 rounded-xl p-5 border border-emerald-100 shadow-sm">
                     <div class="flex items-center space-x-2 text-[#064e3b] font-bold text-xl mb-3 border-b pb-2 border-emerald-200">
                         <i class="fa-solid fa-file-lines"></i>
                         <h2>কোম্পানির সম্পর্কে</h2>
@@ -132,7 +133,7 @@
             </div>
 
             <!-- Right Sidebar Navigation (1 Column) -->
-            <div class="bg-slate-50 p-5 border-l border-slate-200 flex flex-col justify-between space-y-6">
+            <div id="sidebar-menu" class="bg-slate-50 p-5 border-l border-slate-200 flex flex-col justify-between space-y-6">
                 <div class="space-y-2">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">মেনু অপশনসমূহ</h3>
                     
@@ -159,56 +160,43 @@
                         <span>সরবরাহ অফিসার/ইউজার লগইন</span>
                     </a>
 
-                    <!-- মার্কেটিং অফিসার/ইউজার লগইন (নতুন সংযোজন) -->
+                    <!-- মার্কেটিং অফিসার/ইউজার লগইন -->
                     <a href="javascript:void(0);" onclick="openLoginModal('marketing')" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
                         <i class="fa-solid fa-bullhorn w-5 text-[#14532d]"></i>
                         <span>মার্কেটিং অফিসার/ইউজার লগইন</span>
                     </a>
 
-                    <!-- অফিস/এডমিন লগইন (মাস্টার কন্ট্রোল প্যানেল) -->
+                    <!-- অফিস/এডমিন লগইন -->
                     <a href="javascript:void(0);" onclick="openLoginModal('admin')" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-red-600 text-white font-medium shadow hover:bg-red-700 transition">
                         <i class="fa-solid fa-user-shield w-5"></i>
                         <span>অফিস/এডমিন লগইন</span>
                     </a>
                 </div>
-
-                <!-- Quick Links Box inside Sidebar -->
-                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                    <h4 class="font-bold text-slate-800 text-sm mb-2 flex items-center space-x-2">
-                        <i class="fa-solid fa-link text-[#14532d]"></i>
-                        <span>দ্রুত লিংক</span>
-                    </h4>
-                    <div class="space-y-1.5 text-xs">
-                        <a href="javascript:void(0);" onclick="openLoginModal('supplier')" class="block text-slate-600 hover:text-[#14532d] hover:underline">▶ সরবরাহ অফিসার লগইন</a>
-                        <a href="javascript:void(0);" onclick="openLoginModal('marketing')" class="block text-slate-600 hover:text-[#14532d] hover:underline">▶ মার্কেটিং অফিসার লগইন</a>
-                        <a href="javascript:void(0);" onclick="openLoginModal('admin')" class="block text-slate-600 hover:text-[#14532d] hover:underline">▶ অফিস/এডমিন লগইন</a>
-                    </div>
-                </div>
             </div>
 
         </div>
-        <!-- Footer Section -->
+         <!-- Clean & Beautiful Footer Section (Without quick links) -->
         <footer class="bg-[#064e3b] text-white p-6 border-t border-[#166534]">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 text-sm">
-                <div class="flex items-start space-x-3">
-                    <i class="fa-solid fa-location-dot mt-1 text-emerald-300"></i>
+                <div class="flex items-start space-x-3 bg-[#0a5c47] p-4 rounded-xl border border-[#166534] shadow-sm">
+                    <i class="fa-solid fa-location-dot mt-1 text-emerald-300 text-lg"></i>
                     <div>
                         <p class="font-bold text-emerald-200">হেড অফিস ঠিকানা</p>
-                        <p class="text-slate-300 text-xs mt-0.5">আফুরিয়া, হিমাইতপুর, পাবনা</p>
+                        <p class="text-slate-200 text-xs mt-1">আফুরিয়া, হিমাইতপুর, পাবনা</p>
                     </div>
                 </div>
-                <div class="flex items-start space-x-3">
-                    <i class="fa-solid fa-phone mt-1 text-emerald-300"></i>
+                <div class="flex items-start space-x-3 bg-[#0a5c47] p-4 rounded-xl border border-[#166534] shadow-sm">
+                    <i class="fa-solid fa-phone mt-1 text-emerald-300 text-lg"></i>
                     <div>
                         <p class="font-bold text-emerald-200">মোবাইল নাম্বার</p>
-                        <p class="text-slate-300 text-xs mt-0.5">০১৩৩৫০৯৭৯৬০</p>
+                        <p class="text-slate-200 text-xs mt-1">০১৩৩৫০৯৭৯৬০</p>
                     </div>
                 </div>
-                <div class="flex items-start space-x-3">
-                    <i class="fa-solid fa-envelope mt-1 text-emerald-300"></i>
+                <div class="flex items-start space-x-3 bg-[#0a5c47] p-4 rounded-xl border border-[#166534] shadow-sm">
+                    <i class="fa-solid fa-envelope mt-1 text-emerald-300 text-lg"></i>
                     <div>
                         <p class="font-bold text-emerald-200">ইমেইল নাম্বার</p>
-                        <p class="text-slate-300 text-xs mt-0.5">fatlabumani.pabna@gmail.com</p>
+                        <p class="text-slate-200 text-xs mt-1">fatlabumani.pabna@gmail.com</p>
                     </div>
                 </div>
             </div>
@@ -294,6 +282,7 @@
                 iconEl.className = "fa-solid fa-user-shield";
             }
         }
+
         function closeLoginModal() {
             document.getElementById('login-modal').classList.add('hidden');
             document.getElementById('error-alert').classList.add('hidden');
@@ -308,7 +297,6 @@
             const inputPass = document.getElementById('password').value.trim();
             const errorAlert = document.getElementById('error-alert');
 
-            // ডেমো অথেন্টিকেশন চেক (পরবর্তীতে ফায়ারবেজ ডেটাবেজের সাথে ফুল কানেক্ট করা যাবে)
             if (type === 'supplier' && inputId === "supplier01" && inputPass === "Unani02") {
                 alert("সরবরাহ অফিসার লগইন সফল হয়েছে!");
                 closeLoginModal();
@@ -327,8 +315,9 @@
             }
         }
 
-        function toggleSidebarMobile() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar-menu');
+            sidebar.classList.toggle('hidden');
         }
 
         function loadRealtimeData() {
