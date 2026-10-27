@@ -1,1 +1,427 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মার্কেটিং অফিসার ড্যাশবোর্ড - ফাস্টল্যাব ইউনানী</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: #f0fdf4; }
+        .forest-green { background-color: #064e3b; }
+        .forest-green-text { color: #064e3b; }
+        .forest-green-border { border-color: #064e3b; }
+        .table-header { background-color: #064e3b; color: white; }
+    </style>
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen">
 
+    <!-- Login Section (Matches Screenshot) -->
+    <div id="login-section" class="min-h-screen flex items-center justify-center p-4 bg-cover bg-center absolute inset-0 z-50" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80')">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full border-t-4 forest-green-border relative">
+            
+            <div class="text-center mb-6">
+                <div class="inline-block p-3 bg-green-100 rounded-full text-green-800 mb-2">
+                    <i class="fa-solid fa-leaf text-3xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold forest-green-text">ফাস্টল্যাব ইউনানী</h1>
+                <p class="text-xs text-gray-500 mt-0.5">আফুরিয়া, হিমাইতপুর, পাবনা[span_2](start_span)[span_2](end_span)</p>
+                <div class="mt-4 inline-flex items-center gap-2 bg-green-50 px-4 py-1.5 rounded-full text-green-800 font-medium text-sm border border-green-200">
+                    <i class="fa-solid fa-user-tie"></i> <span>অফিসার/ইউজার লগইন</span>
+                </div>
+            </div>
+
+            <!-- Error Message Box -->
+            <div id="error-alert" class="hidden mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                <span id="error-text">ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।</span>
+            </div>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Username</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                            <i class="fa-solid fa-user"></i>
+                        </span>
+                        <input type="text" id="user-id" required placeholder="Username" class="w-full pl-10 pr-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Password</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                            <i class="fa-solid fa-lock"></i>
+                        </span>
+                        <input type="password" id="password" required placeholder="Password" class="w-full pl-10 pr-10 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
+                        <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-eye" id="eye-icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full forest-green text-white py-3 rounded-lg font-semibold hover:bg-green-900 transition flex items-center justify-center gap-2 shadow-md text-sm">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login
+                </button>
+            </form>
+
+            <div class="mt-6 text-center border-t pt-4">
+                <p class="text-xs text-gray-500 mb-2">অথবা</p>
+                <a href="index.html" class="inline-flex items-center gap-2 text-sm text-green-800 hover:underline font-medium">
+                    <i class="fa-solid fa-house"></i> হোম পেজে ফিরে যান[span_3](start_span)[span_3](end_span)
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Section (Hidden by default until login) -->
+    <div id="dashboard-section" class="hidden flex-col min-h-screen">
+        
+        <!-- Header -->
+        <header class="forest-green text-white shadow-md">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white p-2 rounded-full text-green-800">
+                        <i class="fa-solid fa-leaf text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold">ফাস্টল্যাব ইউনানী</h2>
+                        <p class="text-xs text-green-200">আফুরিয়া, হিমাইতপুর, পাবনা[span_4](start_span)[span_4](end_span)</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 bg-green-900 px-3 py-1.5 rounded-lg text-xs">
+                    <i class="fa-solid fa-user-circle text-sm"></i>
+                    <span id="top-profile-name">সঞ্জয় ইসলাম | মার্কেটিং অফিসার</span>[span_5](start_span)[span_5](end_span)
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Layout -->
+        <div class="container mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-4 gap-6 flex-grow">
+            
+            <!-- Left Sidebar Navigation -->
+            <div class="bg-white rounded-xl shadow-md p-4 h-fit border border-gray-100 space-y-2">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl forest-green text-white font-medium text-sm shadow">
+                    <i class="fa-solid fa-chart-line w-5"></i> ড্যাশবোর্ড[span_6](start_span)[span_6](end_span)
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-50 text-gray-700 font-medium text-sm transition">
+                    <i class="fa-solid fa-users w-5 forest-green-text"></i> পার্টি লিস্ট[span_7](start_span)[span_7](end_span)
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-50 text-gray-700 font-medium text-sm transition">
+                    <i class="fa-solid fa-file-invoice w-5 forest-green-text"></i> ডিটেইলস[span_8](start_span)[span_8](end_span)
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-50 text-gray-700 font-medium text-sm transition">
+                    <i class="fa-solid fa-bullhorn w-5 forest-green-text"></i> নোটিশ বোর্ড[span_9](start_span)[span_9](end_span)
+                </a>
+                <hr class="my-2 border-gray-200">
+                <button onclick="handleLogout()" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-600 font-medium text-sm transition">
+                    <i class="fa-solid fa-right-from-bracket w-5"></i> লগ আউট[span_10](start_span)[span_10](end_span)
+                </button>
+            </div>
+
+            <!-- Right Main Content Area (3 Columns) -->
+            <div class="lg:col-span-3 space-y-6">
+                
+                <!-- Top Two Cards: Profile & Notice Board -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Profile Card -->
+                    <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100 flex items-center gap-4">
+                        <div class="w-20 h-20 rounded-full bg-gray-200 overflow-hidden border-2 border-green-700 shrink-0">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" alt="সঞ্জয় ইসলাম" class="w-full h-full object-cover">[span_11](start_span)[span_11](end_span)
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800" id="profile-name">সঞ্জয় ইসলাম</h3>[span_12](start_span)[span_12](end_span)
+                            <p class="text-sm font-semibold text-green-800">মার্কেটিং অফিসার</p>[span_13](start_span)[span_13](end_span)
+                            <p class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="fa-solid fa-phone"></i> ০১৩৩৫০৯৭৯৮৮[span_14](start_span)[span_14](end_span)</p>
+                            <p class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-location-dot"></i> মার্কেটিং এরিয়া: পাবনা সদর[span_15](start_span)[span_15](end_span)</p>
+                        </div>
+                    </div>
+
+                    <!-- Notice Board Card -->
+                    <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                        <div class="flex items-center justify-between mb-3 border-b pb-2">
+                            <h3 class="text-md font-bold forest-green-text flex items-center gap-2">
+                                <i class="fa-solid fa-bullhorn"></i> নোটিশ বোর্ড[span_16](start_span)[span_16](end_span)
+                            </h3>
+                            <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">গুরুত্বপূর্ণ</span>
+                        </div>
+                        <ul class="space-y-2 text-xs text-gray-700">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
+                                <span>আগামী ২০ তারিখের মধ্যে সকল পার্টির বকেয়া পরিশোধের জন্য অনুরোধ করা হলো। <br><span class="text-gray-400">২০ জানুয়ারি ২০২৬</span></span>[span_17](start_span)[span_17](end_span)
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
+                                <span>নতুন পণ্য সংক্রান্ত একটি বিশেষ অফার আগামী মাস থেকে কার্যকর হবে। <br><span class="text-gray-400">১৮ জানুয়ারি ২০২৬</span></span>[span_18](start_span)[span_18](end_span)
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
+                                <span>মাসিক রিপোর্ট ৩০ তারিখের মধ্যে জমা দেওয়ার অনুরোধ রইলো। <br><span class="text-gray-400">১৫ জানুয়ারি ২০২৬</span></span>[span_19](start_span)[span_19](end_span)
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!-- Party List Table -->
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
+                        <h3 class="text-lg font-bold forest-green-text flex items-center gap-2">
+                            <i class="fa-solid fa-users"></i> পার্টি লিস্ট (ফায়ারবেজ লাইভ সিঙ্ক)[span_20](start_span)[span_20](end_span)
+                        </h3>
+                        <div class="relative w-full md:w-72 flex items-center gap-2">
+                            <input type="text" placeholder="পার্টি নাম বা মোবাইল নাম্বার খুঁজুন..." class="w-full pl-3 pr-10 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">[span_21](start_span)[span_21](end_span)
+                            <button class="px-3 py-2 forest-green text-white rounded-lg hover:bg-green-900 text-sm">
+                                <i class="fa-solid fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="table-header text-xs">
+                                    <th class="p-3 border">ক্রমিক</th>
+                                    <th class="p-3 border">পার্টি নাম ও ঠিকানা</th>[span_22](start_span)[span_22](end_span)
+                                    <th class="p-3 border">মোবাইল</th>[span_23](start_span)[span_23](end_span)
+                                    <th class="p-3 border">জমা</th>[span_24](start_span)[span_24](end_span)
+                                    <th class="p-3 border">মাল ক্রয়</th>[span_25](start_span)[span_25](end_span)
+                                    <th class="p-3 border">বর্তমান বকেয়া</th>[span_26](start_span)[span_26](end_span)
+                                    <th class="p-3 border text-center">অ্যাকশন</th>[span_27](start_span)[span_27](end_span)
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 text-xs">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="p-3 border">১</td>
+                                    <td class="p-3 border font-medium">সঞ্জয় ট্রেডার্স, পাবনা</td>[span_28](start_span)[span_28](end_span)
+                                    <td class="p-3 border">০১৮০৬৭৬৪৪৪</td>[span_29](start_span)[span_29](end_span)
+                                    <td class="p-3 border">৫০০</td>[span_30](start_span)[span_30](end_span)
+                                    <td class="p-3 border">৬০০</td>[span_31](start_span)[span_31](end_span)
+                                    <td class="p-3 border">১০০</td>[span_32](start_span)[span_32](end_span)
+                                    <td class="p-3 border text-center">
+                                        <button onclick="showDetails('সঞ্জয় ট্রেডার্স, পাবনা')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow"><i class="fa-solid fa-eye"></i> ডিটেইলস</button>[span_33](start_span)[span_33](end_span)
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="p-3 border">২</td>
+                                    <td class="p-3 border font-medium">রহিম স্টোর, চাটমোহর</td>[span_34](start_span)[span_34](end_span)
+                                    <td class="p-3 border">০১৭২২৩৪৪৭৯৮</td>[span_35](start_span)[span_35](end_span)
+                                    <td class="p-3 border">৩০০</td>[span_36](start_span)[span_36](end_span)
+                                    <td class="p-3 border">৪০০</td>[span_37](start_span)[span_37](end_span)
+                                    <td class="p-3 border">২০০</td>[span_38](start_span)[span_38](end_span)
+                                    <td class="p-3 border text-center">
+                                        <button onclick="showDetails('রহিম স্টোর, চাটমোহর')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow"><i class="fa-solid fa-eye"></i> ডিটেইলস</button>[span_39](start_span)[span_39](end_span)
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="p-3 border">৩</td>
+                                    <td class="p-3 border font-medium">মদিনা ট্রেডার্স, আউড়িয়া</td>[span_40](start_span)[span_40](end_span)
+                                    <td class="p-3 border">০১৮১৯৭৬২৪০২</td>[span_41](start_span)[span_41](end_span)
+                                    <td class="p-3 border">৭০০</td>[span_42](start_span)[span_42](end_span)
+                                    <td class="p-3 border">৯০০</td>[span_43](start_span)[span_43](end_span)
+                                    <td class="p-3 border">২০০</td>[span_44](start_span)[span_44](end_span)
+                                    <td class="p-3 border text-center">
+                                        <button onclick="showDetails('মদিনা ট্রেডার্স, আউড়িয়া')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow"><i class="fa-solid fa-eye"></i> ডিটেইলস</button>[span_45](start_span)[span_45](end_span)
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="p-3 border">৪</td>
+                                    <td class="p-3 border font-medium">আনিক এন্টারপ্রাইজ, ঈশ্বরদী</td>[span_46](start_span)[span_46](end_span)
+                                    <td class="p-3 border">০১৮৭absValue...</td>[span_47](start_span)[span_47](end_span)
+                                    <td class="p-3 border">৪০০</td>[span_48](start_span)[span_48](end_span)
+                                    <td class="p-3 border">৫০০</td>[span_49](start_span)[span_49](end_span)
+                                    <td class="p-3 border">১০০</td>[span_50](start_span)[span_50](end_span)
+                                    <td class="p-3 border text-center">
+                                        <button onclick="showDetails('আনিক এন্টারপ্রাইজ, ঈশ্বরদী')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow"><i class="fa-solid fa-eye"></i> ডিটেইলস</button>[span_51](start_span)[span_51](end_span)
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                                <!-- Bottom Section: Advice & Ledger Details -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- Advice Card -->
+                    <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                        <div class="bg-[#064e3b] text-white px-4 py-2 rounded-lg font-bold text-sm mb-3 text-center shadow">
+                            পরামর্শ[span_52](start_span)[span_52](end_span)
+                        </div>
+                        <ol class="space-y-2 text-xs text-gray-700 list-decimal list-inside font-medium">
+                            <li>নিয়মিত পার্টির সাথে যোগাযোগ রাখুন।</li>
+                            <li>বਕয়া আদায় দ্রুত সম্পন্ন করুন।</li>
+                            <li>নতুন অর্ডার সংগ্রহে সচেষ্ট হোন।</li>
+                            <li>সঠিক সময়ে হিসাব সাবমিট করুন।</li>
+                            <li>গ্রাহক সেবার মান উন্নত করুন।</li>
+                        </ol>
+                    </div>
+
+                    <!-- Ledger Details Table -->
+                    <div id="ledger-section" class="bg-white rounded-xl shadow-md p-5 border border-gray-100 md:col-span-2">
+                        <div class="flex justify-between items-center mb-3 border-b pb-2">
+                            <h3 class="text-md font-bold forest-green-text flex items-center gap-2">
+                                <i class="fa-solid fa-file-invoice-dollar"></i> <span id="selected-party-title">পার্টির লেনদেনের বিবরণ</span>[span_53](start_span)[span_53](end_span)
+                            </h3>
+                            <span class="text-xs bg-gray-100 px-2.5 py-1 rounded text-gray-600">হিসাব বিবরণী</span>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="table-header text-[11px]">
+                                        <th class="p-2.5 border">তারিখ</th>[span_54](start_span)[span_54](end_span)
+                                        <th class="p-2.5 border">বিবরণ</th>[span_55](start_span)[span_55](end_span)
+                                        <th class="p-2.5 border">জমা</th>[span_56](start_span)[span_56](end_span)
+                                        <th class="p-2.5 border">মাল ক্রয়</th>[span_57](start_span)[span_57](end_span)
+                                        <th class="p-2.5 border">Dr/Cr</th>[span_58](start_span)[span_58](end_span)
+                                        <th class="p-2.5 border">অবশিষ্ট</th>[span_59](start_span)[span_59](end_span)
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="p-2.5 border">০১/১০/২৬</td>[span_60](start_span)[span_60](end_span)
+                                        <td class="p-2.5 border">জমা ইসলামী ব্যাংক</td>[span_61](start_span)[span_61](end_span)
+                                        <td class="p-2.5 border">৫০০</td>[span_62](start_span)[span_62](end_span)
+                                        <td class="p-2.5 border">০০</td>[span_63](start_span)[span_63](end_span)
+                                        <td class="p-2.5 border font-semibold text-red-600">Cr</td>[span_64](start_span)[span_64](end_span)
+                                        <td class="p-2.5 border font-bold">-৫০০</td>[span_65](start_span)[span_65](end_span)
+                                    </tr>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="p-2.5 border">০৫/১০/২৬</td>[span_66](start_span)[span_66](end_span)
+                                        <td class="p-2.5 border">মাল ক্রয় (ক্যাশ)</td>[span_67](start_span)[span_67](end_span)
+                                        <td class="p-2.5 border">০০</td>[span_68](start_span)[span_68](end_span)
+                                        <td class="p-2.5 border">৬০০</td>[span_69](start_span)[span_69](end_span)
+                                        <td class="p-2.5 border font-semibold text-blue-600">Dr</td>[span_70](start_span)[span_70](end_span)
+                                        <td class="p-2.5 border font-bold">-১১০০</td>[span_71](start_span)[span_71](end_span)
+                                    </tr>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="p-2.5 border">১০/১০/২৬</td>[span_72](start_span)[span_72](end_span)
+                                        <td class="p-2.5 border">আংশিক পরিশোধ</td>[span_73](start_span)[span_73](end_span)
+                                        <td class="p-2.5 border">৩০০</td>[span_74](start_span)[span_74](end_span)
+                                        <td class="p-2.5 border">০০</td>[span_75](start_span)[span_75](end_span)
+                                        <td class="p-2.5 border font-semibold text-red-600">Cr</td>[span_76](start_span)[span_76](end_span)
+                                        <td class="p-2.5 border font-bold">-৮০০</td>[span_77](start_span)[span_77](end_span)
+                                    </tr>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="p-2.5 border">১৫/১০/২৬</td>[span_78](start_span)[span_78](end_span)
+                                        <td class="p-2.5 border">মাল ক্রয়</td>[span_79](start_span)[span_79](end_span)
+                                        <td class="p-2.5 border">০০</td>[span_80](start_span)[span_80](end_span)
+                                        <td class="p-2.5 border">৪০০</td>[span_81](start_span)[span_81](end_span)
+                                        <td class="p-2.5 border font-semibold text-blue-600">Dr</td>[span_82](start_span)[span_82](end_span)
+                                        <td class="p-2.5 border font-bold">-১২০০</td>[span_83](start_span)[span_83](end_span)
+                                    </tr>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="p-2.5 border">২০/১০/২৬</td>[span_84](start_span)[span_84](end_span)
+                                        <td class="p-2.5 border">জমা ইসলামী ব্যাংক</td>[span_85](start_span)[span_85](end_span)
+                                        <td class="p-2.5 border">৩০০</td>[span_86](start_span)[span_86](end_span)
+                                        <td class="p-2.5 border">০০</td>[span_87](start_span)[span_87](end_span)
+                                        <td class="p-2.5 border font-semibold text-red-600">Cr</td>[span_88](start_span)[span_88](end_span)
+                                        <td class="p-2.5 border font-bold">-৯০০</td>[span_89](start_span)[span_89](end_span)
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 bg-white border-t py-4 text-center text-xs text-gray-500">
+            © ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত[span_90](start_span)[span_90](end_span)
+        </footer>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDmiZ7Pa0nB9HF29bv6qoT2qSzko4RVEHI",
+            authDomain: "fastlab-unani.firebaseapp.com",
+            projectId: "fastlab-unani",
+            storageBucket: "fastlab-unani.firebasestorage.app",
+            messagingSenderId: "1319654847",
+            appId: "1:1319654847:web:cdb5c4813ea8e48877fd0a",
+            measurementId: "G-LDL48BEM76"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let systemAuth = {
+            id: "marketing01",
+            pass: "Unani02",
+            name: "সঞ্জয় ইসলাম"
+        };
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const inputId = document.getElementById('user-id').value.trim();
+            const inputPass = document.getElementById('password').value.trim();
+            const errorAlert = document.getElementById('error-alert');
+
+            if (inputId === systemAuth.id && inputPass === systemAuth.pass) {
+                errorAlert.classList.add('hidden');
+                document.getElementById('profile-name').innerText = systemAuth.name;
+                document.getElementById('top-profile-name').innerText = systemAuth.name + " | মার্কেটিং অফিসার";
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('dashboard-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('flex');
+                
+                // ফায়ারবেজ রিয়েলটাইম ডেটাবেজ লাইভ সিঙ্ক কল
+                loadRealtimeData();
+            } else {
+                errorAlert.classList.remove('hidden');
+                document.getElementById('error-text').innerText = "ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
+            }
+        }
+
+        function handleLogout() {
+            document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('dashboard-section').classList.remove('flex');
+            document.getElementById('login-section').classList.remove('hidden');
+            document.getElementById('user-id').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('error-alert').classList.add('hidden');
+        }
+
+        function showDetails(partyName) {
+            document.getElementById('selected-party-title').innerText = partyName + ' - পার্টির লেনদেনের বিবরণ';
+            document.getElementById('ledger-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function loadRealtimeData() {
+            database.ref('fastlab_marketing_data/').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    console.log("Marketing Realtime Data Synced:", data);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
