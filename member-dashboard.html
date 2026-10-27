@@ -15,10 +15,10 @@
         .table-header { background-color: #064e3b; color: white; }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 flex flex-col min-h-screen">
 
     <!-- Login Section -->
-    <div id="login-section" class="min-h-screen flex items-center justify-center p-4 bg-cover bg-center" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80')">
+    <div id="login-section" class="min-h-screen flex items-center justify-center p-4 bg-cover bg-center absolute inset-0 z-50" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80')">
         <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full border-t-4 forest-green-border relative">
             
             <div class="text-center mb-6">
@@ -32,10 +32,10 @@
                 </div>
             </div>
 
-            <!-- Error Message Box (Initially Hidden) -->
+            <!-- Error Message Box -->
             <div id="error-alert" class="hidden mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm flex items-center gap-2">
                 <i class="fa-solid fa-triangle-exclamation text-lg"></i>
-                <span id="error-text">রং ইউজার আইডি বা পাসওয়ার্ড! আবার চেষ্টা করুন।</span>
+                <span id="error-text">রং ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।</span>
             </div>
 
             <form onsubmit="handleLogin(event)" class="space-y-4">
@@ -45,7 +45,7 @@
                         <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                             <i class="fa-solid fa-user"></i>
                         </span>
-                        <input type="text" id="user-id" required placeholder="যেমন: supplier1" class="w-full pl-10 pr-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-700">
+                        <input type="text" id="user-id" required placeholder="আপনার ইউজার আইডি দিন" class="w-full pl-10 pr-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-700">
                     </div>
                 </div>
 
@@ -73,153 +73,265 @@
                     <i class="fa-solid fa-house"></i> হোম পেজে ফিরে যান
                 </a>
             </div>
-            
-            <div class="mt-4 pt-3 border-t text-center text-xs text-gray-400">
-                ডিফল্ট আইডি: <span class="font-bold text-gray-600">supplier1</span> | পাসওয়ার্ড: <span class="font-bold text-gray-600">1234</span>
-            </div>
         </div>
     </div>
 
-    <!-- Dashboard Section -->
-    <div id="dashboard-section" class="hidden min-h-screen pb-12 flex flex-col justify-between">
-        <div>
-            <!-- Top Header -->
-            <header class="forest-green text-white shadow-md relative">
-                <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <!-- Hamburger Menu Button (Three Lines) -->
-                        <button onclick="toggleMenu()" class="bg-green-900 hover:bg-green-800 text-white p-2 rounded-lg border border-green-700 flex items-center gap-2 transition focus:outline-none">
-                            <i class="fa-solid fa-bars text-lg"></i>
-                            <span class="text-sm font-medium hidden sm:inline">মেনুবার</span>
-                        </button>
-                        <div>
-                            <h2 class="text-base sm:text-lg font-bold">ফাস্টল্যাব ইউনানী</h2>
-                            <p class="text-xs text-green-200">সাপ্লায়ার ম্যানেজমেন্ট - পাবনা শাখা</p>
-                        </div>
+    <!-- Dashboard Section (Hidden by default until login) -->
+    <div id="dashboard-section" class="hidden flex-col min-h-screen">
+        <!-- Top Header with Three-Dot / Hamburger Menu on Right -->
+        <header class="forest-green text-white shadow-md relative">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white p-2 rounded-full text-green-800">
+                        <i class="fa-solid fa-leaf text-xl"></i>
                     </div>
-
-                    <div class="flex items-center gap-3">
-                        <div class="relative">
-                            <span class="bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 absolute -top-1 -right-1">৩</span>
-                            <i class="fa-solid fa-bell text-xl cursor-pointer"></i>
-                        </div>
-                        <div class="flex items-center gap-2 bg-green-900 px-3 py-1.5 rounded-lg border border-green-700">
-                            <span class="text-sm font-medium" id="logged-user-name">মোঃ আব্দুল রহিম</span>
-                            <span class="text-xs bg-green-800 px-2 py-0.5 rounded text-green-200 hidden sm:inline">সরবরাহ অফিসার</span>
-                            <button onclick="handleLogout()" class="ml-1 text-red-300 hover:text-white" title="লগ আউট">
-                                <i class="fa-solid fa-right-from-bracket"></i>
-                            </button>
-                        </div>
+                    <div>
+                        <h2 class="text-lg font-bold">ফাস্টল্যাব ইউনানী</h2>
+                        <p class="text-xs text-green-200">সাপ্লায়ার ম্যানেজমেন্ট - পাবনা শাখা</p>
                     </div>
                 </div>
 
-                <!-- Dropdown Menu (Triggered by Three Lines / Hamburger Icon) -->
-                <div id="dropdown-menu" class="hidden absolute left-4 top-16 bg-white text-gray-800 rounded-xl shadow-2xl w-64 border border-gray-200 z-50 overflow-hidden">
-                    <div class="forest-green text-white px-4 py-3 font-bold flex justify-between items-center text-sm">
-                        <span><i class="fa-solid fa-bars"></i> মেনুবার অপশন</span>
-                        <button onclick="toggleMenu()" class="text-white hover:text-gray-200"><i class="fa-solid fa-xmark"></i></button>
+                <!-- Right Side: Notification & Three-Dot Menu -->
+                <div class="flex items-center gap-4 relative">
+                    <div class="relative">
+                        <span class="bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 absolute -top-1 -right-1">৩</span>
+                        <i class="fa-solid fa-bell text-xl cursor-pointer"></i>
                     </div>
-                    <div class="p-2 space-y-1 text-sm">
-                        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg forest-green text-white font-medium">
-                            <i class="fa-solid fa-chart-line w-5"></i> ড্যাশবোর্ড
+
+                    <!-- Hamburger / Three-Dot Menu Button -->
+                    <button onclick="toggleMenu()" class="bg-green-900 hover:bg-green-800 px-3.5 py-2 rounded-lg border border-green-700 flex items-center gap-2 text-white transition">
+                        <i class="fa-solid fa-bars"></i>
+                        <span class="text-sm font-medium">মেনুবার</span>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div id="dropdown-menu" class="hidden absolute right-0 top-12 w-64 bg-white rounded-xl shadow-2xl border border-gray-200 py-2 z-50 text-gray-800">
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-green-50 hover:text-green-800 font-medium text-sm">
+                            <i class="fa-solid fa-chart-line forest-green-text"></i> ড্যাশবোর্ড
                         </a>
-                        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-800 transition font-medium">
-                            <i class="fa-solid fa-users w-5"></i> পার্টির হিসাব
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-green-50 hover:text-green-800 font-medium text-sm">
+                            <i class="fa-solid fa-users forest-green-text"></i> পার্টির হিসাব
                         </a>
-                        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-800 transition font-medium">
-                            <i class="fa-solid fa-history w-5"></i> সরবরাহ ইতিহাস
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-green-50 hover:text-green-800 font-medium text-sm">
+                            <i class="fa-solid fa-history forest-green-text"></i> সরবরাহ ইতিহাস
                         </a>
-                        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-800 transition font-medium">
-                            <i class="fa-solid fa-bullhorn w-5"></i> নোটিশ বোর্ড
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-green-50 hover:text-green-800 font-medium text-sm">
+                            <i class="fa-solid fa-bullhorn forest-green-text"></i> নোটিশ বোর্ড
                         </a>
-                        
-                        <!-- Admin Panel Controls (Only for Admin) -->
-                        <div id="admin-controls" class="hidden pt-2 border-t mt-2">
-                            <p class="text-xs font-bold text-red-600 mb-1 uppercase tracking-wide px-2"><i class="fa-solid fa-shield-halved"></i> এডমিন কন্ট্রোল</p>
-                            <button onclick="openCredentialModal()" class="w-full text-left flex items-center gap-2 px-3 py-2 bg-amber-50 text-amber-800 rounded-lg text-xs font-semibold hover:bg-amber-100 transition border border-amber-200">
+                        <div id="admin-menu-item" class="hidden">
+                            <hr class="my-1 border-gray-200">
+                            <button onclick="openCredentialModal()" class="w-full text-left flex items-center gap-3 px-4 py-2.5 hover:bg-amber-50 text-amber-800 font-medium text-sm">
                                 <i class="fa-solid fa-key"></i> আইডি/পাসওয়ার্ড পরিবর্তন
                             </button>
                         </div>
-
-                        <hr class="my-2 border-gray-200">
-                        <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 hover:bg-red-50 transition font-medium text-left">
-                            <i class="fa-solid fa-right-from-bracket w-5"></i> লগ আউট
+                        <hr class="my-1 border-gray-200">
+                        <button onclick="handleLogout()" class="w-full text-left flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-red-600 font-medium text-sm">
+                            <i class="fa-solid fa-right-from-bracket"></i> লগ আউট
                         </button>
                     </div>
                 </div>
-            </header>
+            </div>
+        </header>
 
-            <!-- Main Content Layout -->
-            <div class="container mx-auto px-4 mt-6 space-y-6">
-                
-                <!-- Profile & Notice Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100 flex items-center gap-4">
-                        <div class="bg-green-100 p-4 rounded-full text-green-800 text-3xl">
-                            <i class="fa-solid fa-mortar-pestle"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold text-gray-800" id="profile-role-title">সরবরাহ অফিসার</h3>
-                            <p class="text-sm font-semibold text-gray-600" id="profile-name">মোঃ আব্দুল রহিম</p>
-                            <p class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="fa-solid fa-phone"></i> ০১৩৩৫০১৯৭৮৮</p>
-                        </div>
+        <!-- Main Content Area -->
+        <div class="container mx-auto px-4 mt-6 space-y-6 flex-grow">
+            
+            <!-- Top Info Cards: Officer Profile & Notice Board -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Officer Profile Card -->
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100 flex items-center gap-4">
+                    <div class="bg-green-100 p-4 rounded-full text-green-800 text-3xl">
+                        <i class="fa-solid fa-mortar-pestle"></i>
                     </div>
-
-                    <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
-                        <div class="flex items-center justify-between mb-3 border-b pb-2">
-                            <h3 class="text-md font-bold forest-green-text flex items-center gap-2">
-                                <i class="fa-solid fa-bullhorn"></i> নোটিশ বোর্ড
-                            </h3>
-                        </div>
-                        <ul class="space-y-2 text-xs text-gray-700">
-                            <li class="flex items-start gap-2">
-                                <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
-                                <span>আগামী ২০ তারিখের মধ্যে স্টকের তথ্য জমা দিন।</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
-                                <span>নতুন সরবরাহ নীতিমালার বিজ্ঞপ্তি।</span>
-                            </li>
-                        </ul>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800" id="profile-role-title">সরবরাহ অফিসার</h3>
+                        <p class="text-sm font-semibold text-gray-600" id="profile-name">মোঃ আব্দুল রহিম</p>
+                        <p class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="fa-solid fa-phone"></i> ০১৩৩৫০১৯৭৮৮</p>
+                        <p class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-location-dot"></i> মার্কেটিং এরিয়া: পাবনা শাখা</p>
                     </div>
                 </div>
 
-                <!-- Party Table -->
+                <!-- Notice Board Card -->
                 <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
-                    <h3 class="text-lg font-bold forest-green-text mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-users"></i> পার্টির তালিকা ও ব্যালেন্স
-                    </h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr class="table-header text-xs">
-                                    <th class="p-3 border">ক্রমিক</th>
-                                    <th class="p-3 border">পার্টির নাম</th>
-                                    <th class="p-3 border">মোবাইল</th>
-                                    <th class="p-3 border">বর্তমান বকেয়া</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="p-3 border">১</td>
-                                    <td class="p-3 border font-medium">সদাগর ট্রেডার্স, পাবনা</td>
-                                    <td class="p-3 border">০১৮০৬৭৬৪৪৪</td>
-                                    <td class="p-3 border font-bold text-red-600">২০০ টাকা</td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="p-3 border">২</td>
-                                    <td class="p-3 border font-medium">রহিম স্টোর, চাটমোহর</td>
-                                    <td class="p-3 border">০১৭২২৩৪৪৭৯৮</td>
-                                    <td class="p-3 border font-bold text-red-600">২০০ টাকা</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="flex items-center justify-between mb-3 border-b pb-2">
+                        <h3 class="text-md font-bold forest-green-text flex items-center gap-2">
+                            <i class="fa-solid fa-bullhorn"></i> নোটিশ বোর্ড
+                        </h3>
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">গুরুত্বপূর্ণ</span>
                     </div>
+                    <ul class="space-y-2 text-xs text-gray-700">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
+                            <span>আগামী ২০ তারিখের মধ্যে স্টকের তথ্য জমা দিন। <br><span class="text-gray-400">২০ জানুয়ারি ২০২৬</span></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
+                            <span>নতুন সরবরাহ নীতিমালার বিজ্ঞপ্তি। <br><span class="text-gray-400">১৯ জানুয়ারি ২০২৬</span></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
+                            <span>মাসিক হিসাব ৩০ তারিখের মধ্যে জমা দেওয়ার অনুরোধ রইলো। <br><span class="text-gray-400">১৮ জানুয়ারি ২০২৬</span></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Party List Table -->
+            <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
+                    <h3 class="text-lg font-bold forest-green-text flex items-center gap-2">
+                        <i class="fa-solid fa-users"></i> পার্টির তালিকা
+                    </h3>
+                    <div class="relative w-full md:w-72">
+                        <input type="text" placeholder="পার্টি নাম বা মোবাইল নাম্বার খুঁজুন..." class="w-full pl-3 pr-10 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
+                        <button class="absolute inset-y-0 right-0 px-3 forest-green text-white rounded-r-lg hover:bg-green-900">
+                            <i class="fa-solid fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="table-header text-xs">
+                                <th class="p-3 border">ক্রমিক</th>
+                                <th class="p-3 border">সরবরাহকারী পার্টির নাম ও ঠিকানা</th>
+                                <th class="p-3 border">মোবাইল</th>
+                                <th class="p-3 border">জমা মাল</th>
+                                <th class="p-3 border">পাওনা মাল</th>
+                                <th class="p-3 border">বর্তমান বকেয়া</th>
+                                <th class="p-3 border text-center">অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border">১</td>
+                                <td class="p-3 border font-medium">সদাগর ট্রেডার্স, পাবনা</td>
+                                <td class="p-3 border">০১৮০৬৭৬৪৪৪</td>
+                                <td class="p-3 border">১০০</td>
+                                <td class="p-3 border">৬০০</td>
+                                <td class="p-3 border">২০০</td>
+                                <td class="p-3 border text-center">
+                                    <button onclick="showDetails('সদাগর ট্রেডার্স, পাবনা')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border">২</td>
+                                <td class="p-3 border font-medium">রহিম স্টোর, চাটমোহর</td>
+                                <td class="p-3 border">০১৭২২৩৪৪৭৯৮</td>
+                                <td class="p-3 border">৩০০</td>
+                                <td class="p-3 border">৪০০</td>
+                                <td class="p-3 border">২০০</td>
+                                <td class="p-3 border text-center">
+                                    <button onclick="showDetails('রহিম স্টোর, চাটমোহর')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border">৩</td>
+                                <td class="p-3 border font-medium">মদিনা ট্রেডার্স, আউড়িয়া</td>
+                                <td class="p-3 border">০১৮১৯৭৬২৪০২</td>
+                                <td class="p-3 border">১০০</td>
+                                <td class="p-3 border">৯০০</td>
+                                <td class="p-3 border">২০০</td>
+                                <td class="p-3 border text-center">
+                                    <button onclick="showDetails('মদিনা ট্রেডার্স, আউড়িয়া')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border">৪</td>
+                                <td class="p-3 border font-medium">আনিক এন্টারপ্রাইজ, ঈশ্বরদী</td>
+                                <td class="p-3 border">০১৮৭৫৪৮০২১০</td>
+                                <td class="p-3 border">৪০০</td>
+                                <td class="p-3 border">৫০০</td>
+                                <td class="p-3 border">১০০</td>
+                                <td class="p-3 border text-center">
+                                    <button onclick="showDetails('আনিক এন্টারপ্রাইজ, ঈশ্বরদী')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Transaction Ledger Details -->
+            <div id="ledger-section" class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                <div class="flex justify-between items-center mb-4 border-b pb-2">
+                    <h3 class="text-lg font-bold forest-green-text flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice-dollar"></i> <span id="selected-party-title">পার্টির লেনদেনের বিবরণ</span>
+                    </h3>
+                    <span class="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-600">হিসাব বিবরণী</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="table-header text-xs">
+                                <th class="p-3 border">তারিখ</th>
+                                <th class="p-3 border">বিবরণ</th>
+                                <th class="p-3 border">পরিমাণ (কেজি/লিটার)</th>
+                                <th class="p-3 border">মূল্য (টাকা)</th>
+                                <th class="p-3 border">জমা (টাকা)</th>
+                                <th class="p-3 border">Dr/Cr</th>
+                                <th class="p-3 border">অবশিষ্ট ব্যালেন্স</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border">dd/mm/২৬</td>
+                                <td class="p-3 border">মাল সরবরাহ (১০০ কেজি)</td>
+                                <td class="p-3 border">১০০</td>
+                                <td class="p-3 border">২০০০</td>
+                                <td class="p-3 border">০০০</td>
+                                <td class="p-3 border font-semibold text-red-600">Cr</td>
+                                <td class="p-3 border font-bold">-৫০০</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border">০৫/mm/২৬</td>
+                                <td class="p-3 border">বিল পরিশোধ</td>
+                                <td class="p-3 border">২০০</td>
+                                <td class="p-3 border">৬০০০</td>
+                                <td class="p-3 border">৬০০</td>
+                                <td class="p-3 border font-semibold text-blue-600">Dr</td>
+                                <td class="p-3 border font-bold">-১১০০</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border">১০/mm/২৬</td>
+                                <td class="p-3 border">বিল পরিশোধ</td>
+                                <td class="p-3 border">২০০</td>
+                                <td class="p-3 border">১৯০০</td>
+                                <td class="p-3 border">৬০০</td>
+                                <td class="p-3 border font-semibold text-red-600">Cr</td>
+                                <td class="p-3 border font-bold">-৮০০</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border">১৩/mm/২৬</td>
+                                <td class="p-3 border">নতুন অর্ডার</td>
+                                <td class="p-3 border">২০০</td>
+                                <td class="p-3 border">১৪০০</td>
+                                <td class="p-3 border">১,০০০</td>
+                                <td class="p-3 border font-semibold text-blue-600">Dr</td>
+                                <td class="p-3 border font-bold">-২২০০</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border">২০/mm/২৬</td>
+                                <td class="p-3 border">মাল সরবরাহ (১০০ কেজি)</td>
+                                <td class="p-3 border">৮০</td>
+                                <td class="p-3 border">১০০০</td>
+                                <td class="p-3 border">৮০০</td>
+                                <td class="p-3 border font-semibold text-red-600">Cr</td>
+                                <td class="p-3 border font-bold">-৭০০</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
         <!-- Footer -->
+        <footer class="mt-12 bg-white border-t py-4 text-center text-xs text-gray-500">
+            © ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত
+        </footer>
+    </div>
+    <!-- Footer -->
         <footer class="mt-12 bg-white border-t py-4 text-center text-xs text-gray-500">
             © ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত
         </footer>
@@ -234,11 +346,11 @@
             <div class="space-y-3">
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">নতুন ইউজার আইডি</label>
-                    <input type="text" id="new-user-id" value="supplier1" class="w-full px-3 py-2 border rounded text-sm focus:ring-2 focus:ring-green-700">
+                    <input type="text" id="new-user-id" class="w-full px-3 py-2 border rounded text-sm focus:ring-2 focus:ring-green-700">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">নতুন পাসওয়ার্ড</label>
-                    <input type="text" id="new-password" value="1234" class="w-full px-3 py-2 border rounded text-sm focus:ring-2 focus:ring-green-700">
+                    <input type="text" id="new-password" class="w-full px-3 py-2 border rounded text-sm focus:ring-2 focus:ring-green-700">
                 </div>
                 <div class="flex justify-end gap-2 mt-4">
                     <button onclick="closeCredentialModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded text-xs font-medium hover:bg-gray-300">বাতিল</button>
@@ -249,10 +361,10 @@
     </div>
 
     <script>
-        // System Credentials Object
-        let validCredentials = {
-            id: "supplier1",
-            pass: "1234",
+        // Secure Admin & User Credentials (No hardcoded credentials shown on login board)
+        let systemAuth = {
+            id: "admin_fastlab",
+            pass: "Unani@2026#",
             name: "মোঃ আব্দুল রহিম",
             isAdmin: true
         };
@@ -271,37 +383,42 @@
             }
         }
 
-        // Toggle Three-Line Dropdown Menu
         function toggleMenu() {
             const menu = document.getElementById('dropdown-menu');
             menu.classList.toggle('hidden');
         }
 
-        // Strict Login Validation Function
+        // Close menu when clicking outside
+        window.addEventListener('click', function(e) {
+            const menu = document.getElementById('dropdown-menu');
+            const btn = e.target.closest('button');
+            if (!menu.contains(e.target) && (!btn || !btn.getAttribute('onclick')?.includes('toggleMenu'))) {
+                menu.classList.add('hidden');
+            }
+        });
+
         function handleLogin(event) {
             event.preventDefault();
             const inputId = document.getElementById('user-id').value.trim();
             const inputPass = document.getElementById('password').value.trim();
             const errorAlert = document.getElementById('error-alert');
 
-            // Strictly check if input matches valid credentials
-            if (inputId === validCredentials.id && inputPass === validCredentials.pass) {
+            if (inputId === systemAuth.id && inputPass === systemAuth.pass) {
                 errorAlert.classList.add('hidden');
-                document.getElementById('logged-user-name').innerText = validCredentials.name;
-                document.getElementById('profile-name').innerText = validCredentials.name;
+                document.getElementById('profile-name').innerText = systemAuth.name;
                 
-                if (validCredentials.isAdmin) {
-                    document.getElementById('admin-controls').classList.remove('hidden');
+                if (systemAuth.isAdmin) {
+                    document.getElementById('admin-menu-item').classList.remove('hidden');
                     document.getElementById('profile-role-title').innerText = "সিস্টেম এডমিন / সরবরাহ অফিসার";
                 } else {
-                    document.getElementById('admin-controls').classList.add('hidden');
+                    document.getElementById('admin-menu-item').classList.add('hidden');
                     document.getElementById('profile-role-title').innerText = "সরবরাহ অফিসার";
                 }
 
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('dashboard-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('flex');
             } else {
-                // Show Wrong ID or Password Error Banner
                 errorAlert.classList.remove('hidden');
                 document.getElementById('error-text').innerText = "রং ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
             }
@@ -309,6 +426,7 @@
 
         function handleLogout() {
             document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('dashboard-section').classList.remove('flex');
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('user-id').value = '';
             document.getElementById('password').value = '';
@@ -317,8 +435,8 @@
         }
 
         function openCredentialModal() {
-            document.getElementById('new-user-id').value = validCredentials.id;
-            document.getElementById('new-password').value = validCredentials.pass;
+            document.getElementById('new-user-id').value = systemAuth.id;
+            document.getElementById('new-password').value = systemAuth.pass;
             document.getElementById('credential-modal').classList.remove('hidden');
             document.getElementById('dropdown-menu').classList.add('hidden');
         }
@@ -332,13 +450,18 @@
             const newPass = document.getElementById('new-password').value.trim();
             
             if (newId && newPass) {
-                validCredentials.id = newId;
-                validCredentials.pass = newPass;
+                systemAuth.id = newId;
+                systemAuth.pass = newPass;
                 alert('সফলভাবে ইউজার আইডি ও পাসওয়ার্ড আপডেট করা হয়েছে!');
                 closeCredentialModal();
             } else {
                 alert('দয়া করে সঠিক আইডি ও পাসওয়ার্ড লিখুন।');
             }
+        }
+
+        function showDetails(partyName) {
+            document.getElementById('selected-party-title').innerText = partyName + ' - পার্টির লেনদেনের বিবরণ';
+            document.getElementById('ledger-section').scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
