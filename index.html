@@ -40,9 +40,9 @@
                     <p class="text-emerald-200 text-sm mt-1">আফুরিয়া, হিমাইতপুর, পাবনা</p>
                 </div>
             </div>
-            <!-- Top Right Menu Toggle Button for Mobile/Desktop -->
+            <!-- Top Right Menu Toggle Button -->
             <div class="mt-4 md:mt-0">
-                <button onclick="toggleSidebar()" class="bg-[#14532d] hover:bg-forest-600 px-4 py-2.5 rounded-lg flex items-center space-x-2 text-white font-semibold shadow transition">
+                <button onclick="toggleSidebarMobile()" class="bg-[#14532d] hover:bg-forest-600 px-4 py-2.5 rounded-lg flex items-center space-x-2 text-white font-semibold shadow transition">
                     <i class="fa-solid fa-bars"></i>
                     <span>মেনুবার</span>
                 </button>
@@ -64,7 +64,7 @@
                     <div class="space-y-3">
                         <div class="bg-white p-3 rounded-lg shadow-sm border border-emerald-100 flex items-center space-x-3">
                             <span class="w-7 h-7 bg-[#14532d] text-white rounded-full flex items-center justify-center text-xs font-bold">১.</span>
-                            <p class="text-slate-700 text-sm">সকল একাউন্টস অফিসার ও সাপ্লায়ারদের নিয়মিত ডাটা আপডেট করার নির্দেশ দেওয়া হলো।</p>
+                            <p class="text-slate-700 text-sm">সকল অফিসার ও সাপ্লায়ারদের নিয়মিত ফায়ারবেজ ডেটা আপডেট করার নির্দেশ দেওয়া হলো।</p>
                         </div>
                         <div class="bg-white p-3 rounded-lg shadow-sm border border-emerald-100 flex items-center space-x-3">
                             <span class="w-7 h-7 bg-[#14532d] text-white rounded-full flex items-center justify-center text-xs font-bold">২.</span>
@@ -72,7 +72,7 @@
                         </div>
                         <div class="bg-white p-3 rounded-lg shadow-sm border border-emerald-100 flex items-center space-x-3">
                             <span class="w-7 h-7 bg-[#14532d] text-white rounded-full flex items-center justify-center text-xs font-bold">৩.</span>
-                            <p class="text-slate-700 text-sm">শাখার কার্যক্রমে ফায়ারবেজ রিয়েলটাইম ডেটাবেজ সফলভাবে যুক্ত করা হয়েছে।</p>
+                            <p class="text-slate-700 text-sm">মার্কেটিং ও সরবরাহ অফিসারদের ড্যাশবোর্ড আপডেট করা হয়েছে।</p>
                         </div>
                     </div>
                 </section>
@@ -118,7 +118,6 @@
                         </div>
                     </div>
                 </section>
-
                 <!-- About Company Section -->
                 <section class="bg-emerald-50/50 rounded-xl p-5 border border-emerald-100 shadow-sm">
                     <div class="flex items-center space-x-2 text-[#064e3b] font-bold text-xl mb-3 border-b pb-2 border-emerald-200">
@@ -131,7 +130,8 @@
                 </section>
 
             </div>
-             <!-- Right Sidebar Navigation (1 Column) -->
+
+            <!-- Right Sidebar Navigation (1 Column) -->
             <div class="bg-slate-50 p-5 border-l border-slate-200 flex flex-col justify-between space-y-6">
                 <div class="space-y-2">
                     <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">মেনু অপশনসমূহ</h3>
@@ -140,23 +140,33 @@
                         <i class="fa-solid fa-house w-5"></i>
                         <span>হোম পেজ</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
+                    <a href="#notice-section" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
                         <i class="fa-solid fa-bell w-5 text-[#14532d]"></i>
                         <span>নোটিশ বোর্ড</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
+                    <a href="#directors-section" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
                         <i class="fa-solid fa-users w-5 text-[#14532d]"></i>
                         <span>পরিচালক মণ্ডলী</span>
                     </a>
-                    <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
+                    <a href="#about-section" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
                         <i class="fa-solid fa-circle-info w-5 text-[#14532d]"></i>
                         <span>কোম্পানির সম্পর্কে</span>
                     </a>
-                    <a href="javascript:void(0);" onclick="openLoginModal()" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
+                    
+                    <!-- সরবরাহ অফিসার/ইউজার লগইন -->
+                    <a href="javascript:void(0);" onclick="openLoginModal('supplier')" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
                         <i class="fa-solid fa-user-tie w-5 text-[#14532d]"></i>
                         <span>সরবরাহ অফিসার/ইউজার লগইন</span>
                     </a>
-                    <a href="javascript:void(0);" onclick="openLoginModal()" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-red-600 text-white font-medium shadow hover:bg-red-700 transition">
+
+                    <!-- মার্কেটিং অফিসার/ইউজার লগইন (নতুন সংযোজন) -->
+                    <a href="javascript:void(0);" onclick="openLoginModal('marketing')" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
+                        <i class="fa-solid fa-bullhorn w-5 text-[#14532d]"></i>
+                        <span>মার্কেটিং অফিসার/ইউজার লগইন</span>
+                    </a>
+
+                    <!-- অফিস/এডমিন লগইন (মাস্টার কন্ট্রোল প্যানেল) -->
+                    <a href="javascript:void(0);" onclick="openLoginModal('admin')" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-red-600 text-white font-medium shadow hover:bg-red-700 transition">
                         <i class="fa-solid fa-user-shield w-5"></i>
                         <span>অফিস/এডমিন লগইন</span>
                     </a>
@@ -169,14 +179,14 @@
                         <span>দ্রুত লিংক</span>
                     </h4>
                     <div class="space-y-1.5 text-xs">
-                        <a href="javascript:void(0);" onclick="openLoginModal()" class="block text-slate-600 hover:text-[#14532d] hover:underline">▶ সরবরাহ অফিসার লগইন</a>
-                        <a href="javascript:void(0);" onclick="openLoginModal()" class="block text-slate-600 hover:text-[#14532d] hover:underline">▶ অফিস/এডমিন লগইন</a>
+                        <a href="javascript:void(0);" onclick="openLoginModal('supplier')" class="block text-slate-600 hover:text-[#14532d] hover:underline">▶ সরবরাহ অফিসার লগইন</a>
+                        <a href="javascript:void(0);" onclick="openLoginModal('marketing')" class="block text-slate-600 hover:text-[#14532d] hover:underline">▶ মার্কেটিং অফিসার লগইন</a>
+                        <a href="javascript:void(0);" onclick="openLoginModal('admin')" class="block text-slate-600 hover:text-[#14532d] hover:underline">▶ অফিস/এডমিন লগইন</a>
                     </div>
                 </div>
             </div>
 
         </div>
-
         <!-- Footer Section -->
         <footer class="bg-[#064e3b] text-white p-6 border-t border-[#166534]">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 text-sm">
@@ -208,7 +218,8 @@
         </footer>
 
     </div>
-      <!-- Login Modal (Hidden by default, pops up on clicking login) -->
+
+    <!-- Login Modal -->
     <div id="login-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8 relative">
             <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl">
@@ -217,17 +228,18 @@
             
             <div class="text-center mb-6">
                 <div class="inline-flex items-center justify-center w-14 h-14 bg-emerald-50 text-[#14532d] rounded-full text-2xl mb-3 shadow-inner">
-                    <i class="fa-solid fa-user-shield"></i>
+                    <i id="modal-icon" class="fa-solid fa-user-shield"></i>
                 </div>
-                <h2 class="text-xl font-bold text-slate-800">অফিস/ইউজার লগইন</h2>
+                <h2 id="modal-title" class="text-xl font-bold text-slate-800">লগইন প্যানেল</h2>
                 <p class="text-slate-500 text-xs mt-1">সঠিক আইডি ও পাসওয়ার্ড দিয়ে প্রবেশ করুন</p>
             </div>
 
             <div id="error-alert" class="hidden mb-4 p-3 bg-red-50 border-l-4 border-red-500 text-red-700 text-xs rounded-r-lg">
-                <span id="error-text">রং ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।</span>
+                <span id="error-text">ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।</span>
             </div>
 
             <form onsubmit="handleLogin(event)" class="space-y-4">
+                <input type="hidden" id="login-type" value="">
                 <div>
                     <label class="block text-xs font-medium text-slate-700 mb-1">ইউজার আইডি</label>
                     <input type="text" id="user-id" required class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#14532d]" placeholder="ইউজার আইডি দিন">
@@ -265,32 +277,49 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        let systemAuth = {
-            id: "supplier01",
-            pass: "Unani02",
-            name: "মোঃ আব্দুল রহিম"
-        };
-
-        function openLoginModal() {
+        function openLoginModal(type) {
             document.getElementById('login-modal').classList.remove('hidden');
-        }
+            document.getElementById('login-type').value = type;
+            const titleEl = document.getElementById('modal-title');
+            const iconEl = document.getElementById('modal-icon');
 
+            if(type === 'supplier') {
+                titleEl.innerText = "সরবরাহ অফিসার/ইউজার লগইন";
+                iconEl.className = "fa-solid fa-user-tie";
+            } else if(type === 'marketing') {
+                titleEl.innerText = "মার্কেটিং অফিসার/ইউজার লগইন";
+                iconEl.className = "fa-solid fa-bullhorn";
+            } else if(type === 'admin') {
+                titleEl.innerText = "অফিস/এডমিন লগইন (মাস্টার প্যানেল)";
+                iconEl.className = "fa-solid fa-user-shield";
+            }
+        }
         function closeLoginModal() {
             document.getElementById('login-modal').classList.add('hidden');
             document.getElementById('error-alert').classList.add('hidden');
+            document.getElementById('user-id').value = '';
+            document.getElementById('password').value = '';
         }
 
         function handleLogin(event) {
             event.preventDefault();
+            const type = document.getElementById('login-type').value;
             const inputId = document.getElementById('user-id').value.trim();
             const inputPass = document.getElementById('password').value.trim();
             const errorAlert = document.getElementById('error-alert');
 
-            if (inputId === systemAuth.id && inputPass === systemAuth.pass) {
-                errorAlert.classList.add('hidden');
-                alert("লগইন সফল হয়েছে!");
+            // ডেমো অথেন্টিকেশন চেক (পরবর্তীতে ফায়ারবেজ ডেটাবেজের সাথে ফুল কানেক্ট করা যাবে)
+            if (type === 'supplier' && inputId === "supplier01" && inputPass === "Unani02") {
+                alert("সরবরাহ অফিসার লগইন সফল হয়েছে!");
                 closeLoginModal();
-                // ফায়ারবেজ থেকে লাইভ ডেটা সিঙ্ক করার ফাংশন কল করতে পারেন
+                loadRealtimeData();
+            } else if (type === 'marketing' && inputId === "marketing01" && inputPass === "Unani02") {
+                alert("মার্কেটিং অফিসার লগইন সফল হয়েছে!");
+                closeLoginModal();
+                loadRealtimeData();
+            } else if (type === 'admin' && inputId === "admin01" && inputPass === "Unani02") {
+                alert("অফিস/এডমিন মাস্টার প্যানেল লগইন সফল হয়েছে!");
+                closeLoginModal();
                 loadRealtimeData();
             } else {
                 errorAlert.classList.remove('hidden');
@@ -298,11 +327,15 @@
             }
         }
 
+        function toggleSidebarMobile() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         function loadRealtimeData() {
             database.ref('fastlab_data/').on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    console.log("Realtime Data Synced:", data);
+                    console.log("Realtime Data Synced successfully:", data);
                 }
             });
         }
