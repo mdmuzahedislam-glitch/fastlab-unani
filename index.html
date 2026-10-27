@@ -1,4 +1,3 @@
-html
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -60,7 +59,7 @@ html
 
                 <!-- Top Right Hamburger Menu Button & Dropdown Container -->
                 <div class="relative">
-                    <button onclick="toggleMenu(event)" class="px-4 py-2.5 bg-white/10 hover:bg-white/20 active:bg-white/30 border border-white/20 rounded-lg flex items-center gap-2.5 text-white font-semibold text-base transition shadow-md focus:outline-none cursor-pointer" title="মেনুবার">
+                    <button onclick="toggleMenu(event)" class="px-4 py-2.5 bg-white/10 hover:bg-white/25 active:bg-white/30 border border-white/20 rounded-lg flex items-center gap-2.5 text-white font-semibold text-base transition shadow-md focus:outline-none cursor-pointer" title="মেনুবার">
                         <i class="fa-solid fa-bars text-lg"></i>
                         <span class="hidden sm:inline">মেনুবার</span>
                     </button>
@@ -76,32 +75,34 @@ html
                             </button>
                         </div>
                         <nav class="space-y-1 flex flex-col">
-                            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
+                            <a href="index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
                                 <i class="fa-solid fa-house text-forest group-hover:text-white"></i>
                                 <span>হোম পেজ</span>
                             </a>
-                            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
+                            <a href="#notice-section" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
                                 <i class="fa-solid fa-bell text-forest group-hover:text-white"></i>
                                 <span>নোটিশ বোর্ড</span>
                             </a>
-                            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
+                            <a href="#directors-section" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
                                 <i class="fa-solid fa-users text-forest group-hover:text-white"></i>
                                 <span>পরিচালক মণ্ডলীগণ</span>
                             </a>
-                            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
+                            <a href="#about-section" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
                                 <i class="fa-solid fa-building text-forest group-hover:text-white"></i>
                                 <span>কোম্পানির সম্পর্কে</span>
                             </a>
-                            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
+                            <!-- সরবরাহ অফিসার লগইন লিংক -->
+                            <a href="supplier-dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
                                 <i class="fa-solid fa-user-tie text-forest group-hover:text-white"></i>
                                 <span>সরবরাহ অফিসার/ইউজার লগইন</span>
                             </a>
-                            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
+                            <!-- মার্কেটিং অফিসার লগইন লিংক -->
+                            <a href="marketing-dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
                                 <i class="fa-solid fa-user text-forest group-hover:text-white"></i>
                                 <span>মার্কেটিং অফিসার/ইউজার লগইন</span>
                             </a>
-                            <!-- Admin Login Button (Red) -->
-                            <a href="#" onclick="openAdminLoginModal(event)" class="mt-2 flex items-center justify-center gap-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold transition shadow-md">
+                            <!-- Admin Login Link (Red -> opens admin dashboard) -->
+                            <a href="admin-dashboard.html" class="mt-2 flex items-center justify-center gap-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold transition shadow-md">
                                 <i class="fa-solid fa-shield-halved"></i>
                                 <span>অফিস/এডমিন লগইন</span>
                             </a>
@@ -116,7 +117,7 @@ html
         <main class="flex-1 p-4 sm:p-6 space-y-6 max-w-6xl mx-auto w-full">
 
             <!-- 1. Notice Board Section -->
-            <section class="border-2 border-forest rounded-lg overflow-hidden shadow-sm bg-white">
+            <section id="notice-section" class="border-2 border-forest rounded-lg overflow-hidden shadow-sm bg-white">
                 <div class="bg-forest text-white px-4 py-3 flex items-center gap-3">
                     <i class="fa-solid fa-bullhorn text-lg"></i>
                     <h2 class="text-lg sm:text-xl font-bold tracking-wide">নোটিশ বোর্ড</h2>
@@ -138,7 +139,7 @@ html
             </section>
 
             <!-- 2. Board of Directors Section -->
-            <section class="border-2 border-forest rounded-lg overflow-hidden shadow-sm bg-white">
+            <section id="directors-section" class="border-2 border-forest rounded-lg overflow-hidden shadow-sm bg-white">
                 <div class="bg-forest text-white px-4 py-3 flex items-center gap-3">
                     <i class="fa-solid fa-users text-lg"></i>
                     <h2 class="text-lg sm:text-xl font-bold tracking-wide">পরিচালক মণ্ডলীগণ</h2>
@@ -148,7 +149,7 @@ html
                     <!-- Director 1 -->
                     <div class="bg-white border border-green-200 rounded-lg p-4 text-center shadow-xs hover:shadow-md transition flex flex-col items-center">
                         <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 border-forest mb-3 shadow-inner bg-gray-100">
-                            <img src="https://placehold.co/150x150/0a5c36/ffffff?text=মিরাজ" alt="মিরাজ হাসান" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150/0a5c36/ffffff?text=Chairman'">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="মিরাজ হাসান" class="w-full h-full object-cover">
                         </div>
                         <h3 class="font-bold text-lg text-gray-900">মিরাজ হাসান</h3>
                         <span class="mt-2 inline-block bg-forest text-white text-xs sm:text-sm px-4 py-1 rounded-full font-medium shadow-xs">চেয়ারম্যান</span>
@@ -157,7 +158,7 @@ html
                     <!-- Director 2 -->
                     <div class="bg-white border border-green-200 rounded-lg p-4 text-center shadow-xs hover:shadow-md transition flex flex-col items-center">
                         <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 border-forest mb-3 shadow-inner bg-gray-100">
-                            <img src="https://placehold.co/150x150/0a5c36/ffffff?text=রফিকুল" alt="মোঃ রফিকুল ইসলাম" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150/0a5c36/ffffff?text=MD'">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" alt="মোঃ রফিকুল ইসলাম" class="w-full h-full object-cover">
                         </div>
                         <h3 class="font-bold text-lg text-gray-900">মোঃ রফিকুল ইসলাম</h3>
                         <span class="mt-2 inline-block bg-forest text-white text-xs sm:text-sm px-4 py-1 rounded-full font-medium shadow-xs">ব্যবস্থাপনা পরিচালক</span>
@@ -166,7 +167,7 @@ html
                     <!-- Director 3 -->
                     <div class="bg-white border border-green-200 rounded-lg p-4 text-center shadow-xs hover:shadow-md transition flex flex-col items-center">
                         <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 border-forest mb-3 shadow-inner bg-gray-100">
-                            <img src="https://placehold.co/150x150/0a5c36/ffffff?text=আসলাম" alt="এস এম আসলাম" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150/0a5c36/ffffff?text=Director'">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" alt="এস এম আসলাম" class="w-full h-full object-cover">
                         </div>
                         <h3 class="font-bold text-lg text-gray-900">এস এম আসলাম</h3>
                         <span class="mt-2 inline-block bg-forest text-white text-xs sm:text-sm px-4 py-1 rounded-full font-medium shadow-xs">পরিচালক</span>
@@ -175,7 +176,7 @@ html
                     <!-- Director 4 -->
                     <div class="bg-white border border-green-200 rounded-lg p-4 text-center shadow-xs hover:shadow-md transition flex flex-col items-center">
                         <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 border-forest mb-3 shadow-inner bg-gray-100">
-                            <img src="https://placehold.co/150x150/0a5c36/ffffff?text=নূর" alt="মোহাম্মদ নূর ইসলাম" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150/0a5c36/ffffff?text=Director'">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150" alt="মোহাম্মদ নূর ইসলাম" class="w-full h-full object-cover">
                         </div>
                         <h3 class="font-bold text-lg text-gray-900">মোহাম্মদ নূর ইসলাম</h3>
                         <span class="mt-2 inline-block bg-forest text-white text-xs sm:text-sm px-4 py-1 rounded-full font-medium shadow-xs">পরিচালক</span>
@@ -185,7 +186,7 @@ html
             </section>
 
             <!-- 3. About Company Section -->
-            <section class="border-2 border-forest rounded-lg overflow-hidden shadow-sm bg-white">
+            <section id="about-section" class="border-2 border-forest rounded-lg overflow-hidden shadow-sm bg-white">
                 <div class="bg-forest text-white px-4 py-3 flex items-center gap-3">
                     <i class="fa-solid fa-file-lines text-lg"></i>
                     <h2 class="text-lg sm:text-xl font-bold tracking-wide">কোম্পানির সম্পর্কে</h2>
@@ -234,11 +235,12 @@ html
             </div>
 
             <div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-gray-300">
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
                     <i class="fa-solid fa-link text-green-300"></i>
                     <span class="font-semibold text-white">দ্রুত লিংক:</span>
-                    <a href="#" class="hover:underline text-green-200">অফিসার/ইউজার লগইন</a> | 
-                    <a href="#" class="hover:underline text-green-200" onclick="openAdminLoginModal(event)">অফিস/এডমিন লগইন</a>
+                    <a href="supplier-dashboard.html" class="hover:underline text-green-200">সরবরাহ অফিসার লগইন</a> | 
+                    <a href="marketing-dashboard.html" class="hover:underline text-green-200">মার্কেটিং অফিসার লগইন</a> | 
+                    <a href="admin-dashboard.html" class="hover:underline text-green-200">অফিস/এডমিন লগইন</a>
                 </div>
                 <div>
                     <p>&copy; ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত</p>
@@ -248,38 +250,7 @@ html
 
     </div>
 
-    <!-- Custom Modal for Admin Login -->
-    <div id="adminLoginModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden border-t-4 border-red-600">
-            <div class="bg-forest text-white p-4 flex items-center justify-between">
-                <div class="flex items-center gap-2 font-bold text-lg">
-                    <i class="fa-solid fa-shield-halved text-red-400"></i>
-                    <span>অফিস/এডমিন লগইন প্যানেল</span>
-                </div>
-                <button onclick="closeAdminLoginModal()" class="text-gray-300 hover:text-white p-1">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-            </div>
-            <div class="p-6 space-y-4">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">ইউজার আইডি / ইমেইল</label>
-                    <input type="text" placeholder="এডমিন আইডি লিখুন" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">পাসওয়ার্ড</label>
-                    <input type="password" placeholder="••••••••" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:outline-none">
-                </div>
-                <button onclick="handleAdminLogin(event)" class="w-full bg-forest hover:bg-forest-dark text-white font-bold py-3 rounded-lg shadow transition">
-                    প্রবেশ করুন
-                </button>
-                <div id="loginMsg" class="text-center text-sm font-medium text-green-600 hidden">
-                    সফলভাবে লগইন হয়েছে! ড্যাশবোর্ডে রিডাইরেক্ট করা হচ্ছে...
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- JavaScript for Hamburger Menu & Modal -->
+    <!-- JavaScript for Hamburger Menu -->
     <script>
         function toggleMenu(e) {
             e.stopPropagation();
@@ -294,26 +265,6 @@ html
                 menu.classList.add('hidden');
             }
         });
-
-        function openAdminLoginModal(e) {
-            e.preventDefault();
-            document.getElementById('dropdownMenu').classList.add('hidden');
-            document.getElementById('adminLoginModal').classList.remove('hidden');
-        }
-
-        function closeAdminLoginModal() {
-            document.getElementById('adminLoginModal').classList.add('hidden');
-            document.getElementById('loginMsg').classList.add('hidden');
-        }
-
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const msg = document.getElementById('loginMsg');
-            msg.classList.remove('hidden');
-            setTimeout(() => {
-                closeAdminLoginModal();
-            }, 1000);
-        }
     </script>
 
 </body>
