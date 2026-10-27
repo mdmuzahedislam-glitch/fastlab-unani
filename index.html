@@ -24,98 +24,228 @@
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 font-sans antialiased">
+<body class="bg-[#14532d] font-sans antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- Login Section -->
-    <div id="login-section" class="min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-xl border border-slate-100 p-8">
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-forest-50 text-forest-700 rounded-full text-2xl mb-4 shadow-inner">
-                    <i class="fa-solid fa-leaf"></i>
+    <!-- Main Container matching the exact design -->
+    <div class="max-w-6xl mx-auto w-full bg-[#064e3b] shadow-2xl my-4 rounded-xl overflow-hidden border-4 border-[#166534]">
+        
+        <!-- Header Section -->
+        <header class="bg-[#064e3b] p-6 text-white flex flex-col md:flex-row items-center justify-between border-b border-[#166534]">
+            <div class="flex items-center space-x-4">
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-forest-700 text-3xl shadow-inner">
+                    <i class="fa-solid fa-leaf text-[#14532d]"></i>
                 </div>
-                <h1 class="text-2xl font-bold text-slate-800">ফাস্টল্যাব ইউনানী</h1>
-                <p class="text-slate-500 text-sm mt-1">পাবনা শাখা - একাউন্টস এডমিন প্যানেল</p>
+                <div>
+                    <h1 class="text-3xl font-bold tracking-wide">ফাস্টল্যাব ইউনানী</h1>
+                    <p class="text-emerald-200 text-sm mt-1">আফুরিয়া, হিমাইতপুর, পাবনা</p>
+                </div>
+            </div>
+            <!-- Top Right Menu Toggle Button for Mobile/Desktop -->
+            <div class="mt-4 md:mt-0">
+                <button onclick="toggleSidebar()" class="bg-[#14532d] hover:bg-forest-600 px-4 py-2.5 rounded-lg flex items-center space-x-2 text-white font-semibold shadow transition">
+                    <i class="fa-solid fa-bars"></i>
+                    <span>মেনুবার</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Content & Sidebar Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 bg-white">
+            
+            <!-- Left/Main Content Area (3 Columns) -->
+            <div class="lg:col-span-3 p-6 space-y-8">
+                
+                <!-- Notice Board Section -->
+                <section class="bg-emerald-50/50 rounded-xl p-5 border border-emerald-100 shadow-sm">
+                    <div class="flex items-center space-x-2 text-[#064e3b] font-bold text-xl mb-4 border-b pb-2 border-emerald-200">
+                        <i class="fa-solid fa-bullhorn"></i>
+                        <h2>নোটিশ বোর্ড</h2>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="bg-white p-3 rounded-lg shadow-sm border border-emerald-100 flex items-center space-x-3">
+                            <span class="w-7 h-7 bg-[#14532d] text-white rounded-full flex items-center justify-center text-xs font-bold">১.</span>
+                            <p class="text-slate-700 text-sm">সকল একাউন্টস অফিসার ও সাপ্লায়ারদের নিয়মিত ডাটা আপডেট করার নির্দেশ দেওয়া হলো।</p>
+                        </div>
+                        <div class="bg-white p-3 rounded-lg shadow-sm border border-emerald-100 flex items-center space-x-3">
+                            <span class="w-7 h-7 bg-[#14532d] text-white rounded-full flex items-center justify-center text-xs font-bold">২.</span>
+                            <p class="text-slate-700 text-sm">মাসিক আর্থিক প্রতিবেদন সঠিক সময়ে সাবমিট করতে হবে।</p>
+                        </div>
+                        <div class="bg-white p-3 rounded-lg shadow-sm border border-emerald-100 flex items-center space-x-3">
+                            <span class="w-7 h-7 bg-[#14532d] text-white rounded-full flex items-center justify-center text-xs font-bold">৩.</span>
+                            <p class="text-slate-700 text-sm">শাখার কার্যক্রমে ফায়ারবেজ রিয়েলটাইম ডেটাবেজ সফলভাবে যুক্ত করা হয়েছে।</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Board of Directors Section -->
+                <section class="bg-emerald-50/50 rounded-xl p-5 border border-emerald-100 shadow-sm">
+                    <div class="flex items-center space-x-2 text-[#064e3b] font-bold text-xl mb-4 border-b pb-2 border-emerald-200">
+                        <i class="fa-solid fa-users"></i>
+                        <h2>পরিচালক মণ্ডলীগণ</h2>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- Director 1 -->
+                        <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-emerald-100 flex flex-col items-center">
+                            <div class="w-20 h-20 rounded-full bg-slate-200 overflow-hidden mb-3 border-2 border-[#14532d]">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="মিরাজ হাসান" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-sm">মিরাজ হাসান</h3>
+                            <span class="inline-block mt-2 px-3 py-1 bg-[#14532d] text-white text-xs rounded-full font-medium">চেয়ারম্যান</span>
+                        </div>
+                        <!-- Director 2 -->
+                        <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-emerald-100 flex flex-col items-center">
+                            <div class="w-20 h-20 rounded-full bg-slate-200 overflow-hidden mb-3 border-2 border-[#14532d]">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" alt="মোঃ রফিকুল ইসলাম" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-sm">মোঃ রফিকুল ইসলাম</h3>
+                            <span class="inline-block mt-2 px-3 py-1 bg-[#14532d] text-white text-xs rounded-full font-medium">ব্যবস্থাপনা পরিচালক</span>
+                        </div>
+                        <!-- Director 3 -->
+                        <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-emerald-100 flex flex-col items-center">
+                            <div class="w-20 h-20 rounded-full bg-slate-200 overflow-hidden mb-3 border-2 border-[#14532d]">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" alt="এস এম আসলাম" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-sm">এস এম আসলাম</h3>
+                            <span class="inline-block mt-2 px-3 py-1 bg-[#14532d] text-white text-xs rounded-full font-medium">পরিচালক</span>
+                        </div>
+                        <!-- Director 4 -->
+                        <div class="bg-white rounded-xl p-4 text-center shadow-sm border border-emerald-100 flex flex-col items-center">
+                            <div class="w-20 h-20 rounded-full bg-slate-200 overflow-hidden mb-3 border-2 border-[#14532d]">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150" alt="মোহাম্মদ নুর ইসলাম" class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-sm">মোহাম্মদ নুর ইসলাম</h3>
+                            <span class="inline-block mt-2 px-3 py-1 bg-[#14532d] text-white text-xs rounded-full font-medium">পরিচালক</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- About Company Section -->
+                <section class="bg-emerald-50/50 rounded-xl p-5 border border-emerald-100 shadow-sm">
+                    <div class="flex items-center space-x-2 text-[#064e3b] font-bold text-xl mb-3 border-b pb-2 border-emerald-200">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <h2>কোম্পানির সম্পর্কে</h2>
+                    </div>
+                    <p class="text-slate-700 text-sm leading-relaxed">
+                        ফাস্টল্যাব ইউনানী একটি প্রাচীন ও ঐতিহ্যবাহী ইউনানী চিকিৎসা নির্ভর প্রতিষ্ঠান। আমরা প্রাচীন ইউনানী চিকিৎসা পদ্ধতিকে আধুনিক বিজ্ঞানসম্মত গবেষণার মাধ্যমে মানুষের সুস্বাস্থ্য ও সুস্থ জীবন নিশ্চিত করতে কাজ করে যাচ্ছি। আমাদের লক্ষ্য হলো প্রাকৃতিক উপাদান ও ইউনানী চিকিৎসার মাধ্যমে সকলের জন্য নিরাপদ ও কার্যকর স্বাস্থ্যসেবা নিশ্চিত করা।
+                    </p>
+                </section>
+
+            </div>
+             <!-- Right Sidebar Navigation (1 Column) -->
+            <div class="bg-slate-50 p-5 border-l border-slate-200 flex flex-col justify-between space-y-6">
+                <div class="space-y-2">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">মেনু অপশনসমূহ</h3>
+                    
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-[#14532d] text-white font-medium shadow-sm transition">
+                        <i class="fa-solid fa-house w-5"></i>
+                        <span>হোম পেজ</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
+                        <i class="fa-solid fa-bell w-5 text-[#14532d]"></i>
+                        <span>নোটিশ বোর্ড</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
+                        <i class="fa-solid fa-users w-5 text-[#14532d]"></i>
+                        <span>পরিচালক মণ্ডলী</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
+                        <i class="fa-solid fa-circle-info w-5 text-[#14532d]"></i>
+                        <span>কোম্পানির সম্পর্কে</span>
+                    </a>
+                    <a href="javascript:void(0);" onclick="openLoginModal()" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
+                        <i class="fa-solid fa-user-tie w-5 text-[#14532d]"></i>
+                        <span>সরবরাহ অফিসার/ইউজার লগইন</span>
+                    </a>
+                    <a href="javascript:void(0);" onclick="openLoginModal()" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-red-600 text-white font-medium shadow hover:bg-red-700 transition">
+                        <i class="fa-solid fa-user-shield w-5"></i>
+                        <span>অফিস/এডমিন লগইন</span>
+                    </a>
+                </div>
+
+                <!-- Quick Links Box inside Sidebar -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                    <h4 class="font-bold text-slate-800 text-sm mb-2 flex items-center space-x-2">
+                        <i class="fa-solid fa-link text-[#14532d]"></i>
+                        <span>দ্রুত লিংক</span>
+                    </h4>
+                    <div class="space-y-1.5 text-xs">
+                        <a href="javascript:void(0);" onclick="openLoginModal()" class="block text-slate-600 hover:text-[#14532d] hover:underline">▶ সরবরাহ অফিসার লগইন</a>
+                        <a href="javascript:void(0);" onclick="openLoginModal()" class="block text-slate-600 hover:text-[#14532d] hover:underline">▶ অফিস/এডমিন লগইন</a>
+                    </div>
+                </div>
             </div>
 
-            <div id="error-alert" class="hidden mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm rounded-r-lg">
+        </div>
+
+        <!-- Footer Section -->
+        <footer class="bg-[#064e3b] text-white p-6 border-t border-[#166534]">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 text-sm">
+                <div class="flex items-start space-x-3">
+                    <i class="fa-solid fa-location-dot mt-1 text-emerald-300"></i>
+                    <div>
+                        <p class="font-bold text-emerald-200">হেড অফিস ঠিকানা</p>
+                        <p class="text-slate-300 text-xs mt-0.5">আফুরিয়া, হিমাইতপুর, পাবনা</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <i class="fa-solid fa-phone mt-1 text-emerald-300"></i>
+                    <div>
+                        <p class="font-bold text-emerald-200">মোবাইল নাম্বার</p>
+                        <p class="text-slate-300 text-xs mt-0.5">০১৩৩৫০৯৭৯৬০</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <i class="fa-solid fa-envelope mt-1 text-emerald-300"></i>
+                    <div>
+                        <p class="font-bold text-emerald-200">ইমেইল নাম্বার</p>
+                        <p class="text-slate-300 text-xs mt-0.5">fatlabumani.pabna@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center text-xs text-emerald-300 border-t border-[#14532d] pt-4">
+                © ২০২৫ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত
+            </div>
+        </footer>
+
+    </div>
+      <!-- Login Modal (Hidden by default, pops up on clicking login) -->
+    <div id="login-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8 relative">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-14 h-14 bg-emerald-50 text-[#14532d] rounded-full text-2xl mb-3 shadow-inner">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h2 class="text-xl font-bold text-slate-800">অফিস/ইউজার লগইন</h2>
+                <p class="text-slate-500 text-xs mt-1">সঠিক আইডি ও পাসওয়ার্ড দিয়ে প্রবেশ করুন</p>
+            </div>
+
+            <div id="error-alert" class="hidden mb-4 p-3 bg-red-50 border-l-4 border-red-500 text-red-700 text-xs rounded-r-lg">
                 <span id="error-text">রং ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।</span>
             </div>
 
-            <form onsubmit="handleLogin(event)" class="space-y-5">
+            <form onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1.5">ইউজার আইডি</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                            <i class="fa-solid fa-user"></i>
-                        </span>
-                        <input type="text" id="user-id" required class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-forest-600 focus:bg-white transition" placeholder="ইউজার আইডি দিন">
-                    </div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">ইউজার আইডি</label>
+                    <input type="text" id="user-id" required class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#14532d]" placeholder="ইউজার আইডি দিন">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1.5">পাসওয়ার্ড</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                            <i class="fa-solid fa-lock"></i>
-                        </span>
-                        <input type="password" id="password" required class="w-full pl-10 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-forest-600 focus:bg-white transition" placeholder="••••••••">
-                        <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600">
-                            <i id="eye-icon" class="fa-solid fa-eye"></i>
-                        </button>
-                    </div>
+                    <label class="block text-xs font-medium text-slate-700 mb-1">পাসওয়ার্ড</label>
+                    <input type="password" id="password" required class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#14532d]" placeholder="••••••••">
                 </div>
 
-                <button type="submit" class="w-full py-3 px-4 bg-forest-700 hover:bg-forest-800 text-white font-medium rounded-xl shadow-lg shadow-forest-700/20 transition duration-200">
+                <button type="submit" class="w-full py-3 bg-[#14532d] hover:bg-forest-800 text-white font-medium rounded-xl shadow transition text-sm">
                     লগইন করুন
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- Dashboard Section (Initially Hidden) -->
-    <div id="dashboard-section" class="hidden min-h-screen flex-col">
-        <!-- Navbar -->
-        <header class="bg-forest-800 text-white shadow-md sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-forest-700 rounded-lg flex items-center justify-center text-lg shadow">
-                        <i class="fa-solid fa-leaf"></i>
-                    </div>
-                    <div>
-                        <h2 class="font-bold text-lg leading-tight">ফাস্টল্যাব ইউনানী</h2>
-                        <p class="text-xs text-forest-200">পাবনা শাখা</p>
-                    </div>
-                </div>
-
-                <div class="relative">
-                    <button onclick="toggleMenu()" class="flex items-center space-x-3 focus:outline-none bg-forest-700 hover:bg-forest-600 px-3 py-2 rounded-xl transition">
-                        <div class="w-8 h-8 bg-white text-forest-800 rounded-full flex items-center justify-center font-bold text-sm">
-                            <i class="fa-solid fa-user-shield"></i>
-                        </div>
-                        <span id="profile-name" class="font-medium text-sm hidden sm:inline">মোঃ আব্দুল রহিম</span>
-                        <i class="fa-solid fa-chevron-down text-xs text-forest-200"></i>
-                    </button>
-
-                    <!-- Dropdown Menu (পাসওয়ার্ড পরিবর্তনের অপশন স্থায়ীভাবে সরানো হয়েছে) -->
-                    <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-2 text-slate-700">
-                        <button onclick="handleLogout()" class="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2 transition">
-                            <i class="fa-solid fa-right-from-bracket w-5"></i>
-                            <span>লগআউট</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Main Content Area -->
-        <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-                <h3 class="text-xl font-bold text-slate-800 mb-2">একাউন্টস ড্যাশবোর্ড ও রিয়েলটাইম ডেটা</h3>
-                <p class="text-slate-500 text-sm">অন্যান্য স্থান থেকে লগইন করে লাইভ ডেটা দেখতে ও আপডেট করতে পারবেন।</p>
-            </div>
-        </main>
-    </div>
-      <!-- Firebase SDKs -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
@@ -141,32 +271,14 @@
             name: "মোঃ আব্দুল রহিম"
         };
 
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const eyeIcon = document.getElementById('eye-icon');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.classList.remove('fa-eye');
-                eyeIcon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.classList.remove('fa-eye-slash');
-                eyeIcon.classList.add('fa-eye');
-            }
+        function openLoginModal() {
+            document.getElementById('login-modal').classList.remove('hidden');
         }
 
-        function toggleMenu() {
-            const menu = document.getElementById('dropdown-menu');
-            menu.classList.toggle('hidden');
+        function closeLoginModal() {
+            document.getElementById('login-modal').classList.add('hidden');
+            document.getElementById('error-alert').classList.add('hidden');
         }
-
-        window.addEventListener('click', function(e) {
-            const menu = document.getElementById('dropdown-menu');
-            const btn = e.target.closest('button');
-            if (!menu.contains(e.target) && (!btn || !btn.getAttribute('onclick')?.includes('toggleMenu'))) {
-                menu.classList.add('hidden');
-            }
-        });
 
         function handleLogin(event) {
             event.preventDefault();
@@ -176,27 +288,14 @@
 
             if (inputId === systemAuth.id && inputPass === systemAuth.pass) {
                 errorAlert.classList.add('hidden');
-                document.getElementById('profile-name').innerText = systemAuth.name;
-                document.getElementById('login-section').classList.add('hidden');
-                document.getElementById('dashboard-section').classList.remove('hidden');
-                document.getElementById('dashboard-section').classList.add('flex');
-                
-                // ফায়ারবেজ থেকে লাইভ ডেটা লোড করার ফাংশন
+                alert("লগইন সফল হয়েছে!");
+                closeLoginModal();
+                // ফায়ারবেজ থেকে লাইভ ডেটা সিঙ্ক করার ফাংশন কল করতে পারেন
                 loadRealtimeData();
             } else {
                 errorAlert.classList.remove('hidden');
                 document.getElementById('error-text').innerText = "ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
             }
-        }
-
-        function handleLogout() {
-            document.getElementById('dashboard-section').classList.add('hidden');
-            document.getElementById('dashboard-section').classList.remove('flex');
-            document.getElementById('login-section').classList.remove('hidden');
-            document.getElementById('user-id').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('error-alert').classList.add('hidden');
-            document.getElementById('dropdown-menu').classList.add('hidden');
         }
 
         function loadRealtimeData() {
