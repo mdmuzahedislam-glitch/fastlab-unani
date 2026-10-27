@@ -126,7 +126,7 @@
                 </div>
             </div>
         </header>
-         <!-- Main Content Area -->
+        <!-- Main Content Area -->
         <div class="container mx-auto px-4 mt-6 space-y-6 flex-grow">
             
             <!-- Top Info Cards: Officer Profile & Notice Board -->
@@ -196,56 +196,14 @@
                                 <th class="p-3 border text-center">অ্যাকশন</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">১</td>
-                                <td class="p-3 border font-medium">সদাগর ট্রেডার্স, পাবনা</td>
-                                <td class="p-3 border">০১৮০৬৭৬৪৪৪</td>
-                                <td class="p-3 border">১০০</td>
-                                <td class="p-3 border">৬০০</td>
-                                <td class="p-3 border">২০০</td>
-                                <td class="p-3 border text-center">
-                                    <button onclick="showDetails('সদাগর ট্রেডার্স, পাবনা')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">২</td>
-                                <td class="p-3 border font-medium">রহিম স্টোর, চাটমোহর</td>
-                                <td class="p-3 border">০১৭২২৩৪৪৭৯৮</td>
-                                <td class="p-3 border">৩০০</td>
-                                <td class="p-3 border">৪০০</td>
-                                <td class="p-3 border">২০০</td>
-                                <td class="p-3 border text-center">
-                                    <button onclick="showDetails('রহিম স্টোর, চাটমোহর')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">৩</td>
-                                <td class="p-3 border font-medium">মদিনা ট্রেডার্স, আউড়িয়া</td>
-                                <td class="p-3 border">০১৮১৯৭৬২৪০২</td>
-                                <td class="p-3 border">১০০</td>
-                                <td class="p-3 border">৯০০</td>
-                                <td class="p-3 border">২০০</td>
-                                <td class="p-3 border text-center">
-                                    <button onclick="showDetails('মদিনা ট্রেডার্স, আউড়িয়া')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">৪</td>
-                                <td class="p-3 border font-medium">আনিক এন্টারপ্রাইজ, ঈশ্বরদী</td>
-                                <td class="p-3 border">০১৮৭৫৪৮০২১০</td>
-                                <td class="p-3 border">৪০০</td>
-                                <td class="p-3 border">৫০০</td>
-                                <td class="p-3 border">১০০</td>
-                                <td class="p-3 border text-center">
-                                    <button onclick="showDetails('আনিক এন্টারপ্রাইজ, ঈশ্বরদী')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
-                                </td>
-                            </tr>
+                        <tbody id="party-table-body" class="divide-y divide-gray-200">
+                            <!-- Firebase Realtime Data will load dynamically here -->
                         </tbody>
                     </table>
                 </div>
             </div>
-             <!-- Transaction Ledger Details -->
+
+            <!-- Transaction Ledger Details -->
             <div id="ledger-section" class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
                 <div class="flex justify-between items-center mb-4 border-b pb-2">
                     <h3 class="text-lg font-bold forest-green-text flex items-center gap-2">
@@ -269,7 +227,7 @@
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">dd/mm/২৬</td>
+                                <td class="p-3 border">২০/০১/২০২৬</td>
                                 <td class="p-3 border">মাল সরবরাহ (১০০ কেজি)</td>
                                 <td class="p-3 border">১০০</td>
                                 <td class="p-3 border">২০০০</td>
@@ -278,7 +236,7 @@
                                 <td class="p-3 border font-bold">-৫০০</td>
                             </tr>
                             <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">০৫/mm/২৬</td>
+                                <td class="p-3 border">২১/০১/২০২৬</td>
                                 <td class="p-3 border">বিল পরিশোধ</td>
                                 <td class="p-3 border">২০০</td>
                                 <td class="p-3 border">৬০০০</td>
@@ -286,47 +244,37 @@
                                 <td class="p-3 border font-semibold text-blue-600">Dr</td>
                                 <td class="p-3 border font-bold">-১১০০</td>
                             </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">১০/mm/২৬</td>
-                                <td class="p-3 border">বিল পরিশোধ</td>
-                                <td class="p-3 border">২০০</td>
-                                <td class="p-3 border">১৯০০</td>
-                                <td class="p-3 border">৬০০</td>
-                                <td class="p-3 border font-semibold text-red-600">Cr</td>
-                                <td class="p-3 border font-bold">-৮০০</td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">১৩/mm/২৬</td>
-                                <td class="p-3 border">নতুন অর্ডার</td>
-                                <td class="p-3 border">২০০</td>
-                                <td class="p-3 border">১৪০০</td>
-                                <td class="p-3 border">১,০০০</td>
-                                <td class="p-3 border font-semibold text-blue-600">Dr</td>
-                                <td class="p-3 border font-bold">-২২০০</td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">২০/mm/২৬</td>
-                                <td class="p-3 border">মাল সরবরাহ (১০০ কেজি)</td>
-                                <td class="p-3 border">৮০</td>
-                                <td class="p-3 border">১০০০</td>
-                                <td class="p-3 border">৮০০</td>
-                                <td class="p-3 border font-semibold text-red-600">Cr</td>
-                                <td class="p-3 border font-bold">-৭০০</td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
         <!-- Footer -->
         <footer class="mt-12 bg-white border-t py-4 text-center text-xs text-gray-500">
             © ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত
         </footer>
     </div>
 
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
     <script>
-        // Secure Admin & User Credentials
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDmiZ7Pa0nB9HF29bv6qoT2qSzko4RVEHI",
+            authDomain: "fastlab-unani.firebaseapp.com",
+            projectId: "fastlab-unani",
+            storageBucket: "fastlab-unani.firebasestorage.app",
+            messagingSenderId: "1319654847",
+            appId: "1:1319654847:web:cdb5c4813ea8e48877fd0a",
+            measurementId: "G-LDL48BEM76"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         let systemAuth = {
             id: "supplier01",
             pass: "Unani02",
@@ -346,12 +294,12 @@
                 eyeIcon.classList.add('fa-eye');
             }
         }
+
         function toggleMenu() {
             const menu = document.getElementById('dropdown-menu');
             menu.classList.toggle('hidden');
         }
 
-        // Close menu when clicking outside
         window.addEventListener('click', function(e) {
             const menu = document.getElementById('dropdown-menu');
             const btn = e.target.closest('button');
@@ -372,6 +320,9 @@
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('dashboard-section').classList.remove('hidden');
                 document.getElementById('dashboard-section').classList.add('flex');
+                
+                // Load Realtime Data from Firebase
+                loadRealtimeParties();
             } else {
                 errorAlert.classList.remove('hidden');
                 document.getElementById('error-text').innerText = "রং ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
@@ -386,6 +337,49 @@
             document.getElementById('password').value = '';
             document.getElementById('error-alert').classList.add('hidden');
             document.getElementById('dropdown-menu').classList.add('hidden');
+        }
+
+        // Firebase Realtime Data Fetch Function
+        function loadRealtimeParties() {
+            const tableBody = document.getElementById('party-table-body');
+            database.ref('fastlab_parties/').on('value', (snapshot) => {
+                const data = snapshot.val();
+                tableBody.innerHTML = '';
+                if (data) {
+                    let index = 1;
+                    for (let key in data) {
+                        let party = data[key];
+                        tableBody.innerHTML += `
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border">${index++}</td>
+                                <td class="p-3 border font-medium">${party.name}</td>
+                                <td class="p-3 border">${party.mobile}</td>
+                                <td class="p-3 border">${party.givenStock}</td>
+                                <td class="p-3 border">${party.dueStock}</td>
+                                <td class="p-3 border">${party.balance}</td>
+                                <td class="p-3 border text-center">
+                                    <button onclick="showDetails('${party.name}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                } else {
+                    // Fallback demo rows if firebase is empty
+                    tableBody.innerHTML = `
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3 border">১</td>
+                            <td class="p-3 border font-medium">সদাগর ট্রেডার্স, পাবনা</td>
+                            <td class="p-3 border">০১৮০৬৭৬৪৪৪</td>
+                            <td class="p-3 border">১০০</td>
+                            <td class="p-3 border">৬০০</td>
+                            <td class="p-3 border">২০০</td>
+                            <td class="p-3 border text-center">
+                                <button onclick="showDetails('সদাগর ট্রেডার্স, পাবনা')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
         }
 
         function showDetails(partyName) {
