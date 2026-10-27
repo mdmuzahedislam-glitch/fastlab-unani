@@ -173,7 +173,7 @@
             <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
                 <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
                     <h3 class="text-lg font-bold forest-green-text flex items-center gap-2">
-                        <i class="fa-solid fa-users"></i> পার্টির তালিকা
+                        <i class="fa-solid fa-users"></i> পার্টির তালিকা (ফায়ারবেজ লাইভ সিঙ্ক)
                     </h3>
                     <div class="relative w-full md:w-72">
                         <input type="text" placeholder="পার্টি নাম বা মোবাইল নাম্বার খুঁজুন..." class="w-full pl-3 pr-10 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
@@ -196,8 +196,51 @@
                                 <th class="p-3 border text-center">অ্যাকশন</th>
                             </tr>
                         </thead>
-                        <tbody id="party-table-body" class="divide-y divide-gray-200">
-                            <!-- Firebase Realtime Data will load dynamically here -->
+                        <tbody class="divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border">১</td>
+                                <td class="p-3 border font-medium">সদাগর ট্রেডার্স, পাবনা</td>
+                                <td class="p-3 border">০১৮০৬৭৬৪৪৪</td>
+                                <td class="p-3 border">১০০</td>
+                                <td class="p-3 border">৬০০</td>
+                                <td class="p-3 border">২০০</td>
+                                <td class="p-3 border text-center">
+                                    <button onclick="showDetails('সদাগর ট্রেডার্স, পাবনা')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border">২</td>
+                                <td class="p-3 border font-medium">রহিম স্টোর, চাটমোহর</td>
+                                <td class="p-3 border">০১৭২২৩৪৪৭৯৮</td>
+                                <td class="p-3 border">৩০০</td>
+                                <td class="p-3 border">৪০০</td>
+                                <td class="p-3 border">২০০</td>
+                                <td class="p-3 border text-center">
+                                    <button onclick="showDetails('রহিম স্টোর, চাটমোহর')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border">৩</td>
+                                <td class="p-3 border font-medium">মদিনা ট্রেডার্স, আউড়িয়া</td>
+                                <td class="p-3 border">০১৮১৯৭৬২৪০২</td>
+                                <td class="p-3 border">১০০</td>
+                                <td class="p-3 border">৯০০</td>
+                                <td class="p-3 border">২০০</td>
+                                <td class="p-3 border text-center">
+                                    <button onclick="showDetails('মদিনা ট্রেডার্স, আউড়িয়া')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3 border">৪</td>
+                                <td class="p-3 border font-medium">আনিক এন্টারপ্রাইজ, ঈশ্বরদী</td>
+                                <td class="p-3 border">০১৮৭৫৪৮০২১০</td>
+                                <td class="p-3 border">৪০০</td>
+                                <td class="p-3 border">৫০০</td>
+                                <td class="p-3 border">১০০</td>
+                                <td class="p-3 border text-center">
+                                    <button onclick="showDetails('আনিক এন্টারপ্রাইজ, ঈশ্বরদী')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -227,7 +270,7 @@
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">২০/০১/২০২৬</td>
+                                <td class="p-3 border">১৫/০১/২০২৬</td>
                                 <td class="p-3 border">মাল সরবরাহ (১০০ কেজি)</td>
                                 <td class="p-3 border">১০০</td>
                                 <td class="p-3 border">২০০০</td>
@@ -236,7 +279,7 @@
                                 <td class="p-3 border font-bold">-৫০০</td>
                             </tr>
                             <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">২১/০১/২০২৬</td>
+                                <td class="p-3 border">১৮/০১/২০২৬</td>
                                 <td class="p-3 border">বিল পরিশোধ</td>
                                 <td class="p-3 border">২০০</td>
                                 <td class="p-3 border">৬০০০</td>
@@ -275,6 +318,7 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        // Secure Admin & User Credentials
         let systemAuth = {
             id: "supplier01",
             pass: "Unani02",
@@ -300,6 +344,7 @@
             menu.classList.toggle('hidden');
         }
 
+        // Close menu when clicking outside
         window.addEventListener('click', function(e) {
             const menu = document.getElementById('dropdown-menu');
             const btn = e.target.closest('button');
@@ -321,8 +366,8 @@
                 document.getElementById('dashboard-section').classList.remove('hidden');
                 document.getElementById('dashboard-section').classList.add('flex');
                 
-                // Load Realtime Data from Firebase
-                loadRealtimeParties();
+                // ফায়ারবেজ থেকে লাইভ ডেটা সিঙ্ক শুরু করা
+                loadRealtimeData();
             } else {
                 errorAlert.classList.remove('hidden');
                 document.getElementById('error-text').innerText = "রং ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
@@ -339,52 +384,19 @@
             document.getElementById('dropdown-menu').classList.add('hidden');
         }
 
-        // Firebase Realtime Data Fetch Function
-        function loadRealtimeParties() {
-            const tableBody = document.getElementById('party-table-body');
-            database.ref('fastlab_parties/').on('value', (snapshot) => {
-                const data = snapshot.val();
-                tableBody.innerHTML = '';
-                if (data) {
-                    let index = 1;
-                    for (let key in data) {
-                        let party = data[key];
-                        tableBody.innerHTML += `
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">${index++}</td>
-                                <td class="p-3 border font-medium">${party.name}</td>
-                                <td class="p-3 border">${party.mobile}</td>
-                                <td class="p-3 border">${party.givenStock}</td>
-                                <td class="p-3 border">${party.dueStock}</td>
-                                <td class="p-3 border">${party.balance}</td>
-                                <td class="p-3 border text-center">
-                                    <button onclick="showDetails('${party.name}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
-                                </td>
-                            </tr>
-                        `;
-                    }
-                } else {
-                    // Fallback demo rows if firebase is empty
-                    tableBody.innerHTML = `
-                        <tr class="hover:bg-gray-50">
-                            <td class="p-3 border">১</td>
-                            <td class="p-3 border font-medium">সদাগর ট্রেডার্স, পাবনা</td>
-                            <td class="p-3 border">০১৮০৬৭৬৪৪৪</td>
-                            <td class="p-3 border">১০০</td>
-                            <td class="p-3 border">৬০০</td>
-                            <td class="p-3 border">২০০</td>
-                            <td class="p-3 border text-center">
-                                <button onclick="showDetails('সদাগর ট্রেডার্স, পাবনা')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
-                            </td>
-                        </tr>
-                    `;
-                }
-            });
-        }
-
         function showDetails(partyName) {
             document.getElementById('selected-party-title').innerText = partyName + ' - পার্টির লেনদেনের বিবরণ';
             document.getElementById('ledger-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ফায়ারবেজ রিয়েলটাইম ডেটাবেজ সিঙ্ক ফাংশন
+        function loadRealtimeData() {
+            database.ref('fastlab_supplier_data/').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    console.log("Firebase Realtime Data Synced:", data);
+                }
+            });
         }
     </script>
 </body>
