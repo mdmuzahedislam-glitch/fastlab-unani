@@ -35,7 +35,7 @@
             <!-- Error Message Box -->
             <div id="error-alert" class="hidden mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm flex items-center gap-2">
                 <i class="fa-solid fa-triangle-exclamation text-lg"></i>
-                <span id="error-text">রং ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।</span>
+                <span id="error-text">ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।</span>
             </div>
 
             <form onsubmit="handleLogin(event)" class="space-y-4">
@@ -138,9 +138,9 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-bold text-gray-800" id="profile-role-title">সরবরাহ অফিসার</h3>
-                        <p class="text-sm font-semibold text-gray-600" id="profile-name">মোঃ আব্দুল রহিম</p>
-                        <p class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="fa-solid fa-phone"></i> ০১৩৩৫০১৯৭৮৮</p>
-                        <p class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-location-dot"></i> মার্কেটিং এরিয়া: পাবনা শাখা</p>
+                        <p class="text-sm font-semibold text-gray-600" id="profile-name">মোঃ সাজেদুল করিম মৃদুল</p>
+                        <p class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="fa-solid fa-phone"></i>01707-851685</p>
+                        <p class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-location-dot"></i> ফ্যাক্টরি অফিস: আফুরিয়া,হিমাইতপুর,পাবনা।</p>
                     </div>
                 </div>
 
@@ -173,7 +173,7 @@
             <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
                 <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
                     <h3 class="text-lg font-bold forest-green-text flex items-center gap-2">
-                        <i class="fa-solid fa-users"></i> পার্টির তালিকা (ফায়ারবেজ লাইভ সিঙ্ক)
+                        <i class="fa-solid fa-users"></i> পার্টির তালিকা
                     </h3>
                     <div class="relative w-full md:w-72">
                         <input type="text" placeholder="পার্টি নাম বা মোবাইল নাম্বার খুঁজুন..." class="w-full pl-3 pr-10 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
@@ -190,8 +190,8 @@
                                 <th class="p-3 border">ক্রমিক</th>
                                 <th class="p-3 border">সরবরাহকারী পার্টির নাম ও ঠিকানা</th>
                                 <th class="p-3 border">মোবাইল</th>
-                                <th class="p-3 border">জমা মাল</th>
-                                <th class="p-3 border">পাওনা মাল</th>
+                                <th class="p-3 border">জমা</th>
+                                <th class="p-3 border">মাল ক্রয়</th>
                                 <th class="p-3 border">বর্তমান বকেয়া</th>
                                 <th class="p-3 border text-center">অ্যাকশন</th>
                             </tr>
@@ -261,17 +261,15 @@
                             <tr class="table-header text-xs">
                                 <th class="p-3 border">তারিখ</th>
                                 <th class="p-3 border">বিবরণ</th>
-                                <th class="p-3 border">পরিমাণ (কেজি/লিটার)</th>
-                                <th class="p-3 border">মূল্য (টাকা)</th>
-                                <th class="p-3 border">জমা (টাকা)</th>
+                                <th class="p-3 border">জমা</th>
+                                <th class="p-3 border">মাল ক্রয়</th>
                                 <th class="p-3 border">Dr/Cr</th>
                                 <th class="p-3 border">অবশিষ্ট ব্যালেন্স</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">১৫/০১/২০২৬</td>
-                                <td class="p-3 border">মাল সরবরাহ (১০০ কেজি)</td>
+                                <td class="p-3 border">১৫/০১/২০২৬</td>                                
                                 <td class="p-3 border">১০০</td>
                                 <td class="p-3 border">২০০০</td>
                                 <td class="p-3 border">০০০</td>
@@ -279,8 +277,7 @@
                                 <td class="p-3 border font-bold">-৫০০</td>
                             </tr>
                             <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">১৮/০১/২০২৬</td>
-                                <td class="p-3 border">বিল পরিশোধ</td>
+                                <td class="p-3 border">১৮/০১/২০২৬</td>                                
                                 <td class="p-3 border">২০০</td>
                                 <td class="p-3 border">৬০০০</td>
                                 <td class="p-3 border">৬০০</td>
