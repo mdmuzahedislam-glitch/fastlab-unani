@@ -23,6 +23,10 @@
     </script>
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+        body { font-family: 'Hind Siliguri', sans-serif; }
+    </style>
 </head>
 <body class="bg-[#14532d] font-sans antialiased min-h-screen flex flex-col justify-between">
 
@@ -30,7 +34,7 @@
     <div class="max-w-6xl mx-auto w-full bg-[#064e3b] shadow-2xl my-4 rounded-xl overflow-hidden border-4 border-[#166534]">
         
         <!-- Header Section -->
-        <header class="bg-[#064e3b] p-6 text-white flex flex-col md:flex-row items-center justify-between border-b border-[#166534]">
+        <header class="bg-[#064e3b] p-6 text-white flex flex-col md:flex-row items-center justify-between border-b border-[#166534] bg-cover bg-center" style="background-image: linear-gradient(rgba(6, 78, 59, 0.9), rgba(6, 78, 59, 0.9)), url('https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80')">
             <div class="flex items-center space-x-4">
                 <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-forest-700 text-3xl shadow-inner">
                     <i class="fa-solid fa-leaf text-[#14532d]"></i>
@@ -39,13 +43,6 @@
                     <h1 class="text-3xl font-bold tracking-wide">ফাস্টল্যাব ইউনানী</h1>
                     <p class="text-emerald-200 text-sm mt-1">আফুরিয়া, হিমাইতপুর, পাবনা</p>
                 </div>
-            </div>
-            <!-- Top Right Menu Toggle Button for Sidebar -->
-            <div class="mt-4 md:mt-0">
-                <button onclick="toggleSidebar()" class="bg-[#14532d] hover:bg-forest-600 px-4 py-2.5 rounded-lg flex items-center space-x-2 text-white font-semibold shadow transition border border-emerald-600">
-                    <i class="fa-solid fa-bars"></i>
-                    <span>মেনুবার</span>
-                </button>
             </div>
         </header>
 
@@ -126,82 +123,112 @@
                         <h2>কোম্পানির সম্পর্কে</h2>
                     </div>
                     <p class="text-slate-700 text-sm leading-relaxed">
-                        ফাস্টল্যাব ইউনানী একটি প্রাচীন ও ঐতিহ্যবাহী ইউনানী চিকিৎসা নির্ভর প্রতিষ্ঠান। আমরা প্রাচীন ইউনানী চিকিৎসা পদ্ধতিকে আধুনিক বিজ্ঞানসম্মত গবেষণার মাধ্যমে মানুষের সুস্বাস্থ্য ও সুস্থ জীবন নিশ্চিত করতে কাজ করে যাচ্ছি। আমাদের লক্ষ্য হলো প্রাকৃতিক উপাদান ও ইউনানী চিকিৎসার মাধ্যমে সকলের জন্য নিরাপদ ও কার্যকর স্বাস্থ্যসেবা নিশ্চিত করা।
+                        ফাস্টল্যাব ইউনানী একটি প্রাচীন ও ঐতিহ্যবাহী ইউনানী চিকিৎসা নির্ভর প্রতিষ্ঠান। আমরা প্রাচীন ইউনানী চিকিৎসা পদ্ধতিকে আধুনিক বিজ্ঞানসম্মত গবেষণার মাধ্যমে মানুষের সুস্বাস্থ্য ও সুস্থ জীবন নিশ্চিত করতে কাজ করে যাচ্ছি। আমাদের লক্ষ্য হলো প্রাকৃতিক উপাদান ও ইউনানী চিকিৎসার মাধ্যমে সকলের জন্য নিরাপদ ও কার্যকর স্বাস্থ্যসেবা নিশ্চিত করা[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)।
                     </p>
                 </section>
 
             </div>
 
-            <!-- Right Sidebar Navigation (1 Column) -->
-            <div id="sidebar-menu" class="bg-slate-50 p-5 border-l border-slate-200 flex flex-col justify-between space-y-6">
-                <div class="space-y-2">
-                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">মেনু অপশনসমূহ</h3>
+            <!-- Right Sidebar Navigation (1 Column matching the exact picture) -->
+            <div class="bg-slate-50 p-5 border-l border-slate-200 flex flex-col space-y-6">
+                <div>
+                    <!-- Clickable Menu Header to Toggle Sidebar Options -->
+                    <button onclick="toggleSidebarMenu()" class="w-full text-sm font-bold text-white bg-[#14532d] hover:bg-forest-800 px-4 py-2.5 rounded-xl uppercase tracking-wider mb-4 flex items-center justify-between shadow transition">
+                        <span class="flex items-center space-x-2">
+                            <i class="fa-solid fa-bars"></i>
+                            <span>মেনুবার</span>
+                        </span>
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </button>
                     
-                    <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-[#14532d] text-white font-medium shadow-sm transition">
-                        <i class="fa-solid fa-house w-5"></i>
-                        <span>হোম পেজ</span>
-                    </a>
-                    <a href="#notice-section" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
-                        <i class="fa-solid fa-bell w-5 text-[#14532d]"></i>
-                        <span>নোটিশ বোর্ড</span>
-                    </a>
-                    <a href="#directors-section" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
-                        <i class="fa-solid fa-users w-5 text-[#14532d]"></i>
-                        <span>পরিচালক মণ্ডলী</span>
-                    </a>
-                    <a href="#about-section" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
-                        <i class="fa-solid fa-circle-info w-5 text-[#14532d]"></i>
-                        <span>কোম্পানির সম্পর্কে</span>
-                    </a>
-                    
-                    <!-- সরবরাহ অফিসার/ইউজার লগইন -->
-                    <a href="javascript:void(0);" onclick="openLoginModal('supplier')" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
-                        <i class="fa-solid fa-user-tie w-5 text-[#14532d]"></i>
-                        <span>সরবরাহ অফিসার/ইউজার লগইন</span>
-                    </a>
+                    <!-- Sidebar Options Container -->
+                    <div id="sidebar-options" class="space-y-2 transition-all duration-300">
+                        <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-[#14532d] text-white font-medium shadow-sm transition">
+                            <i class="fa-solid fa-house w-5"></i>
+                            <span>হোম পেজ</span>
+                        </a>
+                        <a href="#notice-section" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
+                            <i class="fa-solid fa-bell w-5 text-[#14532d]"></i>
+                            <span>নোটিশ বোর্ড</span>
+                        </a>
+                        <a href="#directors-section" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
+                            <i class="fa-solid fa-users w-5 text-[#14532d]"></i>
+                            <span>পরিচালক মণ্ডলী</span>
+                        </a>
+                        <a href="#about-section" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
+                            <i class="fa-solid fa-circle-info w-5 text-[#14532d]"></i>
+                            <span>কোম্পানির সম্পর্কে</span>
+                        </a>
+                        
+                        <!-- সরবরাহ অফিসার/ইউজার লগইন -->
+                        <a href="javascript:void(0);" onclick="openLoginModal('supplier')" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
+                            <i class="fa-solid fa-user-tie w-5 text-[#14532d]"></i>
+                            <span>সরবরাহ অফিসার/ইউজার লগইন</span>
+                        </a>
 
-                    <!-- মার্কেটিং অফিসার/ইউজার লগইন -->
-                    <a href="javascript:void(0);" onclick="openLoginModal('marketing')" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
-                        <i class="fa-solid fa-bullhorn w-5 text-[#14532d]"></i>
-                        <span>মার্কেটিং অফিসার/ইউজার লগইন</span>
-                    </a>
+                        <!-- মার্কেটিং অফিসার/ইউজার লগইন -->
+                        <a href="javascript:void(0);" onclick="openLoginModal('marketing')" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-emerald-100 text-slate-700 font-medium transition">
+                            <i class="fa-solid fa-bullhorn w-5 text-[#14532d]"></i>
+                            <span>মার্কেটিং অফিসার/ইউজার লগইন</span>
+                        </a>
 
-                    <!-- অফিস/এডমিন লগইন -->
-                    <a href="javascript:void(0);" onclick="openLoginModal('admin')" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-red-600 text-white font-medium shadow hover:bg-red-700 transition">
-                        <i class="fa-solid fa-user-shield w-5"></i>
-                        <span>অফিস/এডমিন লগইন</span>
-                    </a>
+                        <!-- অফিস/এডমিন লগইন -->
+                        <a href="javascript:void(0);" onclick="openLoginModal('admin')" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-red-600 text-white font-medium shadow hover:bg-red-700 transition">
+                            <i class="fa-solid fa-user-shield w-5"></i>
+                            <span>অফিস/এডমিন লগইন</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
         </div>
-         <!-- Clean & Beautiful Footer Section (Without quick links) -->
+
+        <!-- Custom Beautiful Footer Section -->
         <footer class="bg-[#064e3b] text-white p-6 border-t border-[#166534]">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 text-sm">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 text-sm">
+                
+                <!-- Head Office Address -->
                 <div class="flex items-start space-x-3 bg-[#0a5c47] p-4 rounded-xl border border-[#166534] shadow-sm">
                     <i class="fa-solid fa-location-dot mt-1 text-emerald-300 text-lg"></i>
                     <div>
                         <p class="font-bold text-emerald-200">হেড অফিস ঠিকানা</p>
-                        <p class="text-slate-200 text-xs mt-1">আফুরিয়া, হিমাইতপুর, পাবনা</p>
+                        <p class="text-slate-200 text-xs mt-1">আফুরিয়া, হিমাইতপুর, পাবনা[span_2](start_span)[span_2](end_span)</p>
                     </div>
                 </div>
+
+                <!-- Mobile Number -->
                 <div class="flex items-start space-x-3 bg-[#0a5c47] p-4 rounded-xl border border-[#166534] shadow-sm">
                     <i class="fa-solid fa-phone mt-1 text-emerald-300 text-lg"></i>
                     <div>
                         <p class="font-bold text-emerald-200">মোবাইল নাম্বার</p>
-                        <p class="text-slate-200 text-xs mt-1">০১৩৩৫০৯৭৯৬০</p>
+                        <p class="text-slate-200 text-xs mt-1">০১৩৩৫০৯৭৯৬০[span_3](start_span)[span_3](end_span)</p>
                     </div>
                 </div>
+                 <!-- Email Address -->
                 <div class="flex items-start space-x-3 bg-[#0a5c47] p-4 rounded-xl border border-[#166534] shadow-sm">
                     <i class="fa-solid fa-envelope mt-1 text-emerald-300 text-lg"></i>
                     <div>
                         <p class="font-bold text-emerald-200">ইমেইল নাম্বার</p>
-                        <p class="text-slate-200 text-xs mt-1">fatlabumani.pabna@gmail.com</p>
+                        <p class="text-slate-200 text-xs mt-1">fatlabumani.pabna@gmail.com[span_4](start_span)[span_4](end_span)</p>
                     </div>
                 </div>
+
+                <!-- Quick Links -->
+                <div class="flex items-start space-x-3 bg-[#0a5c47] p-4 rounded-xl border border-[#166534] shadow-sm">
+                    <i class="fa-solid fa-link mt-1 text-emerald-300 text-lg"></i>
+                    <div>
+                        <p class="font-bold text-emerald-200">দ্রুত লিংক</p>
+                        <div class="space-y-1 text-xs mt-1">
+                            <a href="javascript:void(0);" onclick="openLoginModal('supplier')" class="block text-slate-200 hover:text-white hover:underline">▶ সরবরাহ অফিসার লগইন[span_5](start_span)[span_5](end_span)</a>
+                            <a href="javascript:void(0);" onclick="openLoginModal('marketing')" class="block text-slate-200 hover:text-white hover:underline">▶ মার্কেটিং অফিসার লগইন</a>
+                            <a href="javascript:void(0);" onclick="openLoginModal('admin')" class="block text-slate-200 hover:text-white hover:underline">▶ অফিস/এডমিন লগইন[span_6](start_span)[span_6](end_span)</a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="text-center text-xs text-emerald-300 border-t border-[#14532d] pt-4">
-                © ২০২৫ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত
+                © ২০২৫ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত[span_7](start_span)[span_7](end_span)
             </div>
         </footer>
 
@@ -265,6 +292,11 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        function toggleSidebarMenu() {
+            const options = document.getElementById('sidebar-options');
+            options.classList.toggle('hidden');
+        }
+
         function openLoginModal(type) {
             document.getElementById('login-modal').classList.remove('hidden');
             document.getElementById('login-type').value = type;
@@ -313,11 +345,6 @@
                 errorAlert.classList.remove('hidden');
                 document.getElementById('error-text').innerText = "ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
             }
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar-menu');
-            sidebar.classList.toggle('hidden');
         }
 
         function loadRealtimeData() {
