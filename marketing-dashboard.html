@@ -17,7 +17,7 @@
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen">
 
-    <!-- Login Section (Matches Screenshot) -->
+    <!-- Login Section -->
     <div id="login-section" class="min-h-screen flex items-center justify-center p-4 bg-cover bg-center absolute inset-0 z-50" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80')">
         <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full border-t-4 forest-green-border relative">
             
@@ -79,49 +79,61 @@
     <!-- Dashboard Section (Hidden by default until login) -->
     <div id="dashboard-section" class="hidden flex-col min-h-screen">
         
-        <header class="forest-green text-white shadow-md">
-    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-        <!-- লোগো এবং নাম অংশ -->
-        <div class="flex items-center gap-3">
-            <div class="bg-white p-2 rounded-full text-green-800">
-                <i class="fa-solid fa-leaf text-xl"></i>
-            </div>
-            <div>
-                <h2 class="text-lg font-bold">ফাস্টল্যাব ইউনানী</h2>
-                <p class="text-xs text-green-200">আফুরিয়া, হেমায়েতপুর, পাবনা</p>
-            </div>
-        </div>
+        <header class="forest-green text-white shadow-md relative">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <!-- লোগো এবং নাম অংশ -->
+                <div class="flex items-center gap-3">
+                    <div class="bg-white p-2 rounded-full text-green-800">
+                        <i class="fa-solid fa-leaf text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold">ফাস্টল্যাব ইউনানী</h2>
+                        <p class="text-xs text-green-200">আফুরিয়া, হেমায়েতপুর, পাবনা</p>
+                    </div>
+                </div>
 
-        <!-- ডানপাশে প্রোফাইল, নোটিফিকেশন এবং থ্রি-লাইন মেনু -->
-        <div class="flex items-center gap-4 relative">
-            <!-- প্রোফাইল তথ্য -->
-            <div class="hidden md:flex items-center gap-2 bg-green-900 px-3 py-1.5 rounded-full">
-                <i class="fa-solid fa-user-circle text-sm"></i>
-                <span id="top-profile-name" class="text-xs">সঞ্জয় ইসলাম | মার্কেটিং অফিসার</span>
-            </div>
+                <!-- ডানপাশে প্রোফাইল, নোটিফিকেশন এবং থ্রি-লাইন মেনু -->
+                <div class="flex items-center gap-4 relative">
+                    <!-- প্রোফাইল তথ্য -->
+                    <div class="hidden md:flex items-center gap-2 bg-green-900 px-3 py-1.5 rounded-full">
+                        <i class="fa-solid fa-user-circle text-sm"></i>
+                        <span id="top-profile-name" class="text-xs">সঞ্জয় ইসলাম | মার্কেটিং অফিসার</span>
+                    </div>
 
-            <!-- থ্রি-লাইন মেনু বাটন -->
-            <div class="hamburger-menu" onclick="toggleMenu()" style="cursor: pointer; padding: 5px;">
-                <div style="width: 25px; height: 3px; background-color: #fff; margin: 5px 0;"></div>
-                <div style="width: 25px; height: 3px; background-color: #fff; margin: 5px 0;"></div>
-                <div style="width: 25px; height: 3px; background-color: #fff; margin: 5px 0;"></div>
-            </div>
+                    <!-- থ্রি-লাইন মেনু বাটন -->
+                    <div class="hamburger-menu" onclick="toggleMenu()" style="cursor: pointer; padding: 5px;">
+                        <div style="width: 25px; height: 3px; background-color: #fff; margin: 5px 0;"></div>
+                        <div style="width: 25px; height: 3px; background-color: #fff; margin: 5px 0;"></div>
+                        <div style="width: 25px; height: 3px; background-color: #fff; margin: 5px 0;"></div>
+                    </div>
 
-            <!-- ড্রপডাউন মেনু অপশনসমূহ -->
-            <div id="dropdownMenu" style="display: none; position: absolute; right: 0; top: 45px; background: #fff; color: #333; box-shadow: 0px 4px 10px rgba(0,0,0,0.2); border-radius: 6px; width: 180px; z-index: 1000; overflow: hidden;">
-                <a href="dashboard.html" style="display: block; padding: 10px 15px; text-decoration: none; color: #333; border-bottom: 1px solid #eee;">ড্যাশবোর্ড</a>
-                <a href="supply.html" style="display: block; padding: 10px 15px; text-decoration: none; color: #333; border-bottom: 1px solid #eee;">সরবরাহ</a>
-                <a href="login.html" style="display: block; padding: 10px 15px; text-decoration: none; color: #333; border-bottom: 1px solid #eee;">ইউজার লগইন</a>
-                <a href="index.html" style="display: block; padding: 10px 15px; text-decoration: none; color: red;">লগআউট</a>
+                    <!-- ড্রপডাউন পপআপ মেনু (ডানপাশে ফিক্সড) -->
+                    <div id="dropdownMenu" class="hidden absolute right-0 top-12 w-56 bg-white rounded-xl shadow-2xl border border-gray-200 py-2 z-50 text-gray-800">
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-green-50 hover:text-green-800 font-medium text-sm border-b">
+                            <i class="fa-solid fa-chart-line forest-green-text"></i> ড্যাশবোর্ড
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-green-50 hover:text-green-800 font-medium text-sm border-b">
+                            <i class="fa-solid fa-users forest-green-text"></i> ডিপো/ডিলার লিস্ট
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-green-50 hover:text-green-800 font-medium text-sm border-b">
+                            <i class="fa-solid fa-file-invoice forest-green-text"></i> ডিপো/ডিলার স্টেটমেন্ট
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-green-50 hover:text-green-800 font-medium text-sm border-b">
+                            <i class="fa-solid fa-bullhorn forest-green-text"></i> নোটিশ বোর্ড
+                        </a>
+                        <button onclick="handleLogout()" class="w-full text-left flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-red-600 font-medium text-sm">
+                            <i class="fa-solid fa-right-from-bracket"></i> লগ আউট
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</header>
+        </header>
+
         <!-- Main Dashboard Layout -->
         <div class="container mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-4 gap-6 flex-grow">
             
-            <!-- Left Sidebar Navigation -->
-            <div class="bg-white rounded-xl shadow-md p-4 h-fit border border-gray-100 space-y-2">
+            <!-- Left Sidebar Navigation (Desktop View) -->
+            <div class="hidden lg:block bg-white rounded-xl shadow-md p-4 h-fit border border-gray-100 space-y-2">
                 <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl forest-green text-white font-medium text-sm shadow">
                     <i class="fa-solid fa-chart-line w-5"></i> ড্যাশবোর্ড
                 </a>
@@ -129,7 +141,7 @@
                     <i class="fa-solid fa-users w-5 forest-green-text"></i> ডিপো/ডিলার লিস্ট
                 </a>
                 <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-50 text-gray-700 font-medium text-sm transition">
-                    <i class="fa-solid fa-file-invoice w-5 forest-green-text"></i>ডিপো/ডিলার স্টেটমেন্ট
+                    <i class="fa-solid fa-file-invoice w-5 forest-green-text"></i> ডিপো/ডিলার স্টেটমেন্ট
                 </a>
                 <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-50 text-gray-700 font-medium text-sm transition">
                     <i class="fa-solid fa-bullhorn w-5 forest-green-text"></i> নোটিশ বোর্ড
@@ -141,7 +153,7 @@
             </div>
 
             <!-- Right Main Content Area (3 Columns) -->
-            <div class="lg:col-span-3 space-y-6">
+            <div class="lg:col-span-3 space-y-6 w-full">
                 
                 <!-- Top Two Cards: Profile & Notice Board -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -184,7 +196,6 @@
                     </div>
 
                 </div>
-
                 <!-- Party List Table -->
                 <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
                     <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
@@ -249,7 +260,7 @@
                                 <tr class="hover:bg-gray-50">
                                     <td class="p-3 border">৪</td>
                                     <td class="p-3 border font-medium">আনিক এন্টারপ্রাইজ, ঈশ্বরদী</td>
-                                    <td class="p-3 border">০১৮৭absValue...</td>
+                                    <td class="p-3 border">০১৮৭৫৪৮০২১০</td>
                                     <td class="p-3 border">৪০০</td>
                                     <td class="p-3 border">৫০০</td>
                                     <td class="p-3 border">১০০</td>
@@ -261,7 +272,8 @@
                         </table>
                     </div>
                 </div>
-                                <!-- Bottom Section: Advice & Ledger Details -->
+
+                <!-- Bottom Section: Advice & Ledger Details -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     
                     <!-- Advice Card -->
@@ -271,14 +283,14 @@
                         </div>
                         <ol class="space-y-2 text-xs text-gray-700 list-decimal list-inside font-medium">
                             <li>নিয়মিত পার্টির সাথে যোগাযোগ রাখুন।</li>
-                            <li>বਕয়া আদায় দ্রুত সম্পন্ন করুন।</li>
+                            <li>বকেয়া আদায় দ্রুত সম্পন্ন করুন।</li>
                             <li>নতুন অর্ডার সংগ্রহে সচেষ্ট হোন।</li>
                             <li>সঠিক সময়ে হিসাব সাবমিট করুন।</li>
                             <li>গ্রাহক সেবার মান উন্নত করুন।</li>
                         </ol>
                     </div>
 
-                    <!-- Ledger Details Table -->
+                    <!-- Ledger Details Table (সঠিক হিসাব ও ব্যালেন্স সহ) -->
                     <div id="ledger-section" class="bg-white rounded-xl shadow-md p-5 border border-gray-100 md:col-span-2">
                         <div class="flex justify-between items-center mb-3 border-b pb-2">
                             <h3 class="text-md font-bold forest-green-text flex items-center gap-2">
@@ -314,7 +326,7 @@
                                         <td class="p-2.5 border">০০</td>
                                         <td class="p-2.5 border">৬০০</td>
                                         <td class="p-2.5 border font-semibold text-blue-600">Dr</td>
-                                        <td class="p-2.5 border font-bold">-১১০০</td>
+                                        <td class="p-2.5 border font-bold">+১০০</td>
                                     </tr>
                                     <tr class="hover:bg-gray-50">
                                         <td class="p-2.5 border">১০/১০/২৬</td>
@@ -322,7 +334,7 @@
                                         <td class="p-2.5 border">৩০০</td>
                                         <td class="p-2.5 border">০০</td>
                                         <td class="p-2.5 border font-semibold text-red-600">Cr</td>
-                                        <td class="p-2.5 border font-bold">-৮০০</td>
+                                        <td class="p-2.5 border font-bold">-২০০</td>
                                     </tr>
                                     <tr class="hover:bg-gray-50">
                                         <td class="p-2.5 border">১৫/১০/২৬</td>
@@ -330,7 +342,7 @@
                                         <td class="p-2.5 border">০০</td>
                                         <td class="p-2.5 border">৪০০</td>
                                         <td class="p-2.5 border font-semibold text-blue-600">Dr</td>
-                                        <td class="p-2.5 border font-bold">-১২০০</td>
+                                        <td class="p-2.5 border font-bold">+২০০</td>
                                     </tr>
                                     <tr class="hover:bg-gray-50">
                                         <td class="p-2.5 border">২০/১০/২৬</td>
@@ -338,7 +350,7 @@
                                         <td class="p-2.5 border">৩০০</td>
                                         <td class="p-2.5 border">০০</td>
                                         <td class="p-2.5 border font-semibold text-red-600">Cr</td>
-                                        <td class="p-2.5 border font-bold">-৯০০</td>
+                                        <td class="p-2.5 border font-bold">-১০০</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -396,24 +408,25 @@
                 eyeIcon.classList.add('fa-eye');
             }
         }
-        function toggleMenu() {
-    var menu = document.getElementById("dropdownMenu");
-    if (menu.style.display === "block") {
-        menu.style.display = "none";
-    } else {
-        menu.style.display = "block";
-    }
-}
 
-// মেনুর বাইরে কোথাও ক্লিক করলে যেন মেনু বন্ধ হয়ে যায়
-window.onclick = function(event) {
-    if (!event.target.closest('.hamburger-menu') && !event.target.closest('#dropdownMenu')) {
-        var menu = document.getElementById("dropdownMenu");
-        if (menu && menu.style.display === "block") {
-            menu.style.display = "none";
+        function toggleMenu() {
+            var menu = document.getElementById("dropdownMenu");
+            if (menu.style.display === "block") {
+                menu.style.display = "none";
+            } else {
+                menu.style.display = "block";
+            }
         }
-    }
-}
+
+        // মেনুর বাইরে কোথাও ক্লিক করলে যেন মেনু বন্ধ হয়ে যায়
+        window.onclick = function(event) {
+            if (!event.target.closest('.hamburger-menu') && !event.target.closest('#dropdownMenu')) {
+                var menu = document.getElementById("dropdownMenu");
+                if (menu && menu.style.display === "block") {
+                    menu.style.display = "none";
+                }
+            }
+        }
         
         function handleLogin(event) {
             event.preventDefault();
@@ -429,7 +442,6 @@ window.onclick = function(event) {
                 document.getElementById('dashboard-section').classList.remove('hidden');
                 document.getElementById('dashboard-section').classList.add('flex');
                 
-                // ফায়ারবেজ রিয়েলটাইম ডেটাবেজ লাইভ সিঙ্ক কল
                 loadRealtimeData();
             } else {
                 errorAlert.classList.remove('hidden');
