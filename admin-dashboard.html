@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>এডমিন ড্যাশবোর্ড - ফাস্টল্যাব ইউনানী</title>
+    <title>এডমিন প্যানেল - ফাস্টল্যাব ইউনানী</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -21,7 +21,7 @@
         <div class="flex items-center gap-3">
             <i class="fa-solid fa-shield-halved text-2xl"></i>
             <div>
-                <h1 class="text-lg font-bold">ফাস্টল্যাব ইউনানী - এডমিন প্যানেল</h1>
+                <h1 class="text-lg font-bold">ফাস্টল্যাব ইউনানী - মূল এডমিন প্যানেল</h1>
                 <p class="text-xs text-green-200">আফুরিয়া, হেমায়েতপুর, পাবনা</p>
             </div>
         </div>
@@ -37,7 +37,7 @@
         <div class="bg-white rounded-xl shadow-md p-6 border-l-4 forest-green-border flex justify-between items-center">
             <div>
                 <h2 class="text-xl font-bold text-gray-800">স্বাগতম, এডমিন মহোদয়!</h2>
-                <p class="text-sm text-gray-600 mt-1">এখান থেকে আপনি হোমপেজ, নোটিশ, এবং মার্কেটিং ও সরবরাহ অফিসারদের ম্যানেজ করতে পারবেন।</p>
+                <p class="text-sm text-gray-600 mt-1">এটি আপনার ফুল কন্ট্রোল প্যানেল। এখান থেকে হোমপেজ, নোটিশ, পরিচালক মণ্ডলী, অফিসার এবং সমস্ত তথ্য ম্যানেজ করতে পারবেন।</p>
             </div>
             <a href="index.html" target="_blank" class="forest-green text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-900 transition flex items-center gap-2">
                 <i class="fa-solid fa-globe"></i> লাইভ সাইট দেখুন
@@ -51,12 +51,20 @@
             </h3>
             <form onsubmit="saveHomeSettings(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">কোম্পানির নাম</label>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">কোম্পানির নাম ও হেডিং</label>
                     <input type="text" id="comp-name" value="ফাস্টল্যাব ইউনানী" class="w-full px-3 py-2 border rounded-lg text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">অফিস ঠিকানা</label>
                     <input type="text" id="comp-address" value="আফুরিয়া, হেমায়েতপুর, পাবনা সদর, পাবনা" class="w-full px-3 py-2 border rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">মোবাইল নাম্বার</label>
+                    <input type="text" id="comp-phone" value="01700-000000" class="w-full px-3 py-2 border rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">ইমেইল ঠিকানা</label>
+                    <input type="email" id="comp-email" value="info@fastlabunani.com" class="w-full px-3 py-2 border rounded-lg text-sm">
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-xs font-medium text-gray-700 mb-1">নোটিশ বোর্ড আপডেট</label>
@@ -68,16 +76,31 @@
                 </div>
                 <div>
                     <button type="submit" class="forest-green text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-green-900 transition shadow">
-                        পরিবর্তনগুলো সেভ করুন
+                        হোমপেজের তথ্য সেভ করুন
                     </button>
                 </div>
             </form>
         </div>
 
-        <!-- ২. অফিসার ম্যানেজমেন্ট সেকশন (একাধিক মার্কেটিং ও সরবরাহ অফিসার যুক্তকরণ) -->
+        <!-- ২. পরিচালক মণ্ডলী আপডেট সেকশন -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <h3 class="text-lg font-bold forest-green-text mb-4 border-b pb-2 flex items-center gap-2">
+                <i class="fa-solid fa-users-gear"></i> পরিচালক মণ্ডলীগণ আপডেট অপশন
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <input type="text" id="dir-name" placeholder="পরিচালকের নাম" class="px-3 py-2 border rounded-lg text-sm">
+                <input type="text" id="dir-desig" placeholder="পদবী (যেমন: ব্যবস্থাপনা পরিচালক)" class="px-3 py-2 border rounded-lg text-sm">
+                <input type="file" id="dir-photo" class="px-3 py-1.5 border rounded-lg text-sm bg-gray-50">
+            </div>
+            <button onclick="addDirector()" class="forest-green text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-green-900 transition">
+                + পরিচালক যুক্ত করুন
+            </button>
+        </div>
+
+        <!-- ৩. অফিসার ম্যানেজমেন্ট সেকশন -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
-            <!-- মার্কেটিং অফিসার লিস্ট ও ফর্ম -->
+            <!-- মার্কেটিং অফিসার ম্যানেজমেন্ট -->
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h3 class="text-lg font-bold forest-green-text mb-4 border-b pb-2 flex items-center gap-2">
                     <i class="fa-solid fa-user-tie"></i> মার্কেটিং অফিসার ম্যানেজমেন্ট
@@ -90,13 +113,9 @@
                         + নতুন মার্কেটিং অফিসার যুক্ত করুন
                     </button>
                 </div>
-                <div id="marketing-list-container" class="border rounded-lg p-3 text-sm text-gray-600 bg-gray-50">
-                    <!-- তালিকা এখানে ডায়নামিক দেখাবে -->
-                    <p class="text-center text-xs text-gray-400">কোনো মার্কেটিং অফিসার যুক্ত করা হয়নি</p>
-                </div>
             </div>
 
-            <!-- সরবরাহ অফিসার লিস্ট ও ফর্ম -->
+            <!-- সরবরাহ অফিসার ম্যানেজমেন্ট -->
             <div class="bg-white rounded-xl shadow-md p-6">
                 <h3 class="text-lg font-bold forest-green-text mb-4 border-b pb-2 flex items-center gap-2">
                     <i class="fa-solid fa-truck-fast"></i> সরবরাহ অফিসার ম্যানেজমেন্ট
@@ -108,10 +127,6 @@
                     <button onclick="addSupplyOfficer()" class="w-full bg-green-700 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-800 transition">
                         + নতুন সরবরাহ অফিসার যুক্ত করুন
                     </button>
-                </div>
-                <div id="supply-list-container" class="border rounded-lg p-3 text-sm text-gray-600 bg-gray-50">
-                    <!-- তালিকা এখানে ডায়নামিক দেখাবে -->
-                    <p class="text-center text-xs text-gray-400">কোনো সরবরাহ অফিসার যুক্ত করা হয়নি</p>
                 </div>
             </div>
 
@@ -125,19 +140,22 @@
     </footer>
 
     <script>
-        // লগইন চেক
-        if(localStorage.getItem('adminLoggedIn') !== 'true') {
-            window.location.href = "admin-login.html";
-        }
-
         function adminLogout() {
-            localStorage.removeItem('adminLoggedIn');
             window.location.href = "admin-login.html";
         }
 
         function saveHomeSettings(e) {
             e.preventDefault();
-            alert("হোমপেজ ও কোম্পানির তথ্য সফলভাবে আপডেট করা হয়েছে!");
+            alert("হোমপেজ, ঠিকানা, নোটিশ এবং কোম্পানির তথ্য সফলভাবে আপডেট করা হয়েছে!");
+        }
+
+        function addDirector() {
+            const name = document.getElementById('dir-name').value;
+            if(!name) { alert("দয়া করে পরিচালকের নাম লিখুন"); return; }
+            alert("পরিচালক মণ্ডলীর তথ্য সফলভাবে যুক্ত করা হয়েছে!");
+            document.getElementById('dir-name').value = '';
+            document.getElementById('dir-desig').value = '';
+            document.getElementById('dir-photo').value = '';
         }
 
         function addMarketingOfficer() {
