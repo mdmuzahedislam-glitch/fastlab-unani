@@ -3,249 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>অফিস / এডমিন প্যানেল - ফাস্টল্যাব ইউনানী</title>
+    <title>এডমিন ড্যাশবোর্ড - ফাস্টল্যাব ইউনানী</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: #f0fdf4; }
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: #f8fafc; }
         .forest-green { background-color: #064e3b; }
         .forest-green-text { color: #064e3b; }
         .forest-green-border { border-color: #064e3b; }
-        .table-header { background-color: #064e3b; color: white; }
     </style>
 </head>
-<body class="bg-gray-50 flex flex-col min-h-screen">
+<body class="min-h-screen flex flex-col">
 
-    <!-- Step-01: অফিস / এডমিন লগইন -->
-    <div id="admin-login-section" class="min-h-screen flex items-center justify-center p-4 bg-cover bg-center absolute inset-0 z-50" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80')">
-        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full border-t-4 forest-green-border relative">
-            <div class="text-center mb-6">
-                <div class="inline-block p-3 bg-green-100 rounded-full text-green-800 mb-2">
-                    <i class="fa-solid fa-leaf text-3xl"></i>
-                </div>
-                <h1 class="text-2xl font-bold forest-green-text">ফাস্টল্যাব ইউনানী</h1>
-                <p class="text-xs text-gray-500 mt-0.5">আফুরিয়া, পাবনা</p>
-                <div class="mt-4 inline-flex items-center gap-2 bg-green-50 px-4 py-1.5 rounded-full text-green-800 font-medium text-sm border border-green-200">
-                    <i class="fa-solid fa-user-shield"></i> <span>অফিস / এডমিন লগইন</span>
-                </div>
-            </div>
-
-            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">User Name</label>
-                    <input type="text" id="admin-user" required placeholder="User Name" class="w-full px-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" id="admin-pass" required placeholder="Password" class="w-full px-4 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
-                </div>
-                <button type="submit" class="w-full forest-green text-white py-3 rounded-lg font-semibold hover:bg-green-900 transition shadow-md text-sm">
-                    Login
-                </button>
-            </form>
-            <div class="mt-6 text-center border-t pt-4">
-                <a href="index.html" class="inline-flex items-center gap-2 text-sm text-green-800 hover:underline font-medium">
-                    <i class="fa-solid fa-house"></i> হোম পেজে ফিরে যান
-                </a>
+    <!-- টপ ন্যাভবার -->
+    <header class="forest-green text-white shadow-md p-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-shield-halved text-2xl"></i>
+            <div>
+                <h1 class="text-lg font-bold">ফাস্টল্যাব ইউনানী - এডমিন প্যানেল</h1>
+                <p class="text-xs text-green-200">আফুরিয়া, হেমায়েতপুর, পাবনা</p>
             </div>
         </div>
-    </div>
+        <button onclick="adminLogout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2">
+            <i class="fa-solid fa-right-from-bracket"></i> লগআউট
+        </button>
+    </header>
 
-    <!-- Step-02 & Step-03: Admin Dashboard -->
-    <div id="admin-dashboard" class="hidden flex-col min-h-screen">
-        <header class="forest-green text-white shadow-md py-4 px-6 flex justify-between items-center">
-            <h2 class="text-lg font-bold"><i class="fa-solid fa-gauge"></i> অফিস / এডমিন প্যানেল (মাস্টার কন্ট্রোল)</h2>
-            <button onclick="adminLogout()" class="bg-red-600 px-4 py-1.5 rounded text-xs font-medium hover:bg-red-700">লগ আউট</button>
-        </header>
+    <!-- মূল কনটেন্ট এরিয়া -->
+    <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
 
-        <main class="container mx-auto px-4 py-6 space-y-6 flex-grow">
+        <!-- ওয়েলকাম কার্ড -->
+        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 forest-green-border flex justify-between items-center">
+            <div>
+                <h2 class="text-xl font-bold text-gray-800">স্বাগতম, এডমিন মহোদয়!</h2>
+                <p class="text-sm text-gray-600 mt-1">এখান থেকে আপনি হোমপেজ, নোটিশ, এবং মার্কেটিং ও সরবরাহ অফিসারদের ম্যানেজ করতে পারবেন।</p>
+            </div>
+            <a href="index.html" target="_blank" class="forest-green text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-900 transition flex items-center gap-2">
+                <i class="fa-solid fa-globe"></i> লাইভ সাইট দেখুন
+            </a>
+        </div>
+
+        <!-- ১. হোমপেজ ও কোম্পানি এডিট সেকশন -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <h3 class="text-lg font-bold forest-green-text mb-4 border-b pb-2 flex items-center gap-2">
+                <i class="fa-solid fa-house-chimney-user"></i> হোমপেজ ও তথ্য এডিট প্যানেল
+            </h3>
+            <form onsubmit="saveHomeSettings(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">কোম্পানির নাম</label>
+                    <input type="text" id="comp-name" value="ফাস্টল্যাব ইউনানী" class="w-full px-3 py-2 border rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">অফিস ঠিকানা</label>
+                    <input type="text" id="comp-address" value="আফুরিয়া, হেমায়েতপুর, পাবনা সদর, পাবনা" class="w-full px-3 py-2 border rounded-lg text-sm">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-medium text-gray-700 mb-1">নোটিশ বোর্ড আপডেট</label>
+                    <textarea id="notice-text" rows="2" class="w-full px-3 py-2 border rounded-lg text-sm">সকল ডিলার ও অফিসারদের অবগতির জন্য জানানো যাচ্ছে যে...</textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-medium text-gray-700 mb-1">কোম্পানি সম্পর্কে বিবরণ (About Us)</label>
+                    <textarea id="about-text" rows="3" class="w-full px-3 py-2 border rounded-lg text-sm">ফাস্টল্যাব ইউনানী একটি বিশ্বস্ত ভেষজ ওষুধ প্রস্তুতকারক প্রতিষ্ঠান...</textarea>
+                </div>
+                <div>
+                    <button type="submit" class="forest-green text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-green-900 transition shadow">
+                        পরিবর্তনগুলো সেভ করুন
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ২. অফিসার ম্যানেজমেন্ট সেকশন (একাধিক মার্কেটিং ও সরবরাহ অফিসার যুক্তকরণ) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
-            <!-- Step-02: Home Page Edit & Company Settings -->
-            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-                <h3 class="text-md font-bold forest-green-text mb-4 border-b pb-2"><i class="fa-solid fa-pen-to-square"></i> হোম পেজ ও কোম্পানি এডিট (Home Page Edit)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">কোম্পানির নাম পরিবর্তন:</label>
-                        <input type="text" value="ফাস্টল্যাব ইউনানী" class="w-full p-2 border rounded text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">ঠিকানা:</label>
-                        <input type="text" value="আফুরিয়া, পাবনা" class="w-full p-2 border rounded text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">লোগো / ছবি (Choose Photo):</label>
-                        <input type="file" class="w-full p-1 border rounded text-xs bg-gray-50">
-                    </div>
+            <!-- মার্কেটিং অফিসার লিস্ট ও ফর্ম -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-lg font-bold forest-green-text mb-4 border-b pb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-user-tie"></i> মার্কেটিং অফিসার ম্যানেজমেন্ট
+                </h3>
+                <div class="space-y-3 mb-4">
+                    <input type="text" id="m-name" placeholder="অফিসারের নাম" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <input type="text" id="m-area" placeholder="এরিয়া / কর্মক্ষেত্র" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <input type="text" id="m-phone" placeholder="মোবাইল নাম্বার" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <button onclick="addMarketingOfficer()" class="w-full bg-green-700 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-800 transition">
+                        + নতুন মার্কেটিং অফিসার যুক্ত করুন
+                    </button>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">নোটিশ বোর্ড এডিট:</label>
-                        <textarea rows="3" class="w-full p-2 border rounded text-sm">আগামী ২০ তারিখের মধ্যে সকল পার্টির বকেয়া পরিশোধের অনুরোধ।</textarea>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">পরামর্শ এডিট (Advice Edit):</label>
-                        <textarea rows="3" class="w-full p-2 border rounded text-sm">১. নিয়মিত পার্টির সাথে যোগাযোগ রাখুন। ২. বকেয়া আদায় দ্রুত করুন।</textarea>
-                    </div>
-                </div>
-
-                <!-- ফুটার এডিট অপশন -->
-                <div class="mt-4">
-                    <label class="block text-xs font-medium text-gray-700 mb-1">ফুটার এডিট (Footer Edit):</label>
-                    <input type="text" value="© ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত" class="w-full p-2 border rounded text-sm">
-                </div>
-
-                <div class="mt-4 text-right">
-                    <button class="forest-green text-white px-4 py-2 rounded text-xs font-semibold shadow">সংরক্ষণ করুন</button>
+                <div id="marketing-list-container" class="border rounded-lg p-3 text-sm text-gray-600 bg-gray-50">
+                    <!-- তালিকা এখানে ডায়নামিক দেখাবে -->
+                    <p class="text-center text-xs text-gray-400">কোনো মার্কেটিং অফিসার যুক্ত করা হয়নি</p>
                 </div>
             </div>
 
-            <!-- Step-03: Marketing & Supply Officer Management -->
-            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-                <h3 class="text-md font-bold forest-green-text mb-4 border-b pb-2"><i class="fa-solid fa-user-tie"></i> মার্কেটিং ও সরবরাহ অফিসার রেজিস্ট্রেশন এবং তালিকা (এডিট/ডিলিট)</h3>
-                
-                <!-- নতুন অফিসার রেজিস্ট্রেশন ফর্ম -->
-                <div class="bg-green-50 p-4 rounded-lg border border-green-200 mb-4 grid grid-cols-1 md:grid-cols-6 gap-3 items-end">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">অফিসার নাম</label>
-                        <input type="text" placeholder="নাম" class="w-full p-2 border rounded text-xs bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">পদবী</label>
-                        <input type="text" placeholder="ASM/TSO" class="w-full p-2 border rounded text-xs bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">মোবাইল</label>
-                        <input type="text" placeholder="নম্বর" class="w-full p-2 border rounded text-xs bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">এরিয়া</label>
-                        <input type="text" placeholder="এরিয়া" class="w-full p-2 border rounded text-xs bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">User/Pass</label>
-                        <input type="text" placeholder="id/pass" class="w-full p-2 border rounded text-xs bg-white">
-                    </div>
-                    <button class="forest-green text-white py-2 rounded text-xs font-semibold h-9">সংরক্ষণ</button>
+            <!-- সরবরাহ অফিসার লিস্ট ও ফর্ম -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-lg font-bold forest-green-text mb-4 border-b pb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-truck-fast"></i> সরবরাহ অফিসার ম্যানেজমেন্ট
+                </h3>
+                <div class="space-y-3 mb-4">
+                    <input type="text" id="s-name" placeholder="অফিসারের নাম" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <input type="text" id="s-phone" placeholder="মোবাইল নাম্বার" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <input type="password" id="s-pass" placeholder="লগইন পিন / পাসওয়ার্ড" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <button onclick="addSupplyOfficer()" class="w-full bg-green-700 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-800 transition">
+                        + নতুন সরবরাহ অফিসার যুক্ত করুন
+                    </button>
                 </div>
-
-                <!-- অফিসার তালিকা ও কন্ট্রোল টেবিল -->
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-xs">
-                        <thead>
-                            <tr class="table-header">
-                                <th class="p-2.5 border">ক্রমিক</th>
-                                <th class="p-2.5 border">অফিসারের নাম</th>
-                                <th class="p-2.5 border">পদবী</th>
-                                <th class="p-2.5 border">মোবাইল</th>
-                                <th class="p-2.5 border">এরিয়া</th>
-                                <th class="p-2.5 border">ইউজার/পাস</th>
-                                <th class="p-2.5 border text-center">অ্যাকশন (এডিট + ডিলিট)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="p-2.5 border">১</td>
-                                <td class="p-2.5 border">মুজাহিদ হৃদয়</td>
-                                <td class="p-2.5 border">ASM</td>
-                                <td class="p-2.5 border">০১৭৩৮৫০৯৭৪৫</td>
-                                <td class="p-2.5 border">পাবনা</td>
-                                <td class="p-2.5 border">Muzahid / 1234</td>
-                                <td class="p-2.5 border text-center space-x-1">
-                                    <button class="bg-blue-600 text-white px-2 py-1 rounded">এডিট</button>
-                                    <button class="bg-red-600 text-white px-2 py-1 rounded">ডিলিট</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div id="supply-list-container" class="border rounded-lg p-3 text-sm text-gray-600 bg-gray-50">
+                    <!-- তালিকা এখানে ডায়নামিক দেখাবে -->
+                    <p class="text-center text-xs text-gray-400">কোনো সরবরাহ অফিসার যুক্ত করা হয়নি</p>
                 </div>
             </div>
 
-            <!-- New Dealer / Depo Registration & Statement Edit/Delete -->
-            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-                <h3 class="text-md font-bold forest-green-text mb-4 border-b pb-2"><i class="fa-solid fa-users"></i> নতুন ডিপো/ডিলার রেজিস্ট্রেশন ও হিসাব স্টেটমেন্ট ম্যানেজমেন্ট</h3>
-                
-                <!-- ডিলার রেজিস্ট্রেশন ফর্ম -->
-                <div class="bg-gray-50 p-4 rounded-lg border mb-4 grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">ডিপো/ডিলার নাম</label>
-                        <input type="text" placeholder="নাম ও ঠিকানা" class="w-full p-2 border rounded text-xs bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">মোবাইল</label>
-                        <input type="text" placeholder="নম্বর" class="w-full p-2 border rounded text-xs bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">প্রারম্ভিক জমা</label>
-                        <input type="number" placeholder="০" class="w-full p-2 border rounded text-xs bg-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">মাল ক্রয়</label>
-                        <input type="number" placeholder="০" class="w-full p-2 border rounded text-xs bg-white">
-                    </div>
-                    <button class="forest-green text-white py-2 rounded text-xs font-semibold h-9">সংরক্ষণ</button>
-                </div>
+        </div>
 
-                <!-- স্টেটমেন্ট এডিট ও ডিলিট টেবিল -->
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-xs">
-                        <thead>
-                            <tr class="table-header">
-                                <th class="p-2.5 border">তারিখ</th>
-                                <th class="p-2.5 border">বিবরণ</th>
-                                <th class="p-2.5 border">জমা</th>
-                                <th class="p-2.5 border">মাল ক্রয়</th>
-                                <th class="p-2.5 border">Dr/Cr</th>
-                                <th class="p-2.5 border">অবশিষ্ট ব্যালেন্স</th>
-                                <th class="p-2.5 border text-center">অ্যাকশন (এডিট + ডিলিট)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="p-2.5 border">১৫/০১/২০২৬</td>
-                                <td class="p-2.5 border">ইসলামী ব্যাংক জমা</td>
-                                <td class="p-2.5 border">৫০০</td>
-                                <td class="p-2.5 border">০০</td>
-                                <td class="p-2.5 border text-red-600 font-bold">Cr</td>
-                                <td class="p-2.5 border font-bold">-৫০০</td>
-                                <td class="p-2.5 border text-center space-x-1">
-                                    <button class="bg-blue-600 text-white px-2 py-1 rounded">এডিট</button>
-                                    <button class="bg-red-600 text-white px-2.5 py-1 rounded">ডিলিট</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+    </main>
 
-        </main>
-
-        <footer class="bg-white border-t py-4 text-center text-xs text-gray-500">
-            © ২০২৬ - ফাস্টল্যাব ইউনানী | এডমিন প্যানেল কন্ট্রোল
-        </footer>
-    </div>
+    <!-- ফুটার -->
+    <footer class="bg-gray-800 text-white text-center py-4 text-xs mt-auto">
+        &copy; ২০২৬ ফাস্টল্যাব ইউনানী। সর্বস্বত্ব সংরক্ষিত।
+    </footer>
 
     <script>
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const user = document.getElementById('admin-user').value.trim();
-            const pass = document.getElementById('admin-pass').value.trim();
-            
-            if(user === "admin" && pass === "admin123") {
-                document.getElementById('admin-login-section').classList.add('hidden');
-                document.getElementById('admin-dashboard').classList.remove('hidden');
-                document.getElementById('admin-dashboard').classList.add('flex');
-            } else {
-                alert("ভুল ইউজারনেম বা পাসওয়ার্ড! সঠিক তথ্য দিন।");
-            }
+        // লগইন চেক
+        if(localStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = "admin-login.html";
         }
 
         function adminLogout() {
-            document.getElementById('admin-dashboard').classList.add('hidden');
-            document.getElementById('admin-login-section').classList.remove('hidden');
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = "admin-login.html";
+        }
+
+        function saveHomeSettings(e) {
+            e.preventDefault();
+            alert("হোমপেজ ও কোম্পানির তথ্য সফলভাবে আপডেট করা হয়েছে!");
+        }
+
+        function addMarketingOfficer() {
+            const name = document.getElementById('m-name').value;
+            if(!name) { alert("দয়া করে অফিসারের নাম লিখুন"); return; }
+            alert("মার্কেটিং অফিসার সফলভাবে যুক্ত করা হয়েছে!");
+            document.getElementById('m-name').value = '';
+            document.getElementById('m-area').value = '';
+            document.getElementById('m-phone').value = '';
+        }
+
+        function addSupplyOfficer() {
+            const name = document.getElementById('s-name').value;
+            if(!name) { alert("দয়া করে অফিসারের নাম লিখুন"); return; }
+            alert("সরবরাহ অফিসার সফলভাবে যুক্ত করা হয়েছে!");
+            document.getElementById('s-name').value = '';
+            document.getElementById('s-phone').value = '';
+            document.getElementById('s-pass').value = '';
         }
     </script>
 </body>
-  </html>
-
+</html>
