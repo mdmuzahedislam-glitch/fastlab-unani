@@ -139,21 +139,14 @@
         &copy; ২০২৬ ফাস্টল্যাব ইউনানী। সর্বস্বত্ব সংরক্ষিত।
     </footer>
 
-    <!-- স্ক্রিপ্ট ও সিকিউরিটি চেক -->
+    <!-- স্ক্রিপ্ট -->
     <script>
-        // ১. সিকিউরিটি চেক: লগইন করা না থাকলে ড্যাশবোর্ডে ঢুকতে দেবে না
-        if (localStorage.getItem('isAdminLoggedIn') !== 'true') {
-            alert("দয়া করে প্রথমে লগইন করুন!");
-            window.location.href = "admin-login.html";
-        }
-
-        // ২. লগআউট ফাংশন
+        // লগআউট ফাংশন (ক্লিক করলে লগইন পেজে নিয়ে যাবে)
         function adminLogout() {
-            localStorage.removeItem('isAdminLoggedIn');
             window.location.href = "admin-login.html";
         }
 
-        // ৩. পেজ লোড হলে আগের সেভ করা ডেটা ইনপুটে বসানো
+        // পেজ লোড হলে আগের সেভ করা ডেটা ইনপুটে বসানো
         window.onload = function() {
             if(localStorage.getItem('compName')) document.getElementById('comp-name').value = localStorage.getItem('compName');
             if(localStorage.getItem('compAddress')) document.getElementById('comp-address').value = localStorage.getItem('compAddress');
@@ -163,7 +156,7 @@
             if(localStorage.getItem('aboutText')) document.getElementById('about-text').value = localStorage.getItem('aboutText');
         }
 
-        // ৪. হোমপেজ সেটিংস সেভ করার ফাংশন
+        // হোমপেজ সেটিংস সেভ করার ফাংশন
         function saveHomeSettings(e) {
             e.preventDefault();
             
