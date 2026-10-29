@@ -6,6 +6,11 @@
     <title>এডমিন প্যানেল - ফাস্টল্যাব ইউনানী</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase JS SDK (Compat version) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
         body { font-family: 'Hind Siliguri', sans-serif; background-color: #f8fafc; }
@@ -22,7 +27,7 @@
             <i class="fa-solid fa-shield-halved text-2xl"></i>
             <div>
                 <h1 class="text-lg font-bold">ফাস্টল্যাব ইউনানী - মূল এডমিন প্যানেল</h1>
-                <p class="text-xs text-green-200">আফুরিয়া, হেমায়েতপুর, পাবনা</p>
+                <p class="text-xs text-green-200">আফুরিয়া, হেমায়েতপুর, পাবনা</p>
             </div>
         </div>
         <button onclick="adminLogout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 cursor-pointer">
@@ -30,13 +35,13 @@
         </button>
     </header>
 
-    <!-- মূল কনটেন্ট এরিয়া -->
+    <!-- মূল কনটেন্ট এরিয়া -->
     <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
 
-        <!-- ওয়েলকাম কার্ড -->
+        <!-- ওয়েলকাম কার্ড -->
         <div class="bg-white rounded-xl shadow-md p-6 border-l-4 forest-green-border flex justify-between items-center">
             <div>
-                <h2 class="text-xl font-bold text-gray-800">স্বাগতম, এডমিন মহোদয়!</h2>
+                <h2 class="text-xl font-bold text-gray-800">স্বাগতম, এডমিন মহোদয়!</h2>
                 <p class="text-sm text-gray-600 mt-1">এটি আপনার ফুল কন্ট্রোল প্যানেল। এখান থেকে হোমপেজ, নোটিশ, পরিচালক মণ্ডলী, অফিসার এবং সমস্ত তথ্য ম্যানেজ করতে পারবেন।</p>
             </div>
             <a href="index.html" target="_blank" class="forest-green text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-900 transition flex items-center gap-2">
@@ -52,27 +57,27 @@
             <form onsubmit="saveHomeSettings(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">কোম্পানির নাম ও হেডিং</label>
-                    <input type="text" id="comp-name" value="ফাস্টল্যাব ইউনানী" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <input type="text" id="comp-name" placeholder="ফাস্টল্যাব ইউনানী" class="w-full px-3 py-2 border rounded-lg text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">অফিস ঠিকানা</label>
-                    <input type="text" id="comp-address" value="আফুরিয়া, হেমায়েতপুর, পাবনা সদর, পাবনা" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <input type="text" id="comp-address" placeholder="আফুরিয়া, হেমায়েতপুর, পাবনা সদর, পাবনা" class="w-full px-3 py-2 border rounded-lg text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">মোবাইল নাম্বার</label>
-                    <input type="text" id="comp-phone" value="০১৩৩৫০১৯৭৬০" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <input type="text" id="comp-phone" placeholder="০১৩৩৫০১৯৭৬০" class="w-full px-3 py-2 border rounded-lg text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">ইমেইল ঠিকানা</label>
-                    <input type="email" id="comp-email" value="fatlabumani.pabna@gmail.com" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <input type="email" id="comp-email" placeholder="fatlabumani.pabna@gmail.com" class="w-full px-3 py-2 border rounded-lg text-sm">
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-xs font-medium text-gray-700 mb-1">নোটিশ বোর্ড আপডেট</label>
-                    <textarea id="notice-text" rows="2" class="w-full px-3 py-2 border rounded-lg text-sm">আগামী ২৫ তারিখের মধ্যে সকল পার্টির বকেয়া পরিশোধের জন্য অনুরোধ করা হলো।</textarea>
+                    <textarea id="notice-text" rows="2" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="নোটিশ লিখুন..."></textarea>
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-xs font-medium text-gray-700 mb-1">কোম্পানি সম্পর্কে বিবরণ (About Us)</label>
-                    <textarea id="about-text" rows="3" class="w-full px-3 py-2 border rounded-lg text-sm">ফাস্টল্যাব ইউনানী একটি প্রাচীন ও ঐতিহ্যবাহী ইউনানী চিকিৎসা নির্ভর প্রতিষ্ঠান...</textarea>
+                    <textarea id="about-text" rows="3" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="কোম্পানির বিবরণ লিখুন..."></textarea>
                 </div>
                 <div>
                     <button type="submit" class="forest-green text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-green-900 transition shadow cursor-pointer">
@@ -90,7 +95,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <input type="text" id="dir-name" placeholder="পরিচালকের নাম" class="px-3 py-2 border rounded-lg text-sm">
                 <input type="text" id="dir-desig" placeholder="পদবী (যেমন: ব্যবস্থাপনা পরিচালক)" class="px-3 py-2 border rounded-lg text-sm">
-                <input type="file" id="dir-photo" class="px-3 py-1.5 border rounded-lg text-sm bg-gray-50">
+                <input type="file" id="dir-photo" accept="image/*" class="px-3 py-1.5 border rounded-lg text-sm bg-gray-50">
             </div>
             <button onclick="addDirector()" class="forest-green text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-green-900 transition cursor-pointer">
                 + পরিচালক যুক্ত করুন
@@ -107,7 +112,7 @@
                 </h3>
                 <div class="space-y-3 mb-4">
                     <input type="text" id="m-name" placeholder="অফিসারের নাম" class="w-full px-3 py-2 border rounded-lg text-sm">
-                    <input type="text" id="m-area" placeholder="এরিয়া / কর্মক্ষেত্র" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <input type="text" id="m-area" placeholder="এরিয়া / কর্মক্ষেত্র" class="w-full px-3 py-2 border rounded-lg text-sm">
                     <input type="text" id="m-phone" placeholder="মোবাইল নাম্বার" class="w-full px-3 py-2 border rounded-lg text-sm">
                     <button onclick="addMarketingOfficer()" class="w-full bg-green-700 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-800 transition cursor-pointer">
                         + নতুন মার্কেটিং অফিসার যুক্ত করুন
@@ -123,7 +128,7 @@
                 <div class="space-y-3 mb-4">
                     <input type="text" id="s-name" placeholder="অফিসারের নাম" class="w-full px-3 py-2 border rounded-lg text-sm">
                     <input type="text" id="s-phone" placeholder="মোবাইল নাম্বার" class="w-full px-3 py-2 border rounded-lg text-sm">
-                    <input type="password" id="s-pass" placeholder="লগইন পিন / পাসওয়ার্ড" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <input type="password" id="s-pass" placeholder="লগইন পিন / পাসওয়ার্ড" class="w-full px-3 py-2 border rounded-lg text-sm">
                     <button onclick="addSupplyOfficer()" class="w-full bg-green-700 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-800 transition cursor-pointer">
                         + নতুন সরবরাহ অফিসার যুক্ত করুন
                     </button>
@@ -138,64 +143,152 @@
     <footer class="bg-gray-800 text-white text-center py-4 text-xs mt-auto">
         &copy; ২০২৬ ফাস্টল্যাব ইউনানী। সর্বস্বত্ব সংরক্ষিত।
     </footer>
-    <!-- স্ক্রিপ্ট -->
+
+    <!-- ফায়ারবেজ ও মূল স্ক্রিপ্ট -->
     <script>
-        // লগআউট ফাংশন (ক্লিক করলে লগইন পেজে নিয়ে যাবে)
+        // ১. ফায়ারবেজ কনফিগারেশন (এখানে আপনার Firebase Console-এর Credentials বসাবেন)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // ফায়ারবেজ ইনিশিয়ালাইজেশন
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        // লগআউট ফাংশন
         function adminLogout() {
             localStorage.removeItem('isAdminLoggedIn');
             sessionStorage.removeItem('isAdminLoggedIn');
             window.location.href = "admin-login.html";
         }
 
-        // পেজ লোড হলে আগের সেভ করা ডেটা ইনপুটে বসানো
+        // ২. পেজ লোড হলে ফায়ারবেজ থেকে ডাটা নিয়ে ইনপুট ফিল্ডে বসানো
         window.onload = function() {
-            if(localStorage.getItem('compName')) document.getElementById('comp-name').value = localStorage.getItem('compName');
-            if(localStorage.getItem('compAddress')) document.getElementById('comp-address').value = localStorage.getItem('compAddress');
-            if(localStorage.getItem('compPhone')) document.getElementById('comp-phone').value = localStorage.getItem('compPhone');
-            if(localStorage.getItem('compEmail')) document.getElementById('comp-email').value = localStorage.getItem('compEmail');
-            if(localStorage.getItem('noticeText')) document.getElementById('notice-text').value = localStorage.getItem('noticeText');
-            if(localStorage.getItem('aboutText')) document.getElementById('about-text').value = localStorage.getItem('aboutText');
-        }
+            db.ref('homeSettings').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    if (data.compName) document.getElementById('comp-name').value = data.compName;
+                    if (data.compAddress) document.getElementById('comp-address').value = data.compAddress;
+                    if (data.compPhone) document.getElementById('comp-phone').value = data.compPhone;
+                    if (data.compEmail) document.getElementById('comp-email').value = data.compEmail;
+                    if (data.noticeText) document.getElementById('notice-text').value = data.noticeText;
+                    if (data.aboutText) document.getElementById('about-text').value = data.aboutText;
+                }
+            });
+        };
 
-        // হোমপেজ সেটিংস সেভ করার ফাংশন
+        // ৩. হোমপেজের তথ্য ফায়ারবেজে সেভ করা
         function saveHomeSettings(e) {
             e.preventDefault();
-            
-            localStorage.setItem('compName', document.getElementById('comp-name').value);
-            localStorage.setItem('compAddress', document.getElementById('comp-address').value);
-            localStorage.setItem('compPhone', document.getElementById('comp-phone').value);
-            localStorage.setItem('compEmail', document.getElementById('comp-email').value);
-            localStorage.setItem('noticeText', document.getElementById('notice-text').value);
-            localStorage.setItem('aboutText', document.getElementById('about-text').value);
 
-            alert("হোমপেজের তথ্য সফলভাবে সংরক্ষণ করা হয়েছে!");
+            const settingsData = {
+                compName: document.getElementById('comp-name').value,
+                compAddress: document.getElementById('comp-address').value,
+                compPhone: document.getElementById('comp-phone').value,
+                compEmail: document.getElementById('comp-email').value,
+                noticeText: document.getElementById('notice-text').value,
+                aboutText: document.getElementById('about-text').value
+            };
+
+            db.ref('homeSettings').set(settingsData)
+                .then(() => {
+                    alert("হোমপেজের তথ্য ফায়ারবেজে সফলভাবে সংরক্ষণ করা হয়েছে!");
+                })
+                .catch((error) => {
+                    alert("ডাটা সেভ করতে সমস্যা হয়েছে: " + error.message);
+                });
         }
 
+        // ৪. পরিচালক যুক্ত করার ফাংশন (ছবি সহ)
         function addDirector() {
-            const name = document.getElementById('dir-name').value;
-            if(!name) { alert("দয়া করে পরিচালকের নাম লিখুন"); return; }
-            alert("পরিচালক মণ্ডলীর তথ্য সফলভাবে যুক্ত করা হয়েছে!");
-            document.getElementById('dir-name').value = '';
-            document.getElementById('dir-desig').value = '';
-            document.getElementById('dir-photo').value = '';
+            const name = document.getElementById('dir-name').value.trim();
+            const desig = document.getElementById('dir-desig').value.trim();
+            const photoInput = document.getElementById('dir-photo');
+
+            if (!name || !desig) { 
+                alert("দয়া করে পরিচালক এর নাম এবং পদবী পূরণ করুন"); 
+                return; 
+            }
+
+            const saveDirectorToFirebase = (photoUrl = '') => {
+                const newDirectorRef = db.ref('directors').push();
+                newDirectorRef.set({
+                    name: name,
+                    designation: desig,
+                    image: photoUrl
+                }).then(() => {
+                    alert("পরিচালক মণ্ডলীর তথ্য সফলভাবে যুক্ত করা হয়েছে!");
+                    document.getElementById('dir-name').value = '';
+                    document.getElementById('dir-desig').value = '';
+                    document.getElementById('dir-photo').value = '';
+                }).catch(err => alert("ত্রুটি: " + err.message));
+            };
+
+            if (photoInput.files && photoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    saveDirectorToFirebase(e.target.result); // Base64 Image
+                };
+                reader.readAsDataURL(photoInput.files[0]);
+            } else {
+                saveDirectorToFirebase();
+            }
         }
 
+        // ৫. মার্কেটিং অফিসার যুক্ত করা
         function addMarketingOfficer() {
-            const name = document.getElementById('m-name').value;
-            if(!name) { alert("দয়া করে অফিসারের নাম লিখুন"); return; }
-            alert("মার্কেটিং অফিসার সফলভাবে যুক্ত করা হয়েছে!");
-            document.getElementById('m-name').value = '';
-            document.getElementById('m-area').value = '';
-            document.getElementById('m-phone').value = '';
+            const name = document.getElementById('m-name').value.trim();
+            const area = document.getElementById('m-area').value.trim();
+            const phone = document.getElementById('m-phone').value.trim();
+
+            if (!name || !phone) { 
+                alert("দয়া করে অফিসারের নাম এবং মোবাইল নাম্বার লিখুন"); 
+                return; 
+            }
+
+            const newOfficerRef = db.ref('marketingOfficers').push();
+            newOfficerRef.set({
+                name: name,
+                area: area,
+                phone: phone
+            }).then(() => {
+                alert("মার্কেটিং অফিসার সফলভাবে যুক্ত করা হয়েছে!");
+                document.getElementById('m-name').value = '';
+                document.getElementById('m-area').value = '';
+                document.getElementById('m-phone').value = '';
+            }).catch(err => alert("ত্রুটি: " + err.message));
         }
 
+        // ৬. সরবরাহ অফিসার যুক্ত করা
         function addSupplyOfficer() {
-            const name = document.getElementById('s-name').value;
-            if(!name) { alert("দয়া করে অফিসারের নাম লিখুন"); return; }
-            alert("সরবরাহ অফিসার সফলভাবে যুক্ত করা হয়েছে!");
-            document.getElementById('s-name').value = '';
-            document.getElementById('s-phone').value = '';
-            document.getElementById('s-pass').value = '';
+            const name = document.getElementById('s-name').value.trim();
+            const phone = document.getElementById('s-phone').value.trim();
+            const pass = document.getElementById('s-pass').value.trim();
+
+            if (!name || !phone || !pass) { 
+                alert("দয়া করে অফিসারের নাম, মোবাইল নাম্বার এবং পিন পূরণ করুন"); 
+                return; 
+            }
+
+            const newOfficerRef = db.ref('supplyOfficers').push();
+            newOfficerRef.set({
+                name: name,
+                phone: phone,
+                password: pass
+            }).then(() => {
+                alert("সরবরাহ অফিসার সফলভাবে যুক্ত করা হয়েছে!");
+                document.getElementById('s-name').value = '';
+                document.getElementById('s-phone').value = '';
+                document.getElementById('s-pass').value = '';
+            }).catch(err => alert("ত্রুটি: " + err.message));
         }
     </script>
 </body>
