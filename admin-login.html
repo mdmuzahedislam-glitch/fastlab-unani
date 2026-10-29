@@ -83,20 +83,25 @@
 
     <!-- Script for Login Validation -->
     <script>
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const user = document.getElementById('admin-user').value;
-            const pass = document.getElementById('admin-pass').value;
+    function handleAdminLogin(e) {
+        e.preventDefault();
+        const user = document.getElementById('admin-user').value;
+        const pass = document.getElementById('admin-pass').value;
 
-            // সাধারণ চেক (আপনার ইচ্ছামতো ইউজারনেম ও পাসওয়ার্ড দিতে পারেন)
-            if(user === "admin" && pass === "1234") {
-                alert("লগইন সফল হয়েছে! এডমিন প্যানেলে প্রবেশ করা হচ্ছে।");
-                window.location.href = "admin-dashboard.html";
-            } else {
-                alert("ভুল ইউজারনেম অথবা পাসওয়ার্ড! দয়া করে সঠিক তথ্য দিন।");
-            }
+        if(user === "admin" && pass === "1234") {
+            // localStorage এবং sessionStorage উভয় স্থানেই লগইন স্ট্যাটাস সেভ করে দেওয়া
+            localStorage.setItem('isAdminLoggedIn', 'true');
+            sessionStorage.setItem('isAdminLoggedIn', 'true');
+            
+            alert("লগইন সফল হয়েছে!");
+            // সরাসরি ড্যাশবোর্ডে পাঠিয়ে দেওয়া
+            window.location.href = "admin-dashboard.html";
+        } else {
+            alert("ভুল ইউজারনেম অথবা পাসওয়ার্ড! দয়া করে 'admin' এবং '1234' দিন।");
         }
+    }
     </script>
+    
 
 </body>
 </html>
