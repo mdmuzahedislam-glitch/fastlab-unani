@@ -138,11 +138,12 @@
     <footer class="bg-gray-800 text-white text-center py-4 text-xs mt-auto">
         &copy; ২০২৬ ফাস্টল্যাব ইউনানী। সর্বস্বত্ব সংরক্ষিত।
     </footer>
-
     <!-- স্ক্রিপ্ট -->
     <script>
         // লগআউট ফাংশন (ক্লিক করলে লগইন পেজে নিয়ে যাবে)
         function adminLogout() {
+            localStorage.removeItem('isAdminLoggedIn');
+            sessionStorage.removeItem('isAdminLoggedIn');
             window.location.href = "admin-login.html";
         }
 
