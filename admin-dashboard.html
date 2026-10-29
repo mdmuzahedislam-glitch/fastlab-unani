@@ -3,178 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>এডমিন প্যানেল - ফাস্টল্যাব ইউনানী</title>
+    <title id="page-title">ফাস্টল্যাব ইউনানী - আফুরিয়া, হিমািতপুর, পাবনা</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: #f8fafc; }
-        .forest-green { background-color: #064e3b; }
-        .forest-green-text { color: #064e3b; }
-        .forest-green-border { border-color: #064e3b; }
-    </style>
-</head>
-<body class="min-h-screen flex flex-col">
-
-    <!-- টপ ন্যাভবার -->
-    <header class="forest-green text-white shadow-md p-4 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <i class="fa-solid fa-shield-halved text-2xl"></i>
-            <div>
-                <h1 class="text-lg font-bold">ফাস্টল্যাব ইউনানী - মূল এডমিন প্যানেল</h1>
-                <p class="text-xs text-green-200">আফুরিয়া, হেমায়েতপুর, পাবনা</p>
-            </div>
-        </div>
-        <button onclick="adminLogout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2">
-            <i class="fa-solid fa-right-from-bracket"></i> লগআউট
-        </button>
-    </header>
-
-    <!-- মূল কনটেন্ট এরিয়া -->
-    <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
-
-        <!-- ওয়েলকাম কার্ড -->
-        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 forest-green-border flex justify-between items-center">
-            <div>
-                <h2 class="text-xl font-bold text-gray-800">স্বাগতম, এডমিন মহোদয়!</h2>
-                <p class="text-sm text-gray-600 mt-1">এটি আপনার ফুল কন্ট্রোল প্যানেল। এখান থেকে হোমপেজ, নোটিশ, পরিচালক মণ্ডলী, অফিসার এবং সমস্ত তথ্য ম্যানেজ করতে পারবেন।</p>
-            </div>
-            <a href="index.html" target="_blank" class="forest-green text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-900 transition flex items-center gap-2">
-                <i class="fa-solid fa-globe"></i> লাইভ সাইট দেখুন
-            </a>
-        </div>
-
-        <!-- ১. হোমপেজ ও কোম্পানি এডিট সেকশন -->
-        <div class="bg-white rounded-xl shadow-md p-6">
-            <h3 class="text-lg font-bold forest-green-text mb-4 border-b pb-2 flex items-center gap-2">
-                <i class="fa-solid fa-house-chimney-user"></i> হোমপেজ ও তথ্য এডিট প্যানেল
-            </h3>
-            <form onsubmit="saveHomeSettings(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">কোম্পানির নাম ও হেডিং</label>
-                    <input type="text" id="comp-name" value="ফাস্টল্যাব ইউনানী" class="w-full px-3 py-2 border rounded-lg text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">অফিস ঠিকানা</label>
-                    <input type="text" id="comp-address" value="আফুরিয়া, হেমায়েতপুর, পাবনা সদর, পাবনা" class="w-full px-3 py-2 border rounded-lg text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">মোবাইল নাম্বার</label>
-                    <input type="text" id="comp-phone" value="01700-000000" class="w-full px-3 py-2 border rounded-lg text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">ইমেইল ঠিকানা</label>
-                    <input type="email" id="comp-email" value="info@fastlabunani.com" class="w-full px-3 py-2 border rounded-lg text-sm">
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-medium text-gray-700 mb-1">নোটিশ বোর্ড আপডেট</label>
-                    <textarea id="notice-text" rows="2" class="w-full px-3 py-2 border rounded-lg text-sm">সকল ডিলার ও অফিসারদের অবগতির জন্য জানানো যাচ্ছে যে...</textarea>
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-medium text-gray-700 mb-1">কোম্পানি সম্পর্কে বিবরণ (About Us)</label>
-                    <textarea id="about-text" rows="3" class="w-full px-3 py-2 border rounded-lg text-sm">ফাস্টল্যাব ইউনানী একটি বিশ্বস্ত ভেষজ ওষুধ প্রস্তুতকারক প্রতিষ্ঠান...</textarea>
-                </div>
-                <div>
-                    <button type="submit" class="forest-green text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-green-900 transition shadow">
-                        হোমপেজের তথ্য সেভ করুন
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- ২. পরিচালক মণ্ডলী আপডেট সেকশন -->
-        <div class="bg-white rounded-xl shadow-md p-6">
-            <h3 class="text-lg font-bold forest-green-text mb-4 border-b pb-2 flex items-center gap-2">
-                <i class="fa-solid fa-users-gear"></i> পরিচালক মণ্ডলীগণ আপডেট অপশন
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <input type="text" id="dir-name" placeholder="পরিচালকের নাম" class="px-3 py-2 border rounded-lg text-sm">
-                <input type="text" id="dir-desig" placeholder="পদবী (যেমন: ব্যবস্থাপনা পরিচালক)" class="px-3 py-2 border rounded-lg text-sm">
-                <input type="file" id="dir-photo" class="px-3 py-1.5 border rounded-lg text-sm bg-gray-50">
-            </div>
-            <button onclick="addDirector()" class="forest-green text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-green-900 transition">
-                + পরিচালক যুক্ত করুন
-            </button>
-        </div>
-
-        <!-- ৩. অফিসার ম্যানেজমেন্ট সেকশন -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            <!-- মার্কেটিং অফিসার ম্যানেজমেন্ট -->
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <h3 class="text-lg font-bold forest-green-text mb-4 border-b pb-2 flex items-center gap-2">
-                    <i class="fa-solid fa-user-tie"></i> মার্কেটিং অফিসার ম্যানেজমেন্ট
-                </h3>
-                <div class="space-y-3 mb-4">
-                    <input type="text" id="m-name" placeholder="অফিসারের নাম" class="w-full px-3 py-2 border rounded-lg text-sm">
-                    <input type="text" id="m-area" placeholder="এরিয়া / কর্মক্ষেত্র" class="w-full px-3 py-2 border rounded-lg text-sm">
-                    <input type="text" id="m-phone" placeholder="মোবাইল নাম্বার" class="w-full px-3 py-2 border rounded-lg text-sm">
-                    <button onclick="addMarketingOfficer()" class="w-full bg-green-700 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-800 transition">
-                        + নতুন মার্কেটিং অফিসার যুক্ত করুন
-                    </button>
-                </div>
-            </div>
-
-            <!-- সরবরাহ অফিসার ম্যানেজমেন্ট -->
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <h3 class="text-lg font-bold forest-green-text mb-4 border-b pb-2 flex items-center gap-2">
-                    <i class="fa-solid fa-truck-fast"></i> সরবরাহ অফিসার ম্যানেজমেন্ট
-                </h3>
-                <div class="space-y-3 mb-4">
-                    <input type="text" id="s-name" placeholder="অফিসারের নাম" class="w-full px-3 py-2 border rounded-lg text-sm">
-                    <input type="text" id="s-phone" placeholder="মোবাইল নাম্বার" class="w-full px-3 py-2 border rounded-lg text-sm">
-                    <input type="password" id="s-pass" placeholder="লগইন পিন / পাসওয়ার্ড" class="w-full px-3 py-2 border rounded-lg text-sm">
-                    <button onclick="addSupplyOfficer()" class="w-full bg-green-700 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-800 transition">
-                        + নতুন সরবরাহ অফিসার যুক্ত করুন
-                    </button>
-                </div>
-            </div>
-
-        </div>
-
-    </main>
-
-    <!-- ফুটার -->
-    <footer class="bg-gray-800 text-white text-center py-4 text-xs mt-auto">
-        &copy; ২০২৬ ফাস্টল্যাব ইউনানী। সর্বস্বত্ব সংরক্ষিত।
-    </footer>
-
     <script>
-        function adminLogout() {
-            window.location.href = "admin-login.html";
-        }
-
-        function saveHomeSettings(e) {
-            e.preventDefault();
-            alert("হোমপেজ, ঠিকানা, নোটিশ এবং কোম্পানির তথ্য সফলভাবে আপডেট করা হয়েছে!");
-        }
-
-        function addDirector() {
-            const name = document.getElementById('dir-name').value;
-            if(!name) { alert("দয়া করে পরিচালকের নাম লিখুন"); return; }
-            alert("পরিচালক মণ্ডলীর তথ্য সফলভাবে যুক্ত করা হয়েছে!");
-            document.getElementById('dir-name').value = '';
-            document.getElementById('dir-desig').value = '';
-            document.getElementById('dir-photo').value = '';
-        }
-
-        function addMarketingOfficer() {
-            const name = document.getElementById('m-name').value;
-            if(!name) { alert("দয়া করে অফিসারের নাম লিখুন"); return; }
-            alert("মার্কেটিং অফিসার সফলভাবে যুক্ত করা হয়েছে!");
-            document.getElementById('m-name').value = '';
-            document.getElementById('m-area').value = '';
-            document.getElementById('m-phone').value = '';
-        }
-
-        function addSupplyOfficer() {
-            const name = document.getElementById('s-name').value;
-            if(!name) { alert("দয়া করে অফিসারের নাম লিখুন"); return; }
-            alert("সরবরাহ অফিসার সফলভাবে যুক্ত করা হয়েছে!");
-            document.getElementById('s-name').value = '';
-            document.getElementById('s-phone').value = '';
-            document.getElementById('s-pass').value = '';
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forest: {
+                            DEFAULT: '#0a5c36',
+                            dark: '#064225',
+                            light: '#12824e',
+                            bg: '#f0f4f1'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Hind Siliguri"', 'sans-serif']
+                    }
+                }
+            }
         }
     </script>
+</head>
+<body class="bg-forest-bg text-gray-800 font-sans min-h-screen flex flex-col justify-between relative">
+
+    <!-- Wrapper -->
+    <div class="w-full max-w-[1360px] mx-auto bg-white shadow-2xl flex flex-col min-h-screen my-0 md:my-4 rounded-none md:rounded-xl overflow-hidden relative">
+
+        <!-- Header Section -->
+        <header class="relative bg-gradient-to-r from-forest-dark via-forest to-forest-light text-white p-4 sm:p-6 shadow-md overflow-visible z-30">
+            <!-- Background herbal pattern overlay -->
+            <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+            
+            <div class="relative z-10 flex items-center justify-between gap-4">
+                <!-- Logo & Title -->
+                <div class="flex items-center gap-4 text-left">
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center p-2 shadow-inner border-2 border-green-200 shrink-0">
+                        <!-- Leaf SVG Logo -->
+                        <svg viewBox="0 0 100 100" class="w-full h-full text-forest fill-current">
+                            <path d="M50 10 C30 30, 20 50, 50 90 C80 50, 70 30, 50 10 Z" opacity="0.15"/>
+                            <path d="M50 15 C35 35, 28 55, 50 85 C72 55, 65 35, 50 15 Z"/>
+                            <path d="M50 30 L50 75 M35 45 C42 40, 48 45, 50 55 C52 45, 58 40, 65 45" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 id="main-title" class="text-2xl sm:text-4xl font-bold tracking-wide drop-shadow">ফাস্টল্যাব ইউনানী</h1>
+                        <p id="main-address" class="text-sm sm:text-lg text-green-100 font-medium">আফুরিয়া, হিমািতপুর, পাবনা</p>
+                    </div>
+                </div>
+
+                <!-- Top Right Hamburger Menu Button & Dropdown Container -->
+                <div class="relative">
+                    <button onclick="toggleMenu(event)" class="px-4 py-2.5 bg-white/10 hover:bg-white/25 active:bg-white/30 border border-white/20 rounded-lg flex items-center gap-2.5 text-white font-semibold text-base transition shadow-md focus:outline-none cursor-pointer" title="মেনুবার">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                        <span class="hidden sm:inline">মেনুবার</span>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div id="dropdownMenu" class="absolute right-0 mt-3 w-72 sm:w-80 bg-white text-gray-800 rounded-xl shadow-2xl border border-green-200 hidden z-50 transform origin-top-right transition-all p-2">
+                        <div class="bg-forest text-white px-4 py-3 rounded-lg flex items-center justify-between mb-2">
+                            <span class="font-bold text-base flex items-center gap-2">
+                                <i class="fa-solid fa-bars"></i> মেনুবার
+                            </span>
+                            <button onclick="toggleMenu(event)" class="text-green-200 hover:text-white">
+                                <i class="fa-solid fa-xmark text-lg"></i>
+                            </button>
+                        </div>
+                        <nav class="space-y-1 flex flex-col">
+                            <a href="index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
+                                <i class="fa-solid fa-house text-forest group-hover:text-white"></i>
+                                <span>হোম পেজ</span>
+                            </a>
+                            <a href="#notice-section" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
+                                <i class="fa-solid fa-bell text-forest group-hover:text-white"></i>
+                                <span>নোটিশ বোর্ড</span>
+                            </a>
+                            <a href="#directors-section" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
+                                <i class="fa-solid fa-users text-forest group-hover:text-white"></i>
+                                <span>পরিচালক মণ্ডলীগণ</span>
+                            </a>
+                            <a href="#about-section" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
+                                <i class="fa-solid fa-building text-forest group-hover:text-white"></i>
+                                <span>কোম্পানির সম্পর্কে</span>
+                            </a>
+                            <!-- সরবরাহ অফিসার লগইন লিংক -->
+                            <a href="supplier-dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
+                                <i class="fa-solid fa-user-tie text-forest group-hover:text-white"></i>
+                                <span>সরবরাহ অফিসার/ইউজার লগইন</span>
+                            </a>
+                            <!-- মার্কেটিং অফিসার লগইন লিংক -->
+                            <a href="marketing-dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest hover:text-white text-gray-700 font-medium transition group">
+                                <i class="fa-solid fa-user text-forest group-hover:text-white"></i>
+                                <span>মার্কেটিং অফিসার/ইউজার লগইন</span>
+                            </a>
+                            <!-- Admin Login Link (Red -> opens admin dashboard) -->
+                            <a href="admin-dashboard.html" class="mt-2 flex items-center justify-center gap-3 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold transition shadow-md">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <span>অফিস/এডমিন লগইন</span>
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- Main Body Layout -->
+        <main class="flex-1 p-4 sm:p-6 space-y-6 max-w-6xl mx-auto w-full">
+
+            <!-- 1. Notice Board Section -->
+            <section id="notice-section" class="border-2 border-forest rounded-lg overflow-hidden shadow-sm bg-white">
+                <div class="bg-forest text-white px-4 py-3 flex items-center gap-3">
+                    <i class="fa-solid fa-bullhorn text-lg"></i>
+                    <h2 class="text-lg sm:text-xl font-bold tracking-wide">নোটিশ বোর্ড</h2>
+                </div>
+                <div id="notice-container" class="p-4 space-y-3 bg-green-50/50">
+                    <div class="flex items-center gap-3 bg-white p-3 rounded-md border border-green-200 shadow-xs hover:shadow transition">
+                        <span class="w-7 h-7 bg-forest text-white rounded-full flex items-center justify-center font-bold text-sm shrink-0">১.</span>
+                        <p class="text-sm sm:text-base text-gray-700 font-medium">আগামী ২৫ তারিখের মধ্যে সকল পার্টির বকেয়া পরিশোধের জন্য অনুরোধ করা হলো। <span class="text-xs text-gray-500 block sm:inline">২০ জানুয়ারি ২০২৬</span></p>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white p-3 rounded-md border border-green-200 shadow-xs hover:shadow transition">
+                        <span class="w-7 h-7 bg-forest text-white rounded-full flex items-center justify-center font-bold text-sm shrink-0">২.</span>
+                        <p class="text-sm sm:text-base text-gray-700 font-medium">নতুন পণ্য সংক্রান্ত একটি বিশেষ অফার আগামী মাস থেকে কার্যকর হবে। <span class="text-xs text-gray-500 block sm:inline">১৮ জানুয়ারি ২০২৬</span></p>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white p-3 rounded-md border border-green-200 shadow-xs hover:shadow transition">
+                        <span class="w-7 h-7 bg-forest text-white rounded-full flex items-center justify-center font-bold text-sm shrink-0">৩.</span>
+                        <p class="text-sm sm:text-base text-gray-700 font-medium">মাসিক রিপোর্ট ৩০ তারিখের মধ্যে জমা দেওয়ার জন্য অনুরোধ রইলো। <span class="text-xs text-gray-500 block sm:inline">১৫ জানুয়ারি ২০২৬</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Board of Directors Section -->
+            <section id="directors-section" class="border-2 border-forest rounded-lg overflow-hidden shadow-sm bg-white">
+                <div class="bg-forest text-white px-4 py-3 flex items-center gap-3">
+                    <i class="fa-solid fa-users text-lg"></i>
+                    <h2 class="text-lg sm:text-xl font-bold tracking-wide">পরিচালক মণ্ডলীগণ</h2>
+                </div>
+                <div class="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                    
+                    <!-- Director 1 -->
+                    <div class="bg-white border border-green-200 rounded-lg p-4 text-center shadow-xs hover:shadow-md transition flex flex-col items-center">
+                        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 border-forest mb-3 shadow-inner bg-gray-100">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="মিরাজ হাসান" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900">মিরাজ হাসান</h3>
+                        <span class="mt-2 inline-block bg-forest text-white text-xs sm:text-sm px-4 py-1 rounded-full font-medium shadow-xs">চেয়ারম্যান</span>
+                    </div>
+
+                    <!-- Director 2 -->
+                    <div class="bg-white border border-green-200 rounded-lg p-4 text-center shadow-xs hover:shadow-md transition flex flex-col items-center">
+                        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 border-forest mb-3 shadow-inner bg-gray-100">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" alt="মোঃ রফিকুল ইসলাম" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900">মোঃ রফিকুল ইসলাম</h3>
+                        <span class="mt-2 inline-block bg-forest text-white text-xs sm:text-sm px-4 py-1 rounded-full font-medium shadow-xs">ব্যবস্থাপনা পরিচালক</span>
+                    </div>
+
+                    <!-- Director 3 -->
+                    <div class="bg-white border border-green-200 rounded-lg p-4 text-center shadow-xs hover:shadow-md transition flex flex-col items-center">
+                        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 border-forest mb-3 shadow-inner bg-gray-100">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" alt="এস এম আসলাম" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900">এস এম আসলাম</h3>
+                        <span class="mt-2 inline-block bg-forest text-white text-xs sm:text-sm px-4 py-1 rounded-full font-medium shadow-xs">পরিচালক</span>
+                    </div>
+
+                    <!-- Director 4 -->
+                    <div class="bg-white border border-green-200 rounded-lg p-4 text-center shadow-xs hover:shadow-md transition flex flex-col items-center">
+                        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 border-forest mb-3 shadow-inner bg-gray-100">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150" alt="মোহাম্মদ নূর ইসলাম" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-900">মোহাম্মদ নূর ইসলাম</h3>
+                        <span class="mt-2 inline-block bg-forest text-white text-xs sm:text-sm px-4 py-1 rounded-full font-medium shadow-xs">পরিচালক</span>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 3. About Company Section -->
+            <section id="about-section" class="border-2 border-forest rounded-lg overflow-hidden shadow-sm bg-white">
+                <div class="bg-forest text-white px-4 py-3 flex items-center gap-3">
+                    <i class="fa-solid fa-file-lines text-lg"></i>
+                    <h2 class="text-lg sm:text-xl font-bold tracking-wide">কোম্পানির সম্পর্কে</h2>
+                </div>
+                <div class="p-4 sm:p-6 text-gray-700 leading-relaxed text-justify text-sm sm:text-base font-medium">
+                    <p id="about-text-content">ফাস্টল্যাব ইউনানী একটি প্রাচীন ও ঐতিহ্যবাহী ইউনানী চিকিৎসা নির্ভর প্রতিষ্ঠান। আমরা প্রাচীন ইউনানী চিকিৎসা পদ্ধতিকে আধুনিক বিজ্ঞানসম্মত গবেষণার মাধ্যমে মানুষের সুস্বাস্থ্য ও সুস্থ জীবন নিশ্চিত করতে কাজ করে যাচ্ছি। আমাদের লক্ষ্য হলো প্রাকৃতিক উপাদান ও ইউনানী চিকিৎসার মাধ্যমে সকলের জন্য নিরাপদ ও কার্যকর স্বাস্থ্যসেবা নিশ্চিত করা।</p>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer Section -->
+        <footer class="bg-forest-dark text-white pt-6 pb-4 px-4 sm:px-8 border-t border-forest-light">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-6 border-b border-white/10 text-sm">
+                
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 bg-forest p-2 rounded-full text-green-300">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-green-200 mb-1">হেড অফিস ঠিকানা</h4>
+                        <p id="footer-address" class="text-gray-300">আফুরিয়া, হিমািতপুর, পাবনা</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 bg-forest p-2 rounded-full text-green-300">
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-green-200 mb-1">মোবাইল নাম্বার</h4>
+                        <p id="footer-phone" class="text-gray-300 font-mono">০১৩৩৫০১৯৭৬০</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 bg-forest p-2 rounded-full text-green-300">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-green-200 mb-1">ইমেইল নাম্বার</h4>
+                        <p id="footer-email" class="text-gray-300 break-all">fatlabumani.pabna@gmail.com</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-gray-300">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <i class="fa-solid fa-link text-green-300"></i>
+                    <span class="font-semibold text-white">দ্রুত লিংক:</span>
+                    <a href="supplier-dashboard.html" class="hover:underline text-green-200">সরবরাহ অফিসার লগইন</a> | 
+                    <a href="marketing-dashboard.html" class="hover:underline text-green-200">মার্কেটিং অফিসার লগইন</a> | 
+                    <a href="admin-dashboard.html" class="hover:underline text-green-200">অফিস/এডমিন লগইন</a>
+                </div>
+                <div>
+                    <p>&copy; ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript for Menu & Dynamic Data Loading -->
+    <script>
+        function toggleMenu(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('dropdownMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(e) {
+            const menu = document.getElementById('dropdownMenu');
+            if (!menu.contains(e.target) && !e.target.closest('button')) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // Load saved data from localStorage if available
+        window.addEventListener('DOMContentLoaded', () => {
+            const compName = localStorage.getItem('compName');
+            const compAddress = localStorage.getItem('compAddress');
+            const compPhone = localStorage.getItem('compPhone');
+            const compEmail = localStorage.getItem('compEmail');
+            const noticeText = localStorage.getItem('noticeText');
+            const aboutText = localStorage.getItem('aboutText');
+
+            if(compName) {
+                document.getElementById('main-title').innerText = compName;
+                document.getElementById('page-title').innerText = compName + " - " + (compAddress || "");
+            }
+            if(compAddress) {
+                document.getElementById('main-address').innerText = compAddress;
+                document.getElementById('footer-address').innerText = compAddress;
+            }
+            if(compPhone) {
+                document.getElementById('footer-phone').innerText = compPhone;
+            }
+            if(compEmail) {
+                document.getElementById('footer-email').innerText = compEmail;
+            }
+            if(noticeText) {
+                const noticeContainer = document.getElementById('notice-container');
+                noticeContainer.innerHTML = `
+                    <div class="flex items-center gap-3 bg-white p-3 rounded-md border border-green-200 shadow-xs hover:shadow transition">
+                        <span class="w-7 h-7 bg-forest text-white rounded-full flex items-center justify-center font-bold text-sm shrink-0">১.</span>
+                        <p class="text-sm sm:text-base text-gray-700 font-medium">${noticeText} <span class="text-xs text-gray-500 block sm:inline">আপডেটকৃত</span></p>
+                    </div>
+                `;
+            }
+            if(aboutText) {
+                document.getElementById('about-text-content').innerText = aboutText;
+            }
+        });
+    </script>
+
 </body>
 </html>
