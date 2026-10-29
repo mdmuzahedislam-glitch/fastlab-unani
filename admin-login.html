@@ -88,7 +88,7 @@
         const user = document.getElementById('admin-user').value;
         const pass = document.getElementById('admin-pass').value;
 
-        if(user === "admin" && pass === "1234") {
+        if(user === "fastlab10" && pass === "F1234*") {
             // localStorage এবং sessionStorage উভয় স্থানেই লগইন স্ট্যাটাস সেভ করে দেওয়া
             localStorage.setItem('isAdminLoggedIn', 'true');
             sessionStorage.setItem('isAdminLoggedIn', 'true');
@@ -97,7 +97,7 @@
             // সরাসরি ড্যাশবোর্ডে পাঠিয়ে দেওয়া
             window.location.href = "admin-dashboard.html";
         } else {
-            alert("ভুল ইউজারনেম অথবা পাসওয়ার্ড! দয়া করে 'admin' এবং '1234' দিন।");
+            alert("❌ ভুল ইউজারনেম অথবা পাসওয়ার্ড!");
         }
     }
     </script>
