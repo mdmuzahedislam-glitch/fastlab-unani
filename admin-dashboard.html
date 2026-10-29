@@ -145,16 +145,17 @@
     </footer>
 
     <!-- ফায়ারবেজ ও মূল স্ক্রিপ্ট -->
-    <script>
-        // ১. ফায়ারবেজ কনফিগারেশন (এখানে আপনার Firebase Console-এর Credentials বসাবেন)
+   <script>
+        // ১. ফায়ারবেজ কনফিগারেশন (আপনার আসল ক্রেডেনশিয়াল সহ)
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyDmiZ7Pa0nB9HF29bv6qoT2qSzko4RVEHI",
+            authDomain: "fastlab-unani.firebaseapp.com",
+            databaseURL: "https://fastlab-unani-default-rtdb.firebaseio.com",
+            projectId: "fastlab-unani",
+            storageBucket: "fastlab-unani.firebasestorage.app",
+            messagingSenderId: "1319654847",
+            appId: "1:1319654847:web:cdb5c4813ea8e48877fd0a",
+            measurementId: "G-LDL48BEM76"
         };
 
         // ফায়ারবেজ ইনিশিয়ালাইজেশন
@@ -170,7 +171,7 @@
             window.location.href = "admin-login.html";
         }
 
-        // ২. পেজ লোড হলে ফায়ারবেজ থেকে ডাটা নিয়ে ইনপুট ফিল্ডে বসানো
+        // ২. পেজ লোড হলে ফায়ারবেজ থেকে ডাটা নিয়ে ইনপুট ফিল্ডে বসানো
         window.onload = function() {
             db.ref('homeSettings').on('value', (snapshot) => {
                 const data = snapshot.val();
@@ -203,7 +204,7 @@
                     alert("হোমপেজের তথ্য ফায়ারবেজে সফলভাবে সংরক্ষণ করা হয়েছে!");
                 })
                 .catch((error) => {
-                    alert("ডাটা সেভ করতে সমস্যা হয়েছে: " + error.message);
+                    alert("ডাটা সেভ করতে সমস্যা হয়েছে: " + error.message);
                 });
         }
 
