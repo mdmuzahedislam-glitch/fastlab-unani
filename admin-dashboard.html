@@ -25,7 +25,7 @@
                 <p class="text-xs text-green-200">আফুরিয়া, হেমায়েতপুর, পাবনা</p>
             </div>
         </div>
-        <button onclick="adminLogout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2">
+        <button onclick="adminLogout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-right-from-bracket"></i> লগআউট
         </button>
     </header>
@@ -75,7 +75,7 @@
                     <textarea id="about-text" rows="3" class="w-full px-3 py-2 border rounded-lg text-sm">ফাস্টল্যাব ইউনানী একটি প্রাচীন ও ঐতিহ্যবাহী ইউনানী চিকিৎসা নির্ভর প্রতিষ্ঠান...</textarea>
                 </div>
                 <div>
-                    <button type="submit" class="forest-green text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-green-900 transition shadow">
+                    <button type="submit" class="forest-green text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-green-900 transition shadow cursor-pointer">
                         হোমপেজের তথ্য সেভ করুন
                     </button>
                 </div>
@@ -92,7 +92,7 @@
                 <input type="text" id="dir-desig" placeholder="পদবী (যেমন: ব্যবস্থাপনা পরিচালক)" class="px-3 py-2 border rounded-lg text-sm">
                 <input type="file" id="dir-photo" class="px-3 py-1.5 border rounded-lg text-sm bg-gray-50">
             </div>
-            <button onclick="addDirector()" class="forest-green text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-green-900 transition">
+            <button onclick="addDirector()" class="forest-green text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-green-900 transition cursor-pointer">
                 + পরিচালক যুক্ত করুন
             </button>
         </div>
@@ -109,7 +109,7 @@
                     <input type="text" id="m-name" placeholder="অফিসারের নাম" class="w-full px-3 py-2 border rounded-lg text-sm">
                     <input type="text" id="m-area" placeholder="এরিয়া / কর্মক্ষেত্র" class="w-full px-3 py-2 border rounded-lg text-sm">
                     <input type="text" id="m-phone" placeholder="মোবাইল নাম্বার" class="w-full px-3 py-2 border rounded-lg text-sm">
-                    <button onclick="addMarketingOfficer()" class="w-full bg-green-700 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-800 transition">
+                    <button onclick="addMarketingOfficer()" class="w-full bg-green-700 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-800 transition cursor-pointer">
                         + নতুন মার্কেটিং অফিসার যুক্ত করুন
                     </button>
                 </div>
@@ -124,7 +124,7 @@
                     <input type="text" id="s-name" placeholder="অফিসারের নাম" class="w-full px-3 py-2 border rounded-lg text-sm">
                     <input type="text" id="s-phone" placeholder="মোবাইল নাম্বার" class="w-full px-3 py-2 border rounded-lg text-sm">
                     <input type="password" id="s-pass" placeholder="লগইন পিন / পাসওয়ার্ড" class="w-full px-3 py-2 border rounded-lg text-sm">
-                    <button onclick="addSupplyOfficer()" class="w-full bg-green-700 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-800 transition">
+                    <button onclick="addSupplyOfficer()" class="w-full bg-green-700 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-800 transition cursor-pointer">
                         + নতুন সরবরাহ অফিসার যুক্ত করুন
                     </button>
                 </div>
@@ -139,12 +139,21 @@
         &copy; ২০২৬ ফাস্টল্যাব ইউনানী। সর্বস্বত্ব সংরক্ষিত।
     </footer>
 
+    <!-- স্ক্রিপ্ট ও সিকিউরিটি চেক -->
     <script>
-        function adminLogout() {
+        // ১. সিকিউরিটি চেক: লগইন করা না থাকলে ড্যাশবোর্ডে ঢুকতে দেবে না
+        if (localStorage.getItem('isAdminLoggedIn') !== 'true') {
+            alert("দয়া করে প্রথমে লগইন করুন!");
             window.location.href = "admin-login.html";
         }
 
-        // Load existing saved settings into admin form fields on load
+        // ২. লগআউট ফাংশন
+        function adminLogout() {
+            localStorage.removeItem('isAdminLoggedIn');
+            window.location.href = "admin-login.html";
+        }
+
+        // ৩. পেজ লোড হলে আগের সেভ করা ডেটা ইনপুটে বসানো
         window.onload = function() {
             if(localStorage.getItem('compName')) document.getElementById('comp-name').value = localStorage.getItem('compName');
             if(localStorage.getItem('compAddress')) document.getElementById('comp-address').value = localStorage.getItem('compAddress');
@@ -154,6 +163,7 @@
             if(localStorage.getItem('aboutText')) document.getElementById('about-text').value = localStorage.getItem('aboutText');
         }
 
+        // ৪. হোমপেজ সেটিংস সেভ করার ফাংশন
         function saveHomeSettings(e) {
             e.preventDefault();
             
