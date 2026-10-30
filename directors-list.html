@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পরিচালক তালিকা ও এডিট - ফাস্টল্যাব ইউনানী</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forest: {
+                            DEFAULT: '#1b4d3e',
+                            dark: '#123529',
+                            light: '#2e7d63'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"SolaimanLipi"', 'Inter', 'Kalpurush', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+
+    <div class="max-w-4xl mx-auto p-4 sm:p-6 my-6 bg-white shadow-xl rounded-2xl">
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b pb-4 mb-6">
+            <h1 class="text-xl sm:text-2xl font-bold text-forest">পরিচালক মণ্ডলীর তালিকা ও ব্যবস্থাপনা</h1>
+            <a href="admin.html" class="bg-gray-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-600 transition">
+                <i class="fa-solid fa-arrow-left mr-1"></i> অ্যাডমিন প্যানেল
+            </a>
+        </div>
+
+        <!-- Edit Form (Hidden by default, shown when Edit is clicked) -->
+        <div id="editContainer" class="hidden mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+            <h3 class="text-md font-bold text-forest mb-3">পরিচালকের তথ্য এডিট করুন</h3>
+            <input type="hidden" id="editIndex">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">পরিচালকের নাম</label>
+                    <input type="text" id="editName" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-forest">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">পদবী</label>
+                    <input type="text" id="editDesignation" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-forest">
+                </div>
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="updateDirector()" class="bg-forest text-white px-4 py-2 rounded-lg text-sm hover:bg-forest-dark transition">আপডেট করুন</button>
+                <button onclick="cancelEdit()" class="bg-gray-400 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-500 transition">বাতিল</button>
+            </div>
+        </div>
+
+        <!-- Directors Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-100 text-gray-600 text-sm">
+                        <th class="p-3 border-b">ছবি</th>
+                        <th class="p-3 border-b">নাম</th>
+                        <th class="p-3 border-b">পদবী</th>
+                        <th class="p-3 border-b text-center">অ্যাকশন</th>
+                    </tr>
+                </thead>
+                <tbody id="directorTableBody" class="text-sm text-gray-700">
+                    <!-- JavaScript দিয়ে ডেটা লোড হবে -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        function renderDirectors() {
+            const tableBody = document.getElementById('directorTableBody');
+            tableBody.innerHTML = '';
+            
+            let directors = JSON.parse(localStorage.getItem('directorsList')) || [];
+
+            if (directors.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="text-center p-6 text-gray-400">কোনো পরিচালক যোগ করা হয়নি</td></tr>`;
+                return;
+            }
+
+            directors.forEach((director, index) => {
+                tableBody.innerHTML += `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-3">
+                            <img src="${director.image || 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-full object-cover border" alt="Director">
+                        </td>
+                        <td class="p-3 font-medium">${director.name}</td>
+                        <td class="p-3">${director.designation}</td>
+                        <td class="p-3 text-center space-x-2">
+                            <button onclick="editDirector(${index})" class="bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-blue-600 transition">
+                                <i class="fa-solid fa-pen-to-square mr-1"></i> এডিট
+                            </button>
+                            <button onclick="deleteDirector(${index})" class="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-red-600 transition">
+                                <i class="fa-solid fa-trash mr-1"></i> ডিলিট
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteDirector(index) {
+            if (confirm('আপনি কি নিশ্চিত এই পরিচালককে মুছে ফেলতে চান?')) {
+                let directors = JSON.parse(localStorage.getItem('directorsList')) || [];
+                directors.splice(index, 1);
+                localStorage.setItem('directorsList', JSON.stringify(directors));
+                renderDirectors();
+            }
+        }
+
+        function editDirector(index) {
+            let directors = JSON.parse(localStorage.getItem('directorsList')) || [];
+            let director = directors[index];
+
+            document.getElementById('editIndex').value = index;
+            document.getElementById('editName').value = director.name;
+            document.getElementById('editDesignation').value = director.designation;
+
+            document.getElementById('editContainer').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateDirector() {
+            let index = document.getElementById('editIndex').value;
+            let name = document.getElementById('editName').value;
+            let designation = document.getElementById('editDesignation').value;
+
+            if (!name || !designation) {
+                alert('দয়া করে নাম এবং পদবী পূরণ করুন।');
+                return;
+            }
+
+            let directors = JSON.parse(localStorage.getItem('directorsList')) || [];
+            directors[index].name = name;
+            directors[index].designation = designation;
+
+            localStorage.setItem('directorsList', JSON.stringify(directors));
+            document.getElementById('editContainer').classList.add('hidden');
+            renderDirectors();
+        }
+
+        function cancelEdit() {
+            document.getElementById('editContainer').classList.add('hidden');
+        }
+
+        window.onload = function() {
+            renderDirectors();
+        };
+    </script>
+</body>
+</html>
