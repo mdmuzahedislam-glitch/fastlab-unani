@@ -158,8 +158,9 @@
                 if (directors) {
                     Object.keys(directors).forEach((key) => {
                         const dir = directors[key];
-                        const imgSrc = dir.image ? dir.image : "https://via.placeholder.com/40";
-
+                        // ছবি না থাকলে পরিচালকের নাম দিয়ে সুন্দর ডিফল্ট অবতার তৈরি করবে
+                        const imgSrc = (dir.image && dir.image !== "") ? dir.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(dir.name)}&background=0a5c36&color=fff&size=128`;
+                        
                         tableBody.innerHTML += `
                             <tr class="border-b hover:bg-gray-50">
                                 <td class="p-3">
