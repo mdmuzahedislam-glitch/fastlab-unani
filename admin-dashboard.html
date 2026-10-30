@@ -157,28 +157,36 @@
                 const directors = snapshot.val();
                 if (directors) {
                     Object.keys(directors).forEach((key) => {
-                        const dir = directors[key];
-                        // ছবি না থাকলে পরিচালকের নাম দিয়ে সুন্দর ডিফল্ট অবতার তৈরি করবে
-                        const imgSrc = (dir.image && dir.image !== "") ? dir.image : `https://ui-avatars.com/api/?name=${encodeURIComponent(dir.name)}&background=0a5c36&color=fff&size=128`;
-                        
-                        tableBody.innerHTML += `
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="p-3">
-                                    <img src="${imgSrc}" class="w-10 h-10 rounded-full object-cover border" alt="Director">
-                                </td>
-                                <td class="p-3 font-medium">${dir.name}</td>
-                                <td class="p-3">${dir.designation}</td>
-                                <td class="p-3 text-center space-x-2">
-                                    <button onclick="editDirector('${key}', '${dir.name}', '${dir.designation}')" class="bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-blue-600 transition cursor-pointer">
-                                        <i class="fa-solid fa-pen-to-square mr-1"></i> এডিট
-                                    </button>
-                                    <button onclick="deleteDirector('${key}')" class="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-red-600 transition cursor-pointer">
-                                        <i class="fa-solid fa-trash mr-1"></i> ডিলিট
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
-                    });
+                    const dir = directors[key];
+                                    // ছবি না থাকলে গোল শেপের ভেতর জেন্ডার বা নাম অনুযায়ী আইকন দেখাবে
+                    let imageHtml = "";
+                    if (dir.image && dir.image !== "") {
+                        imageHtml = `<img src="${dir.image}" alt="${dir.name}" class="w-full h-full object-cover">`;
+                    } else {
+                        let iconClass = (dir.name.includes('বেগম') || dir.name.includes('খাতুন') || dir.name.includes('আক্তার')) ? 'fa-user-dress' : 'fa-user-tie';
+                        imageHtml = `<div class="w-full h-full bg-emerald-100 text-emerald-800 flex items-center justify-center rounded-full"><i class="fa-solid ${iconClass} text-xl"></i></div>`;
+                    }
+
+                    tableBody.innerHTML += `
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-3">
+                                <div class="w-10 h-10 rounded-full overflow-hidden border border-emerald-600 bg-gray-50 flex items-center justify-center">
+                                    ${imageHtml}
+                                </div>
+                            </td>
+                            <td class="p-3 font-medium">${dir.name}</td>
+                            <td class="p-3">${dir.designation}</td>
+                            <td class="p-3 text-center space-x-2">
+                                <button onclick="editDirector('${key}', '${dir.name}', '${dir.designation}')" class="bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-blue-600 transition cursor-pointer">
+                                    <i class="fa-solid fa-pen-to-square mr-1"></i> এডিট
+                                </button>
+                                <button onclick="deleteDirector('${key}')" class="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-red-600 transition cursor-pointer">
+                                    <i class="fa-solid fa-trash mr-1"></i> ডিলিট
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
                 } else {
                     tableBody.innerHTML = `<tr><td colspan="4" class="text-center p-6 text-gray-400">কোনো পরিচালক যোগ করা হয়নি</td></tr>`;
                 }
