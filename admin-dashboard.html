@@ -283,36 +283,35 @@
         document.getElementById('editContainer').classList.add('hidden');
     }
 </script>
-        <!-- ৩. অফিসার ম্যানেজমেন্ট সেকশন -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <a href="marketing-management.html" class="block bg-white border border-emerald-200 rounded-xl p-6 shadow-sm hover:shadow-md transition text-center font-bold text-lg text-forest">
-            <i class="fa-solid fa-users-gear mr-2"></i> মার্কেটিং অফিসার ও পার্টি ম্যানেজমেন্ট (আলাদা পেজ)
-        </a>
-            <!-- সরবরাহ অফিসার ম্যানেজমেন্ট -->
-            <div class="bg-white rounded-xl shadow-md p-6">
-                <h3 class="text-lg font-bold forest-green-text mb-4 border-b pb-2 flex items-center gap-2">
-                    <i class="fa-solid fa-truck-fast"></i> সরবরাহ অফিসার ম্যানেজমেন্ট
-                </h3>
-                <div class="space-y-3 mb-4">
-                    <input type="text" id="s-name" placeholder="অফিসারের নাম" class="w-full px-3 py-2 border rounded-lg text-sm">
-                    <input type="text" id="s-phone" placeholder="মোবাইল নাম্বার" class="w-full px-3 py-2 border rounded-lg text-sm">
-                    <input type="password" id="s-pass" placeholder="লগইন পিন / পাসওয়ার্ড" class="w-full px-3 py-2 border rounded-lg text-sm">
-                    <button onclick="addSupplyOfficer()" class="w-full bg-green-700 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-800 transition cursor-pointer">
-                        + নতুন সরবরাহ অফিসার যুক্ত করুন
-                    </button>
-                </div>
-            </div>
-
+        <!-- অফিসার ম্যানেজমেন্ট সেকশন (দুটি লিংক বাটন) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    
+    <!-- মার্কেটিং অফিসার ম্যানেজমেন্ট লিংক বাটন -->
+    <a href="marketing-management.html" class="bg-forest text-white rounded-xl p-6 shadow-md hover:bg-emerald-800 transition flex items-center justify-between group">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-users-gear text-2xl"></i>
+            <span class="text-lg font-bold">মার্কেটিং অফিসার ম্যানেজমেন্ট</span>
         </div>
+        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+    </a>
 
+    <!-- সরবরাহ অফিসার ম্যানেজমেন্ট লিংক বাটন -->
+    <a href="supply-management.html" class="bg-forest text-white rounded-xl p-6 shadow-md hover:bg-emerald-800 transition flex items-center justify-between group">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-truck-fast text-2xl"></i>
+            <span class="text-lg font-bold">সরবরাহ অফিসার ম্যানেজমেন্ট</span>
+        </div>
+        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+    </a>
+
+       </div> 
     </main>
 
     <!-- ফুটার -->
     <footer class="bg-gray-800 text-white text-center py-4 text-xs mt-auto">
         &copy; ২০২৬ ফাস্টল্যাব ইউনানী। সর্বস্বত্ব সংরক্ষিত।
     </footer>
-
-    <!-- ফায়ারবেজ ও মূল স্ক্রিপ্ট -->
+        <!-- ফায়ারবেজ ও মূল স্ক্রিপ্ট -->
     <script>
         // ১. ফায়ারবেজ কনফিগারেশন
         const firebaseConfig = {
@@ -410,54 +409,6 @@
             } else {
                 saveDirectorToFirebase();
             }
-        }
-
-        // ৫. মার্কেটিং অফিসার যুক্ত করা
-        function addMarketingOfficer() {
-            const name = document.getElementById('m-name').value.trim();
-            const area = document.getElementById('m-area').value.trim();
-            const phone = document.getElementById('m-phone').value.trim();
-
-            if (!name || !phone) { 
-                alert("দয়া করে অফিসারের নাম এবং মোবাইল নাম্বার লিখুন"); 
-                return; 
-            }
-
-            const newOfficerRef = db.ref('marketingOfficers').push();
-            newOfficerRef.set({
-                name: name,
-                area: area,
-                phone: phone
-            }).then(() => {
-                alert("মার্কেটিং অফিসার সফলভাবে যুক্ত করা হয়েছে!");
-                document.getElementById('m-name').value = '';
-                document.getElementById('m-area').value = '';
-                document.getElementById('m-phone').value = '';
-            }).catch(err => alert("ত্রুটি: " + err.message));
-        }
-
-        // ৬. সরবরাহ অফিসার যুক্ত করা
-        function addSupplyOfficer() {
-            const name = document.getElementById('s-name').value.trim();
-            const phone = document.getElementById('s-phone').value.trim();
-            const pass = document.getElementById('s-pass').value.trim();
-
-            if (!name || !phone || !pass) { 
-                alert("দয়া করে অফিসারের নাম, মোবাইল নাম্বার এবং পিন পূরণ করুন"); 
-                return; 
-            }
-
-            const newOfficerRef = db.ref('supplyOfficers').push();
-            newOfficerRef.set({
-                name: name,
-                phone: phone,
-                password: pass
-            }).then(() => {
-                alert("সরবরাহ অফিসার সফলভাবে যুক্ত করা হয়েছে!");
-                document.getElementById('s-name').value = '';
-                document.getElementById('s-phone').value = '';
-                document.getElementById('s-pass').value = '';
-            }).catch(err => alert("ত্রুটি: " + err.message));
         }
     </script>
 </body>
