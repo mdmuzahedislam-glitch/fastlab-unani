@@ -12,8 +12,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: #f8fafc; }
+        @import url('https://fonts.googleapis.com/css2?family=solaimanLipi:wght@400;500;600;700&display=swap');
+        body { font-family: 'solaimanLipi', sans-serif; background-color: #f8fafc; }
         .forest-green { background-color: #064e3b; }
         .forest-green-text { color: #064e3b; }
         .forest-green-border { border-color: #064e3b; }
@@ -22,7 +22,7 @@
 <body class="min-h-screen flex flex-col">
 
     <!-- টপ ন্যাভবার -->
-    <header class="forest-green text-white shadow-md p-4 flex justify-between items-center">
+    <header class="forest-red text-white shadow-md p-4 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <i class="fa-solid fa-shield-halved text-2xl"></i>
             <div>
@@ -39,7 +39,7 @@
     <main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-6">
 
         <!-- ওয়েলকাম কার্ড -->
-        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 forest-green-border flex justify-between items-center">
+        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 forest-red-border flex justify-between items-center">
             <div>
                 <h2 class="text-xl font-bold text-gray-800">স্বাগতম, এডমিন মহোদয়!</h2>
                 <p class="text-sm text-gray-600 mt-1">এটি আপনার ফুল কন্ট্রোল প্যানেল। এখান থেকে হোমপেজ, নোটিশ, পরিচালক মণ্ডলী, অফিসার এবং সমস্ত তথ্য ম্যানেজ করতে পারবেন।</p>
@@ -65,15 +65,16 @@
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">মোবাইল নাম্বার</label>
-                    <input type="text" id="comp-phone" placeholder="০১৩৩৫০১৯৭৬০" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <input type="text" id="comp-phone" placeholder="০১৩৩৫-০৯৭৪৬" class="w-full px-3 py-2 border rounded-lg text-sm">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">ইমেইল ঠিকানা</label>
-                    <input type="email" id="comp-email" placeholder="fatlabumani.pabna@gmail.com" class="w-full px-3 py-2 border rounded-lg text-sm">
+                    <input type="email" id="comp-email" placeholder="fatlabunani.pabna@gmail.com" class="w-full px-3 py-2 border rounded-lg text-sm">
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-xs font-medium text-gray-700 mb-1">নোটিশ বোর্ড আপডেট</label>
-                    <textarea id="notice-text" rows="2" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="নোটিশ লিখুন..."></textarea>
+                    <textarea id="notice-text" rows="4" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="নোটিশ লিখুন..."></textarea>
+                    <textarea id="notice-text" rows="4" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="নোটিশ লিখুন..."></textarea>
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-xs font-medium text-gray-700 mb-1">কোম্পানি সম্পর্কে বিবরণ (About Us)</label>
