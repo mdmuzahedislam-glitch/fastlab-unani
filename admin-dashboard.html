@@ -87,25 +87,192 @@
             </form>
         </div>
 
-        <!-- ২. পরিচালক মণ্ডলী আপডেট সেকশন -->
-        <div class="bg-white rounded-xl shadow-md p-6">
-            <h3 class="text-lg font-bold forest-green-text mb-4 border-b pb-2 flex items-center gap-2">
-                <i class="fa-solid fa-users-gear"></i> পরিচালক মণ্ডলীগণ আপডেট অপশন
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <input type="text" id="dir-name" placeholder="পরিচালকের নাম" class="px-3 py-2 border rounded-lg text-sm">
-                <input type="text" id="dir-desig" placeholder="পদবী (যেমন: ব্যবস্থাপনা পরিচালক)" class="px-3 py-2 border rounded-lg text-sm">
-                <input type="file" id="dir-photo" accept="image/*" class="px-3 py-1.5 border rounded-lg text-sm bg-gray-50">
-            </div>
-            <button onclick="addDirector()" class="forest-green text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-green-900 transition cursor-pointer">
-                + পরিচালক যুক্ত করুন
-            </button>
-            </div>
-            <a href="directors-list.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-forest group">
-            <i class="fa-solid fa-users-gear text-forest group-hover:text-white"></i>
-            <span>পরিচালকগণের তালিকা</span>
-        </a>
+        <!-- ২. পরিচালক মণ্ডলী আপডেট ও ম্যানেজমেন্ট সেকশন -->
+<div class="bg-white rounded-xl shadow-md p-6 mb-6">
+    <h3 class="text-lg font-bold text-emerald-800 mb-4 border-b pb-2 flex items-center gap-2">
+        <i class="fa-solid fa-users-gear"></i> পরিচালক মণ্ডলীগণ আপডেট অপশন
+    </h3>
+    
+    <!-- পরিচালক যোগ করার ফর্ম -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <input type="text" id="dir-name" placeholder="পরিচালকের নাম" class="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600">
+        <input type="text" id="dir-desig" placeholder="পদবী (যেমন: ব্যবস্থাপনা পরিচালক)" class="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600">
+        <input type="file" id="dir-photo" accept="image/*" class="px-3 py-1.5 border rounded-lg text-sm bg-gray-50">
+    </div>
+    <button onclick="addDirector()" class="bg-emerald-800 text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-emerald-900 transition cursor-pointer">
+        + পরিচালক যুক্ত করুন
+    </button>
 
+    <!-- এডিট করার হিডেন ফর্ম (যখন এডিটে ক্লিক করা হবে তখন দেখাবে) -->
+    <div id="editContainer" class="hidden mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+        <h4 class="text-md font-bold text-emerald-800 mb-3">পরিচালকের তথ্য এডিট করুন</h4>
+        <input type="hidden" id="editIndex">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">পরিচালকের নাম</label>
+                <input type="text" id="editName" class="w-full p-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">পদবী</label>
+                <input type="text" id="editDesignation" class="w-full p-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600">
+            </div>
+        </div>
+        <div class="flex space-x-2">
+            <button onclick="updateDirector()" class="bg-emerald-800 text-white px-4 py-2 rounded-lg text-sm hover:bg-emerald-900 transition">আপডেট করুন</button>
+            <button onclick="cancelEdit()" class="bg-gray-400 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-500 transition">বাতিল</button>
+        </div>
+    </div>
+
+    <!-- পরিচালকগণের তালিকা টেবিল -->
+    <div class="mt-6 border-t pt-4">
+        <h4 class="text-md font-bold text-gray-700 mb-3">বর্তমান পরিচালকগণের তালিকা</h4>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-100 text-gray-600 text-sm">
+                        <th class="p-3 border-b">ছবি</th>
+                        <th class="p-3 border-b">নাম</th>
+                        <th class="p-3 border-b">পদবী</th>
+                        <th class="p-3 border-b text-center">অ্যাকশন</th>
+                    </tr>
+                </thead>
+                <tbody id="adminDirectorTableBody" class="text-sm text-gray-700">
+                    <!-- జాভাস্ক্রিপ্ট দিয়ে ডাইনামিকালি ডাটা লোড হবে -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- জাভাস্ক্রিপ্ট ফাংশন -->
+<script>
+    // ড্যাশবোর্ডে পরিচালক রেন্ডার করার ফাংশন
+    function renderAdminDirectors() {
+        const tableBody = document.getElementById('adminDirectorTableBody');
+        if (!tableBody) return;
+        tableBody.innerHTML = '';
+        
+        let directors = JSON.parse(localStorage.getItem('directorsList')) || [];
+
+        if (directors.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="4" class="text-center p-6 text-gray-400">কোনো পরিচালক যোগ করা হয়নি</td></tr>`;
+            return;
+        }
+
+        directors.forEach((director, index) => {
+            tableBody.innerHTML += `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="p-3">
+                        <img src="${director.image || 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-full object-cover border" alt="Director">
+                    </td>
+                    <td class="p-3 font-medium">${director.name}</td>
+                    <td class="p-3">${director.designation}</td>
+                    <td class="p-3 text-center space-x-2">
+                        <button onclick="editDirector(${index})" class="bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-blue-600 transition">
+                            <i class="fa-solid fa-pen-to-square mr-1"></i> এডিট
+                        </button>
+                        <button onclick="deleteDirector(${index})" class="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs hover:bg-red-600 transition">
+                            <i class="fa-solid fa-trash mr-1"></i> ডিলিট
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    // নতুন পরিচালক যোগ করার ফাংশন
+    function addDirector() {
+        let name = document.getElementById('dir-name').value;
+        let designation = document.getElementById('dir-desig').value;
+        let photoInput = document.getElementById('dir-photo');
+
+        if (!name || !designation) {
+            alert('দয়া করে পরিচালকের নাম এবং পদবী পূরণ করুন।');
+            return;
+        }
+
+        let imageUrl = '';
+        if (photoInput.files && photoInput.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                imageUrl = e.target.result;
+                saveAndRenderDirector(name, designation, imageUrl);
+            }
+            reader.readAsDataURL(photoInput.files[0]);
+        } else {
+            saveAndRenderDirector(name, designation, '');
+        }
+    }
+
+    function saveAndRenderDirector(name, designation, image) {
+        let directors = JSON.parse(localStorage.getItem('directorsList')) || [];
+        directors.push({ name, designation, image });
+        localStorage.setItem('directorsList', JSON.stringify(directors));
+
+        document.getElementById('dir-name').value = '';
+        document.getElementById('dir-desig').value = '';
+        document.getElementById('dir-photo').value = '';
+
+        renderAdminDirectors();
+        alert('পরিচালক সফলভাবে যুক্ত করা হয়েছে!');
+    }
+
+    // ডিলিট করার ফাংশন
+    function deleteDirector(index) {
+        if (confirm('আপনি কি নিশ্চিত এই পরিচালককে মুছে ফেলতে চান?')) {
+            let directors = JSON.parse(localStorage.getItem('directorsList')) || [];
+            directors.splice(index, 1);
+            localStorage.setItem('directorsList', JSON.stringify(directors));
+            renderAdminDirectors();
+        }
+    }
+
+    // এডিট করার জন্য ডাটা ইনপুটে আনার ফাংশন
+    function editDirector(index) {
+        let directors = JSON.parse(localStorage.getItem('directorsList')) || [];
+        let director = directors[index];
+
+        document.getElementById('editIndex').value = index;
+        document.getElementById('editName').value = director.name;
+        document.getElementById('editDesignation').value = director.designation;
+
+        document.getElementById('editContainer').classList.remove('hidden');
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    // এডিট শেষে আপডেট করার ফাংশন
+    function updateDirector() {
+        let index = document.getElementById('editIndex').value;
+        let name = document.getElementById('editName').value;
+        let designation = document.getElementById('editDesignation').value;
+
+        if (!name || !designation) {
+            alert('দয়া করে নাম এবং পদবী পূরণ করুন।');
+            return;
+        }
+
+        let directors = JSON.parse(localStorage.getItem('directorsList')) || [];
+        directors[index].name = name;
+        directors[index].designation = designation;
+
+        localStorage.setItem('directorsList', JSON.stringify(directors));
+        document.getElementById('editContainer').classList.add('hidden');
+        renderAdminDirectors();
+        alert('তথ্য সফলভাবে আপডেট করা হয়েছে!');
+    }
+
+    // এডিট বাতিল করার ফাংশন
+    function cancelEdit() {
+        document.getElementById('editContainer').classList.add('hidden');
+    }
+
+    // পেজ লোড হলে তালিকা দেখানোর জন্য
+    window.onload = function() {
+        if (typeof renderAdminDirectors === 'function') {
+            renderAdminDirectors();
+        }
+    };
+</script>
         <!-- ৩. অফিসার ম্যানেজমেন্ট সেকশন -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
