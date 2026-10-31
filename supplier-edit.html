@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সরবরাহ অফিসার ও সাপ্লায়ার ম্যানেজমেন্ট - এডমিন এডিট প্যানেল</title>
+    <title>সরবরাহ অফিসার ও সাপ্লায়ার ম্যানেজমেন্ট - ডাইনামিক এডিট প্যানেল</title>
     <!-- বুটস্ট্রাপ সিডিএন (Bootstrap 5 CSS) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -27,6 +27,14 @@
             text-align: center;
             vertical-align: middle;
         }
+        .action-form-section {
+            display: none;
+            background: #f8f9fa;
+            border: 2px dashed #198754;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
@@ -34,47 +42,51 @@
     <div class="container my-4">
         <!-- হেডার অংশ -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>🔐 সরবরাহ অফিসার ও সাপ্লায়ার কন্ট্রোল প্যানেল</h2>
+            <h2>🔐 সরবরাহ অফিসার ও সাপ্লায়ার ডাইনামিক কন্ট্রোল প্যানেল</h2>
             <a href="admin-dashboard.html" class="btn btn-secondary">← এডমিন ড্যাশবোর্ডে ফিরে যান</a>
         </div>
 
-        <!-- ১. সরবরাহ অফিসার প্রোফাইল ও নোটিশ বোর্ড এডিট ফর্ম -->
+        <!-- ১. সরবরাহ অফিসার প্রোফাইল এডিট সেকশন -->
         <div class="panel-card">
-            <form id="officerProfileForm">
-                <h4 class="mb-3 text-success">অফিসার প্রোফাইল ও নোটিশ বোর্ড এডিট বক্স</h4>
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">পদবী</label>
-                        <input type="text" class="form-control" id="officerDesignation" value="সরবরাহ অফিসার" required>
+            <h4 class="mb-3 text-success">অফিসার প্রোফাইল ও নোটিশ বোর্ড নিয়ন্ত্রণ</h4>
+            <button class="btn btn-outline-success mb-3" onclick="toggleSection('officerEditBox')">⚙️ অফিসার প্রোফাইল এডিট করুন</button>
+            
+            <div id="officerEditBox" class="action-form-section">
+                <form id="officerProfileForm">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">পদবী</label>
+                            <input type="text" class="form-control" id="officerDesignation" value="সরবরাহ অফিসার">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">অফিসারের নাম</label>
+                            <input type="text" class="form-control" id="officerName" value="মোঃ আবদুল রহিম">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">মোবাইল নাম্বার</label>
+                            <input type="text" class="form-control" id="officerPhone" value="01707-051645">
+                        </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">অফিসারের নাম</label>
-                        <input type="text" class="form-control" id="officerName" value="মোঃ আবদুল রহিম" required>
+                    <div class="mb-3">
+                        <label class="form-label">এরিয়া বা ঠিকানা</label>
+                        <input type="text" class="form-control" id="officerAddress" value="ফাস্টল্যাব ইউনানী, আফুরিয়া, হেমায়েতপুর, পাবনা">
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">মোবাইল নাম্বার</label>
-                        <input type="text" class="form-control" id="officerPhone" value="01707-051645" required>
+                    <div class="mb-3">
+                        <label class="form-label">নোটিশ বোর্ডের আপডেট</label>
+                        <textarea class="form-control" id="noticeBoard" rows="3">আগামী ২০ তারিখের মধ্যে বকেয়া টাকা জমা দিও।</textarea>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">এরিয়া বা ঠিকানা</label>
-                    <input type="text" class="form-control" id="officerAddress" value="ফাস্টল্যাব ইউনানী, আফুরিয়া, হেমায়েতপুর, পাবনা">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">নোটিশ বোর্ডের আপডেট</label>
-                    <textarea class="form-control" id="noticeBoard" rows="3">আগামী ২০ তারিখের মধ্যে বকেয়া টাকা জমা দিও।</textarea>
-                </div>
-                <button type="submit" class="btn btn-success w-100">অফিসার প্রোফাইল লাইভ আপডেট করুন</button>
-            </form>
+                    <button type="submit" class="btn btn-success">পরিবর্তন সেভ করুন</button>
+                </form>
+            </div>
         </div>
 
         <!-- ২. নতুন সাপ্লায়ার যুক্ত করার ফরম -->
         <div class="panel-card">
+            <h4 class="mb-3 text-success">নতুন সাপ্লায়ার যুক্ত করার ফরম</h4>
             <form id="newSupplierForm">
-                <h4 class="mb-3 text-success">নতুন সাপ্লায়ার যুক্ত করার ফরম</h4>
                 <div class="row">
                     <div class="col-md-2 mb-3">
-                        <label class="form-label">সিরিয়াল নম্বর</label>
+                        <label class="form-label">সিরিয়াল</label>
                         <input type="text" class="form-control" placeholder="০১" required>
                     </div>
                     <div class="col-md-4 mb-3">
@@ -86,7 +98,7 @@
                         <input type="text" class="form-control" placeholder="মোবাইল নাম্বার" required>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label class="form-label">প্রারম্ভিক বকেয়া ব্যালেন্স</label>
+                        <label class="form-label">প্রারম্ভিক বকেয়া</label>
                         <input type="number" class="form-control" placeholder="টাকার পরিমাণ" required>
                     </div>
                 </div>
@@ -94,9 +106,9 @@
             </form>
         </div>
 
-        <!-- ৩. সরবরাহকারীর তালিকা ও হিসাব টেবিল (অ্যাকশন বাটনসহ) -->
+        <!-- ৩. সরবরাহকারীর তালিকা ও হিসাব টেবিল (বাটনভিত্তিক ডাইনামিক সেকশনসহ) -->
         <div class="panel-card">
-            <h4 class="mb-3 text-success">সরবরাহকারীর তালিকা ও হিসাব বিবরণী</h4>
+            <h4 class="mb-3 text-success">সরবরাহকারীর তালিকা ও অ্যাকশন কন্ট্রোল</h4>
             <div class="table-responsive">
                 <table class="table table-bordered table-striped table-custom">
                     <thead>
@@ -119,30 +131,24 @@
                             <td>৮০০</td>
                             <td class="fw-bold text-danger">২০০</td>
                             <td>
-                                <button class="btn btn-sm btn-info mb-1">প্রোফাইল</button>
-                                <button class="btn btn-sm btn-success mb-1">জমা এন্ট্রি</button>
-                                <button class="btn btn-sm btn-warning mb-1">এডিট</button>
-                                <button class="btn btn-sm btn-secondary mb-1">স্টেটমেন্ট</button>
-                                <button class="btn btn-sm btn-danger mb-1">ডিলিট</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>২</td>
-                            <td>রহিম স্টোর, চাটমোহর</td>
-                            <td>০১৭২২-৩৪৪৭৯৮</td>
-                            <td>৩০০</td>
-                            <td>৫০০</td>
-                            <td class="fw-bold text-danger">২০০</td>
-                            <td>
-                                <button class="btn btn-sm btn-info mb-1">প্রোফাইল</button>
-                                <button class="btn btn-sm btn-success mb-1">জমা এন্ট্রি</button>
-                                <button class="btn btn-sm btn-warning mb-1">এডিট</button>
-                                <button class="btn btn-sm btn-secondary mb-1">স্টেটমেন্ট</button>
-                                <button class="btn btn-sm btn-danger mb-1">ডিলিট</button>
+                                <button class="btn btn-sm btn-info mb-1" onclick="openAction('profile', 1)">প্রোফাইল</button>
+                                <button class="btn btn-sm btn-success mb-1" onclick="openAction('deposit', 1)">জমা এন্ট্রি</button>
+                                <button class="btn btn-sm btn-warning mb-1" onclick="openAction('edit', 1)">এডিট</button>
+                                <button class="btn btn-sm btn-secondary mb-1" onclick="openAction('statement', 1)">স্টেটমেন্ট</button>
+                                <button class="btn btn-sm btn-danger mb-1" onclick="deleteSupplier(1)">ডিলিট</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- ডাইনামিক হিডেন অ্যাকশন ফর্ম বক্স (কোনো বাটনে ক্লিক করলে এটি ওপেন হবে) -->
+            <div id="dynamicActionContainer" class="action-form-section">
+                <h5 id="actionTitle" class="text-primary mb-3"></h5>
+                <div id="actionFormContent">
+                    <!-- জাভাস্ক্রিপ্ট দিয়ে এখানে নির্দিষ্ট ফর্ম লোড হবে -->
+                </div>
+                <button class="btn btn-sm btn-dark mt-3" onclick="closeActionBox()">বন্ধ করুন</button>
             </div>
         </div>
 
@@ -185,15 +191,54 @@
 
     </div>
 
-    <!-- জাভাস্ক্রিপ্ট -->
+    <!-- জাভাস্ক্রিপ্ট লজিক -->
     <script>
+        // টগল সেকশন ফাংশন
+        function toggleSection(id) {
+            let elem = document.getElementById(id);
+            if (elem.style.display === "block") {
+                elem.style.display = "none";
+            } else {
+                elem.style.display = "block";
+            }
+        }
+
+        // বাটন অনুযায়ী ডাইনামিক ফর্ম ওপেন করার ফাংশন
+        function openAction(type, id) {
+            let container = document.getElementById('dynamicActionContainer');
+            let title = document.getElementById('actionTitle');
+            let content = document.getElementById('actionFormContent');
+            
+            container.style.display = "block";
+
+            if (type === 'profile') {
+                title.innerText = "👤 সাপ্লায়ারের বিস্তারিত প্রোফাইল তথ্য";
+                content.innerHTML = `<p><strong>নাম:</strong> সদরগর ট্রেডার্স, পাবনা</p><p><strong>মোবাইল:</strong> ০১৮০৭-৫৬৪৪৩৪</p><p>স্ট্যাটাস: সক্রিয়</p>`;
+            } else if (type === 'deposit') {
+                title.innerText = "💰 নতুন জমা এন্ট্রি ফরম";
+                content.innerHTML = `<input type='number' class='form-control mb-2' placeholder='জমার পরিমাণ লিখুন'><input type='text' class='form-control mb-2' placeholder='বিবরণ'><button class='btn btn-success btn-sm'>জমা সেভ করুন</button>`;
+            } else if (type === 'edit') {
+                title.innerText = "✏️ সাপ্লায়ার তথ্য সংশোধন (Edit Form)";
+                content.innerHTML = `<input type='text' class='form-control mb-2' value='সদরগর ট্রেডার্স, পাবনা'><input type='text' class='form-control mb-2' value='০১৮০৭-৫৬৪৪৩৪'><button class='btn btn-warning btn-sm'>সংশোধন সেভ করুন</button>`;
+            } else if (type === 'statement') {
+                title.innerText = "📊 সাপ্লায়ার স্টেটমেন্ট ও লেনদেন বিবরণী";
+                content.innerHTML = `<p>এই সাপ্লায়ারের সমস্ত পেমেন্ট ও ক্রয়ের হিসাব এখানে তালিকা আকারে দেখাবে।</p>`;
+            }
+        }
+
+        function closeActionBox() {
+            document.getElementById('dynamicActionContainer').style.display = "none";
+        }
+
+        function deleteSupplier(id) {
+            if(confirm('আপনি কি নিশ্চিতভাবে এই সাপ্লায়ারকে ডিলিট করতে চান?')) {
+                alert('সাপ্লায়ার সফলভাবে ডিলিট করা হয়েছে!');
+            }
+        }
+
         document.getElementById('officerProfileForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('অফিসারের প্রোফাইল ও নোটিশ সফলভাবে লাইভ আপডেট করা হয়েছে!');
-        });
-        document.getElementById('newSupplierForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('নতুন সাপ্লায়ার সফলভাবে তালিকাভুক্ত করা হয়েছে!');
+            alert('অফিসারের প্রোফাইল সফলভাবে আপডেট করা হয়েছে!');
         });
     </script>
 
