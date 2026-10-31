@@ -8,6 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -25,188 +28,224 @@
     <!-- হেডার বা নবার -->
     <header class="bg-forest text-white p-4 shadow-md flex justify-between items-center">
         <h1 class="text-xl font-bold flex items-center gap-2">
-            ⚙️ সরবরাহ অফিসার ও সরবরাহ পার্টি ম্যানেজমেন্ট প্যানেল[span_0](start_span)[span_0](end_span)
+            <i class="fa-solid fa-truck-fast"></i> সরবরাহ অফিসার ও সরবরাহ পার্টি ম্যানেজমেন্ট প্যানেল
         </h1>
         <a href="admindashboard.html" class="bg-amber-400 text-black px-4 py-2 rounded-lg font-bold hover:bg-amber-500 transition">
-            ড্যাশবোর্ড[span_1](start_span)[span_1](end_span)
+            ড্যাশবোর্ড
         </a>
     </header>
 
     <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
 
-        <!-- ১. অফিসার প্রোফাইল নোটিশ বোর্ড এডিট -->
+        <!-- ১. নতুন সরবরাহ অফিসার সংরক্ষণ করুন -->
         <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-forest">
             <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
-                📁 অফিসার প্রোফাইল নোটিশ বোর্ড এডিট[span_2](start_span)[span_2](end_span)
+                <i class="fa-solid fa-user-plus"></i> নতুন সরবরাহ অফিসার সংরক্ষণ করুন
             </h2>
-            <div class="space-y-3">
-                <div class="border p-3 rounded-lg bg-gray-50 text-gray-500">১.[span_3](start_span)[span_3](end_span)</div>
-                <div class="border p-3 rounded-lg bg-gray-50 text-gray-500">২.[span_4](start_span)[span_4](end_span)</div>
-                <div class="border p-3 rounded-lg bg-gray-50 text-gray-500">৩.[span_5](start_span)[span_5](end_span)</div>
-            </div>
-        </section>
-
-        <!-- ২. নতুন সরবরাহ অফিসার সংরক্ষণ করুন -->
-        <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-forest">
-            <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
-                ➕ নতুন সরবরাহ অফিসার সংরক্ষণ করুন[span_6](start_span)[span_6](end_span)
-            </h2>
-            <p class="text-sm text-gray-700 mb-4 bg-emerald-50 p-3 rounded border border-emerald-200">
-                ক্রমিক নং: নং লিখুন, অফিসার নাম: নাম লিখুন, মোবাইল: নাম্বার লিখুন, কর্মরত এরিয়া: এরিয়ার নাম লিখুন, ইউজার আইডি: ইউজার আইডি লিখুন, পাসওয়ার্ড: একটি ছয় ডিজিটের পাসওয়ার্ড লিখুন[span_7](start_span)[span_7](end_span)
-            </p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <input type="text" placeholder="ক্রমিক নং" class="border p-2 rounded-lg">
-                <input type="text" placeholder="অফিসারের নাম" class="border p-2 rounded-lg">
-                <input type="text" placeholder="মোবাইল নাম্বার" class="border p-2 rounded-lg">
-                <input type="text" placeholder="কর্মরত এরিয়া" class="border p-2 rounded-lg">
-                <input type="text" placeholder="ইউজার আইডি" class="border p-2 rounded-lg">
-                <input type="password" placeholder="পাসওয়ার্ড (৬ ডিজিট)" class="border p-2 rounded-lg">
+                <input type="text" id="officer-serial" placeholder="ক্রমিক নং" class="border p-2 rounded-lg">
+                <input type="text" id="officer-name" placeholder="অফিসারের নাম" class="border p-2 rounded-lg">
+                <input type="text" id="officer-phone" placeholder="মোবাইল নাম্বার" class="border p-2 rounded-lg">
+                <input type="text" id="officer-area" placeholder="কর্মরত এরিয়া" class="border p-2 rounded-lg">
+                <input type="text" id="officer-id" placeholder="ইউজার আইডি" class="border p-2 rounded-lg">
+                <input type="password" id="officer-pass" placeholder="পাসওয়ার্ড (৬ ডিজিট)" class="border p-2 rounded-lg">
             </div>
-            <button class="bg-emerald-600 text-white px-5 py-2 rounded font-bold hover:bg-emerald-700">
-                সংরক্ষণ[span_8](start_span)[span_8](end_span)
+            <button onclick="saveSupplyOfficer()" class="bg-emerald-600 text-white px-5 py-2 rounded font-bold hover:bg-emerald-700">
+                সংরক্ষণ
             </button>
         </section>
 
-        <!-- ৩. সরবরাহ অফিসার লিস্ট -->
+        <!-- ২. সরবরাহ অফিসার লিস্ট -->
         <section class="bg-white p-6 rounded-xl shadow-md">
             <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
-                🟩 সরবরাহ অফিসার লিস্ট[span_9](start_span)[span_9](end_span)
+                <i class="fa-solid fa-users"></i> সরবরাহ অফিসার লিস্ট
             </h2>
-            <div class="bg-gray-50 p-4 rounded-lg border text-sm space-y-1 text-gray-800">
-                <p><strong>ক্রমিক নং:</strong> ০১[span_10](start_span)[span_10](end_span)</p>
-                <p><strong>অফিসারের নাম:</strong> মুজাহিদ সরদার[span_11](start_span)[span_11](end_span)</p>
-                <p><strong>মোবাইল নাম্বার:</strong> ০১৭৪৮৪২১৫৬৬৪[span_12](start_span)[span_12](end_span)</p>
-                <p><strong>কর্মরত এরিয়া:</strong> পাবনা ব্রাঞ্চ[span_13](start_span)[span_13](end_span)</p>
-                <p><strong>ইউজার আইডি:</strong> muzahid-01[span_14](start_span)[span_14](end_span)</p>
-                <p><strong>পাসওয়ার্ড:</strong> M1234#[span_15](start_span)[span_15](end_span)</p>
-                <p class="text-emerald-700 font-semibold mt-2">একশন বাটন-এডিট ও ডিলিট[span_16](start_span)[span_16](end_span)</p>
-            </div>
-            <button class="mt-4 bg-emerald-600 text-white px-5 py-2 rounded font-bold hover:bg-emerald-700">
-                সংরক্ষণ[span_17](start_span)[span_17](end_span)
-            </button>
-        </section>
-
-        <!-- ৪. নতুন সরবরাহ পার্টি সংরক্ষণ করুন -->
-        <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-forest">
-            <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
-                ➕ নতুন সরবরাহ পার্টি সংরক্ষণ করুন[span_18](start_span)[span_18](end_span)
-            </h2>
-            <p class="text-sm text-gray-700 mb-4 bg-emerald-50 p-3 rounded border border-emerald-200">
-                ক্রমিক নং: ক্রমিক নং লিখুন, পার্টির নাম ও ঠিকানা: নাম ঠিকানা লিখুন, পার্টির মোবাইল নাম্বার: নাম্বার লিখুন, পূর্বের বকেয়া ব্যালেন্স, পূর্বের পাওনা টাকা[span_19](start_span)[span_19](end_span)
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <input type="text" placeholder="ক্রমিক নং" class="border p-2 rounded-lg">
-                <input type="text" placeholder="পার্টির নাম ও ঠিকানা" class="border p-2 rounded-lg">
-                <input type="text" placeholder="পার্টির মোবাইল নাম্বার" class="border p-2 rounded-lg">
-                <input type="number" placeholder="পূর্বের বকেয়া ব্যালেন্স" class="border p-2 rounded-lg">
-                <input type="number" placeholder="পূর্বের পাওনা টাকা" class="border p-2 rounded-lg">
-            </div>
-            <button class="bg-emerald-600 text-white px-5 py-2 rounded font-bold hover:bg-emerald-700">
-                সংরক্ষণ[span_20](start_span)[span_20](end_span)
-            </button>
-        </section>
-
-        <!-- ৫. সরবরাহ পার্টির লিস্ট -->
-        <section class="bg-white p-6 rounded-xl shadow-md">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-base font-bold text-forest flex items-center gap-2">
-                    🟩 সরবরাহ পার্টির লিস্ট[span_21](start_span)[span_21](end_span)
-                </h2>
-                <button class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-600">
-                    প্রিন্ট বাটন[span_22](start_span)[span_22](end_span)
-                </button>
-            </div>
-            <p class="text-xs text-gray-600 mb-3">ক্রমিক নং+পার্টির নাম ও ঠিকানা+মোবাইল+মোট জমা+মাল ক্রয়+বকেয়া+একশন[span_23](start_span)[span_23](end_span)</p>
-            <div class="space-y-3 text-sm">
-                <div class="p-3 bg-gray-50 border rounded flex flex-wrap justify-between items-center">
-                    <span>০১ + মুজাহিদ স্টোর, পাবনা + ০১৩৪......... + ৫০০ + ১০০০ + ৫০০[span_24](start_span)[span_24](end_span)</span>
-                    <span class="text-emerald-700 font-bold">জমা এন্ট্রি + এডিট + স্টেটমেন্ট + ডিলিট[span_25](start_span)[span_25](end_span)</span>
-                </div>
-                <div class="p-3 bg-gray-50 border rounded flex flex-wrap justify-between items-center">
-                    <span>০২ + মুজাহিদ স্টোর, পাবনা + ০১৩৪......... + ৫০০ + ১০০০ + ৫০০[span_26](start_span)[span_26](end_span)</span>
-                    <span class="text-emerald-700 font-bold">জমা এন্ট্রি + এডিট + স্টেটমেন্ট + ডিলিট[span_27](start_span)[span_27](end_span)</span>
-                </div>
-            </div>
-            <!-- মোট লেনদেন সারাংশ -->
-            <div class="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg flex justify-between font-bold text-gray-800">
-                <span>মোট লেনদেন=১০০০ + ২০০০[span_28](start_span)[span_28](end_span)</span>
-                <span class="text-emerald-700">+১০০০[span_29](start_span)[span_29](end_span)</span>
-            </div>
-        </section>
-
-        <!-- ৬. পার্টি স্টেটমেন্ট (হিডেন ফরম থাকবে) -->
-        <section class="bg-white p-6 rounded-xl shadow-md border">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-base font-bold text-forest flex items-center gap-2">
-                    📊 পার্টি স্টেটমেন্ট-(হিডেন ফরম থাকবে)[span_30](start_span)[span_30](end_span)
-                </h2>
-                <button class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-600">
-                    প্রিন্ট বাটন[span_31](start_span)[span_31](end_span)
-                </button>
-            </div>
-            <p class="text-xs text-gray-600 mb-2">তারিখ+বিবরণ+জমা+মাল ক্রয়+Dr/Cr+অবশিষ্ট+একশন[span_32](start_span)[span_32](end_span)</p>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-sm">
                     <thead>
                         <tr class="bg-gray-100">
-                            <th class="p-2 border">তারিখ[span_33](start_span)[span_33](end_span)</th>
-                            <th class="p-2 border">বিবরণ[span_34](start_span)[span_34](end_span)</th>
-                            <th class="p-2 border">জমা[span_35](start_span)[span_35](end_span)</th>
-                            <th class="p-2 border">মাল ক্রয়[span_36](start_span)[span_36](end_span)</th>
-                            <th class="p-2 border">Dr/Cr[span_37](start_span)[span_37](end_span)</th>
-                            <th class="p-2 border">অবশিষ্ট[span_38](start_span)[span_38](end_span)</th>
-                            <th class="p-2 border">একশন[span_39](start_span)[span_39](end_span)</th>
+                            <th class="p-2 border">ক্রমিক নং</th>
+                            <th class="p-2 border">অফিসারের নাম</th>
+                            <th class="p-2 border">মোবাইল</th>
+                            <th class="p-2 border">এরিয়া</th>
+                            <th class="p-2 border">ইউজার আইডি</th>
+                            <th class="p-2 border">পাসওয়ার্ড</th>
+                            <th class="p-2 border">একশন</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td class="p-2 border">১২/১০/২৬[span_40](start_span)[span_40](end_span)</td>
-                            <td class="p-2 border">ক্যাশ[span_41](start_span)[span_41](end_span)</td>
-                            <td class="p-2 border">+৫০০[span_42](start_span)[span_42](end_span)</td>
-                            <td class="p-2 border">+০০[span_43](start_span)[span_43](end_span)</td>
-                            <td class="p-2 border">Cr[span_44](start_span)[span_44](end_span)</td>
-                            <td class="p-2 border">-৫০০চি[span_45](start_span)[span_45](end_span)</td>
-                            <td class="p-2 border">এডিট+ডিলিট[span_46](start_span)[span_46](end_span)</td>
-                        </tr>
+                    <tbody id="supply-officer-list">
+                        <!-- ফায়ারবেজ থেকে ডাইনামিক ডাটা আসবে -->
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- ৭. পার্টি জমা এন্ট্রি ফরম-(হিডেন ফরম থাকবে) -->
-        <section class="bg-white p-6 rounded-xl shadow-md border-2 border-emerald-600">
+        <!-- ৩. নতুন সরবরাহ পার্টি সংরক্ষণ করুন -->
+        <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-forest">
             <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
-                ✍️ পার্টি জমা এন্ট্রি ফরম-(হিডেন ফরম থাকবে)[span_47](start_span)[span_47](end_span)
+                <i class="fa-solid fa-handshake"></i> নতুন সরবরাহ পার্টি সংরক্ষণ করুন
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <input type="text" id="party-serial" placeholder="ক্রমিক নং" class="border p-2 rounded-lg">
+                <input type="text" id="party-name" placeholder="পার্টির নাম ও ঠিকানা" class="border p-2 rounded-lg">
+                <input type="text" id="party-phone" placeholder="পার্টির মোবাইল নাম্বার" class="border p-2 rounded-lg">
+                <input type="number" id="party-due" placeholder="পূর্বের বকেয়া ব্যালেন্স" class="border p-2 rounded-lg">
+                <input type="number" id="party-advance" placeholder="পূর্বের পাওনা টাকা" class="border p-2 rounded-lg">
+            </div>
+            <button onclick="saveSupplyParty()" class="bg-emerald-600 text-white px-5 py-2 rounded font-bold hover:bg-emerald-700">
+                সংরক্ষণ
+            </button>
+        </section>
+
+        <!-- ৪. সরবরাহ পার্টির লিস্ট -->
+        <section class="bg-white p-6 rounded-xl shadow-md">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-base font-bold text-forest flex items-center gap-2">
+                    <i class="fa-solid fa-list"></i> সরবরাহ পার্টির লিস্ট
+                </h2>
+                <button onclick="window.print()" class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-600">
+                    প্রিন্ট বাটন
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="p-2 border">ক্রমিক নং</th>
+                            <th class="p-2 border">পার্টির নাম ও ঠিকানা</th>
+                            <th class="p-2 border">মোবাইল</th>
+                            <th class="p-2 border">মোট জমা</th>
+                            <th class="p-2 border">মাল ক্রয়</th>
+                            <th class="p-2 border">বকেয়া</th>
+                            <th class="p-2 border">একশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="supply-party-list">
+                        <!-- ফায়ারবেজ থেকে ডাইনামিক ডাটা আসবে -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ৫. পার্টি জমা এন্ট্রি ফরম (শুরুতে হিডেন থাকবে) -->
+        <section id="deposit-form-section" class="bg-white p-6 rounded-xl shadow-md border-2 border-emerald-600 hidden">
+            <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square"></i> পার্টি জমা এন্ট্রি ফরম
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 text-sm">
                 <div>
-                    <label class="block font-semibold text-gray-700 mb-1">তারিখ:[span_48](start_span)[span_48](end_span)</label>
-                    <input type="date" class="w-full border p-2 rounded-lg">
+                    <label class="block font-semibold text-gray-700 mb-1">তারিখ:</label>
+                    <input type="date" id="dep-date" class="w-full border p-2 rounded-lg">
                 </div>
                 <div>
-                    <label class="block font-semibold text-gray-700 mb-1">বিবরণ:[span_49](start_span)[span_49](end_span)</label>
-                    <input type="text" placeholder="বিবরণ লিখুন" class="w-full border p-2 rounded-lg">
+                    <label class="block font-semibold text-gray-700 mb-1">বিবরণ:</label>
+                    <input type="text" id="dep-desc" placeholder="বিবরণ লিখুন" class="w-full border p-2 rounded-lg">
                 </div>
                 <div>
-                    <label class="block font-semibold text-gray-700 mb-1">জমা:[span_50](start_span)[span_50](end_span)</label>
-                    <input type="number" placeholder="জমা টাকার পরিমাণ" class="w-full border p-2 rounded-lg">
+                    <label class="block font-semibold text-gray-700 mb-1">জমা:</label>
+                    <input type="number" id="dep-amount" placeholder="জমা টাকার পরিমাণ" class="w-full border p-2 rounded-lg">
                 </div>
                 <div>
-                    <label class="block font-semibold text-gray-700 mb-1">মাল ক্রয়:[span_51](start_span)[span_51](end_span)</label>
-                    <input type="number" placeholder="মাল ক্রয়ের পরিমাণ" class="w-full border p-2 rounded-lg">
+                    <label class="block font-semibold text-gray-700 mb-1">মাল ক্রয়:</label>
+                    <input type="number" id="dep-purchase" placeholder="মাল ক্রয়ের পরিমাণ" class="w-full border p-2 rounded-lg">
                 </div>
             </div>
             <div class="flex gap-3">
-                <button class="bg-emerald-600 text-white px-6 py-2 rounded font-bold hover:bg-emerald-700">
-                    জমা দিন[span_52](start_span)[span_52](end_span)
+                <button onclick="submitDeposit()" class="bg-emerald-600 text-white px-6 py-2 rounded font-bold hover:bg-emerald-700">
+                    জমা দিন
                 </button>
-                <button class="bg-amber-500 text-white px-6 py-2 rounded font-bold hover:bg-amber-600">
-                    বাতিল[span_53](start_span)[span_53](end_span)
+                <button onclick="hideDepositForm()" class="bg-amber-500 text-white px-6 py-2 rounded font-bold hover:bg-amber-600">
+                    বাতিল
                 </button>
+            </div>
+        </section>
+
+        <!-- ৬. পার্টি স্টেটমেন্ট (শুরুতে হিডেন থাকবে) -->
+        <section id="statement-section" class="bg-white p-6 rounded-xl shadow-md border hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-base font-bold text-forest flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line"></i> পার্টি স্টেটমেন্ট
+                </h2>
+                <button onclick="window.print()" class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-600">
+                    প্রিন্ট বাটন
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="p-2 border">তারিখ</th>
+                            <th class="p-2 border">বিবরণ</th>
+                            <th class="p-2 border">জমা</th>
+                            <th class="p-2 border">মাল ক্রয়</th>
+                            <th class="p-2 border">Dr/Cr</th>
+                            <th class="p-2 border">অবশিষ্ট</th>
+                            <th class="p-2 border">একশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statement-list">
+                        <!-- স্টেটমেন্ট ডাটা -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-4">
+                <button onclick="hideStatement()" class="bg-gray-500 text-white px-4 py-1 rounded text-sm">বন্ধ করুন</button>
             </div>
         </section>
 
     </main>
 
+    <!-- ফায়ারবেজ ও কার্যকারী স্ক্রিপ্ট -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDmiZ7Pa0nB9HF29bv6qoT2qSzko4RVEHI",
+            authDomain: "fastlab-unani.firebaseapp.com",
+            databaseURL: "https://fastlab-unani-default-rtdb.firebaseio.com",
+            projectId: "fastlab-unani",
+            storageBucket: "fastlab-unani.firebasestorage.app",
+            messagingSenderId: "1319654847",
+            appId: "1:1319654847:web:cdb5c4813ea8e48877fd0a",
+            measurementId: "G-LDL48BEM76"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        // জমা এন্ট্রি ফর্ম দেখানোর ফাংশন (হিডেন থেকে দৃশ্যমান করা)
+        function showDepositForm() {
+            document.getElementById('deposit-form-section').classList.remove('hidden');
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function hideDepositForm() {
+            document.getElementById('deposit-form-section').classList.add('hidden');
+        }
+
+        // স্টেটমেন্ট দেখানোর ফাংশন
+        function showStatement() {
+            document.getElementById('statement-section').classList.remove('hidden');
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function hideStatement() {
+            document.getElementById('statement-section').classList.add('hidden');
+        }
+
+        // ডাটা সংরক্ষণ ফাংশনগুলো
+        function saveSupplyOfficer() {
+            alert("অফিসার সংরক্ষণের কাজ এখানে যুক্ত হবে।");
+        }
+
+        function saveSupplyParty() {
+            alert("পার্টি সংরক্ষণের কাজ এখানে যুক্ত হবে।");
+        }
+
+        function submitDeposit() {
+            alert("জমা সফলভাবে এন্ট্রি হয়েছে!");
+            hideDepositForm();
+        }
+    </script>
 </body>
 </html>
