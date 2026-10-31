@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সরবরাহ অফিসার এডিট ও লাইভ কন্ট্রোল প্যানেল</title>
+    <title>সরবরাহ অফিসার ও সাপ্লায়ার ম্যানেজমেন্ট - এডমিন এডিট প্যানেল</title>
     <!-- বুটস্ট্রাপ সিডিএন (Bootstrap 5 CSS) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -11,12 +11,21 @@
             background-color: #f4f6f9;
             font-family: 'SolaimanLipi', sans-serif;
         }
-        .admin-panel-card {
+        .panel-card {
             background: #ffffff;
             padding: 25px;
             border-radius: 10px;
             box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
             margin-bottom: 25px;
+        }
+        .table-custom th {
+            background-color: #198754;
+            color: white;
+            text-align: center;
+        }
+        .table-custom td {
+            text-align: center;
+            vertical-align: middle;
         }
     </style>
 </head>
@@ -25,96 +34,166 @@
     <div class="container my-4">
         <!-- হেডার অংশ -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>🔐 সরবরাহ অফিসার লাইভ এডিট প্যানেল</h2>
+            <h2>🔐 সরবরাহ অফিসার ও সাপ্লায়ার কন্ট্রোল প্যানেল</h2>
             <a href="admin-dashboard.html" class="btn btn-secondary">← এডমিন ড্যাশবোর্ডে ফিরে যান</a>
         </div>
 
-        <!-- ১. অফিসার প্রোফাইল ও নোটিশ বোর্ড এডিট ফর্ম -->
-        <div class="admin-panel-card">
-            <form id="supplierEditForm">
-                <h4 class="mb-3 text-primary">অফিসার প্রোফাইল ও নোটিশ এডিট বক্সসমূহ</h4>[span_2](start_span)[span_2](end_span)
-                
+        <!-- ১. সরবরাহ অফিসার প্রোফাইল ও নোটিশ বোর্ড এডিট ফর্ম -->
+        <div class="panel-card">
+            <form id="officerProfileForm">
+                <h4 class="mb-3 text-success">অফিসার প্রোফাইল ও নোটিশ বোর্ড এডিট বক্স</h4>
                 <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="officerDesignation" class="form-label">পদবী (যেমন: সরবরাহ অফিসার)</label>[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)
-                        <input type="text" class="form-control" id="officerDesignation" required>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">পদবী</label>
+                        <input type="text" class="form-control" id="officerDesignation" value="সরবরাহ অফিসার" required>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="officerName" class="form-label">অফিসারের নাম</label>[span_5](start_span)[span_5](end_span)[span_6](start_span)[span_6](end_span)
-                        <input type="text" class="form-control" id="officerName" required>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">অফিসারের নাম</label>
+                        <input type="text" class="form-control" id="officerName" value="মোঃ আবদুল রহিম" required>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="officerPhone" class="form-label">মোবাইল নাম্বার</label>[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)
-                        <input type="text" class="form-control" id="officerPhone" required>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="officerAddress" class="form-label">ঠিকানা বা এরিয়া</label>[span_9](start_span)[span_9](end_span)[span_10](start_span)[span_10](end_span)
-                        <input type="text" class="form-control" id="officerAddress">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">মোবাইল নাম্বার</label>
+                        <input type="text" class="form-control" id="officerPhone" value="01707-051645" required>
                     </div>
                 </div>
-
-                <!-- লগইন সিকিউরিটি সেটিংস -->
-                <div class="row bg-light p-3 rounded mb-3 border">
-                    <h5 class="text-secondary mb-3">লগইন সিকিউরিটি (ইউজারনেম ও পাসওয়ার্ড)</h5>
-                    <div class="col-md-6 mb-3">
-                        <label for="userUsername" class="form-label">ইউজারনেম</label>
-                        <input type="text" class="form-control" id="userUsername" required>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="userPassword" class="form-label">পাসওয়ার্ড</label>
-                        <input type="text" class="form-control" id="userPassword" required>
-                    </div>
-                </div>
-
                 <div class="mb-3">
-                    <label for="noticeBoard" class="form-label">নোটিশ বোর্ডের আপডেট</label>[span_11](start_span)[span_11](end_span)[span_12](start_span)[span_12](end_span)
-                    <textarea class="form-control" id="noticeBoard" rows="3" placeholder="জরুরি নোটিশ লিখুন"></textarea>
+                    <label class="form-label">এরিয়া বা ঠিকানা</label>
+                    <input type="text" class="form-control" id="officerAddress" value="ফাস্টল্যাব ইউনানী, আফুরিয়া, হেমায়েতপুর, পাবনা">
                 </div>
-
-                <button type="submit" class="btn btn-success w-100 py-2">🔄 ইউজারের ড্যাশবোর্ডে লাইভ আপডেট করুন</button>
+                <div class="mb-3">
+                    <label class="form-label">নোটিশ বোর্ডের আপডেট</label>
+                    <textarea class="form-control" id="noticeBoard" rows="3">আগামী ২০ তারিখের মধ্যে বকেয়া টাকা জমা দিও।</textarea>
+                </div>
+                <button type="submit" class="btn btn-success w-100">অফিসার প্রোফাইল লাইভ আপডেট করুন</button>
             </form>
         </div>
 
-        <!-- ২. নতুন সাপ্লায়ার যুক্ত করার ফর্ম -->
-        <div class="admin-panel-card">
+        <!-- ২. নতুন সাপ্লায়ার যুক্ত করার ফরম -->
+        <div class="panel-card">
             <form id="newSupplierForm">
-                <h4 class="mb-3 text-primary">নতুন সাপ্লায়ার যুক্ত করার ফরম</h4>[span_13](start_span)[span_13](end_span)
-
+                <h4 class="mb-3 text-success">নতুন সাপ্লায়ার যুক্ত করার ফরম</h4>
                 <div class="row">
                     <div class="col-md-2 mb-3">
-                        <label for="serialNumber" class="form-label">সিরিয়াল</label>[span_14](start_span)[span_14](end_span)[span_15](start_span)[span_15](end_span)
-                        <input type="text" class="form-control" id="serialNumber" placeholder="০১">
+                        <label class="form-label">সিরিয়াল নম্বর</label>
+                        <input type="text" class="form-control" placeholder="০১" required>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="supplierNameAddress" class="form-label">নাম ও ঠিকানা</label>[span_16](start_span)[span_16](end_span)[span_17](start_span)[span_17](end_span)
-                        <input type="text" class="form-control" id="supplierNameAddress" placeholder="নাম ও ঠিকানা">
+                        <label class="form-label">নাম ও ঠিকানা</label>
+                        <input type="text" class="form-control" placeholder="সাপ্লায়ারের নাম ও ঠিকানা" required>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="supplierPhone" class="form-label">মোবাইল নাম্বার</label>[span_18](start_span)[span_18](end_span)[span_19](start_span)[span_19](end_span)
-                        <input type="text" class="form-control" id="supplierPhone" placeholder="মোবাইল">
+                        <label class="form-label">মোবাইল নাম্বার</label>
+                        <input type="text" class="form-control" placeholder="মোবাইল নাম্বার" required>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="openingBalance" class="form-label">প্রারম্ভিক বকেয়া</label>[span_20](start_span)[span_20](end_span)[span_21](start_span)[span_21](end_span)
-                        <input type="number" class="form-control" id="openingBalance" placeholder="টাকা">
+                        <label class="form-label">প্রারম্ভিক বকেয়া ব্যালেন্স</label>
+                        <input type="number" class="form-control" placeholder="টাকার পরিমাণ" required>
                     </div>
                 </div>
-
-                <button type="submit" class="btn btn-primary w-100 py-2">➕ সাপ্লায়ার তালিকাভুক্ত করুন</button>
+                <button type="submit" class="btn btn-primary w-100">নতুন সাপ্লায়ার সংরক্ষণ করুন</button>
             </form>
+        </div>
+
+        <!-- ৩. সরবরাহকারীর তালিকা ও হিসাব টেবিল (অ্যাকশন বাটনসহ) -->
+        <div class="panel-card">
+            <h4 class="mb-3 text-success">সরবরাহকারীর তালিকা ও হিসাব বিবরণী</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-custom">
+                    <thead>
+                        <tr>
+                            <th>সিরিয়াল</th>
+                            <th>নাম ও ঠিকানা</th>
+                            <th>মোবাইল নাম্বার</th>
+                            <th>মোট জমা (Credit)</th>
+                            <th>মোট মাল ক্রয় (Debit)</th>
+                            <th>বর্তমান বকেয়া ব্যালেন্স</th>
+                            <th>অ্যাকশন বাটনসমূহ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>১</td>
+                            <td>সদরগর ট্রেডার্স, পাবনা</td>
+                            <td>০১৮০৭-৫৬৪৪৩৪</td>
+                            <td>৬০০</td>
+                            <td>৮০০</td>
+                            <td class="fw-bold text-danger">২০০</td>
+                            <td>
+                                <button class="btn btn-sm btn-info mb-1">প্রোফাইল</button>
+                                <button class="btn btn-sm btn-success mb-1">জমা এন্ট্রি</button>
+                                <button class="btn btn-sm btn-warning mb-1">এডিট</button>
+                                <button class="btn btn-sm btn-secondary mb-1">স্টেটমেন্ট</button>
+                                <button class="btn btn-sm btn-danger mb-1">ডিলিট</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>২</td>
+                            <td>রহিম স্টোর, চাটমোহর</td>
+                            <td>০১৭২২-৩৪৪৭৯৮</td>
+                            <td>৩০০</td>
+                            <td>৫০০</td>
+                            <td class="fw-bold text-danger">২০০</td>
+                            <td>
+                                <button class="btn btn-sm btn-info mb-1">প্রোফাইল</button>
+                                <button class="btn btn-sm btn-success mb-1">জমা এন্ট্রি</button>
+                                <button class="btn btn-sm btn-warning mb-1">এডিট</button>
+                                <button class="btn btn-sm btn-secondary mb-1">স্টেটমেন্ট</button>
+                                <button class="btn btn-sm btn-danger mb-1">ডিলিট</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ৪. পার্টির লেনদেনের বিবরণ টেবিল -->
+        <div class="panel-card">
+            <h4 class="mb-3 text-success">পার্টির লেনদেনের বিবরণ ও ব্যালেন্স হিসাব</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-custom">
+                    <thead>
+                        <tr>
+                            <th>তারিখ</th>
+                            <th>বিবরণ</th>
+                            <th>জমা</th>
+                            <th>মাল ক্রয়</th>
+                            <th>Dr/Cr</th>
+                            <th>অবশিষ্ট ব্যালেন্স</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>১৫/০৫/২০২৬</td>
+                            <td>৬০০</td>
+                            <td>২০০০</td>
+                            <td>০০০</td>
+                            <td>Cr</td>
+                            <td class="text-danger">-৫০০</td>
+                        </tr>
+                        <tr>
+                            <td>১৮/০৫/২০২৬</td>
+                            <td>২০০</td>
+                            <td>১০০০</td>
+                            <td>৯০০</td>
+                            <td>Dr</td>
+                            <td class="text-danger">-১১০০</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
     </div>
 
-    <!-- ফায়ারবেজ এবং লাইভ সিঙ্ক স্ক্রিপ্ট (আপনার প্রজেক্টের ফায়ারবেজ কনফিগারেশন এখানে যুক্ত করুন) -->
-    <script type="module">
-        // আপনার ফায়ারবেজ প্রজেক্টের ইনিশিয়ালাইজেশন কোড এখানে যুক্ত হবে
-        document.getElementById('supplierEditForm').addEventListener('submit', function(e) {
+    <!-- জাভাস্ক্রিপ্ট -->
+    <script>
+        document.getElementById('officerProfileForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            // এখানে ডাটাবেজে ডাটা সেভ করার কোড বসবে
-            alert('সফলভাবে লাইভ আপডেট করা হয়েছে!');
+            alert('অফিসারের প্রোফাইল ও নোটিশ সফলভাবে লাইভ আপডেট করা হয়েছে!');
+        });
+        document.getElementById('newSupplierForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('নতুন সাপ্লায়ার সফলভাবে তালিকাভুক্ত করা হয়েছে!');
         });
     </script>
 
