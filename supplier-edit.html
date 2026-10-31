@@ -3,244 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সরবরাহ অফিসার ও সাপ্লায়ার ম্যানেজমেন্ট - ডাইনামিক এডিট প্যানেল</title>
-    <!-- বুটস্ট্রাপ সিডিএন (Bootstrap 5 CSS) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f4f6f9;
-            font-family: 'SolaimanLipi', sans-serif;
-        }
-        .panel-card {
-            background: #ffffff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
-            margin-bottom: 25px;
-        }
-        .table-custom th {
-            background-color: #198754;
-            color: white;
-            text-align: center;
-        }
-        .table-custom td {
-            text-align: center;
-            vertical-align: middle;
-        }
-        .action-form-section {
-            display: none;
-            background: #f8f9fa;
-            border: 2px dashed #198754;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container my-4">
-        <!-- হেডার অংশ -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>🔐 সরবরাহ অফিসার ও সাপ্লায়ার ডাইনামিক কন্ট্রোল প্যানেল</h2>
-            <a href="admin-dashboard.html" class="btn btn-secondary">← এডমিন ড্যাশবোর্ডে ফিরে যান</a>
-        </div>
-
-        <!-- ১. সরবরাহ অফিসার প্রোফাইল এডিট সেকশন -->
-        <div class="panel-card">
-            <h4 class="mb-3 text-success">অফিসার প্রোফাইল ও নোটিশ বোর্ড নিয়ন্ত্রণ</h4>
-            <button class="btn btn-outline-success mb-3" onclick="toggleSection('officerEditBox')">⚙️ অফিসার প্রোফাইল এডিট করুন</button>
-            
-            <div id="officerEditBox" class="action-form-section">
-                <form id="officerProfileForm">
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">পদবী</label>
-                            <input type="text" class="form-control" id="officerDesignation" value="সরবরাহ অফিসার">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">অফিসারের নাম</label>
-                            <input type="text" class="form-control" id="officerName" value="মোঃ আবদুল রহিম">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">মোবাইল নাম্বার</label>
-                            <input type="text" class="form-control" id="officerPhone" value="01707-051645">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">এরিয়া বা ঠিকানা</label>
-                        <input type="text" class="form-control" id="officerAddress" value="ফাস্টল্যাব ইউনানী, আফুরিয়া, হেমায়েতপুর, পাবনা">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">নোটিশ বোর্ডের আপডেট</label>
-                        <textarea class="form-control" id="noticeBoard" rows="3">আগামী ২০ তারিখের মধ্যে বকেয়া টাকা জমা দিও।</textarea>
-                    </div>
-                    <button type="submit" class="btn btn-success">পরিবর্তন সেভ করুন</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- ২. নতুন সাপ্লায়ার যুক্ত করার ফরম -->
-        <div class="panel-card">
-            <h4 class="mb-3 text-success">নতুন সাপ্লায়ার যুক্ত করার ফরম</h4>
-            <form id="newSupplierForm">
-                <div class="row">
-                    <div class="col-md-2 mb-3">
-                        <label class="form-label">সিরিয়াল</label>
-                        <input type="text" class="form-control" placeholder="০১" required>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label">নাম ও ঠিকানা</label>
-                        <input type="text" class="form-control" placeholder="সাপ্লায়ারের নাম ও ঠিকানা" required>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label">মোবাইল নাম্বার</label>
-                        <input type="text" class="form-control" placeholder="মোবাইল নাম্বার" required>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label">প্রারম্ভিক বকেয়া</label>
-                        <input type="number" class="form-control" placeholder="টাকার পরিমাণ" required>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">নতুন সাপ্লায়ার সংরক্ষণ করুন</button>
-            </form>
-        </div>
-
-        <!-- ৩. সরবরাহকারীর তালিকা ও হিসাব টেবিল (বাটনভিত্তিক ডাইনামিক সেকশনসহ) -->
-        <div class="panel-card">
-            <h4 class="mb-3 text-success">সরবরাহকারীর তালিকা ও অ্যাকশন কন্ট্রোল</h4>
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-custom">
-                    <thead>
-                        <tr>
-                            <th>সিরিয়াল</th>
-                            <th>নাম ও ঠিকানা</th>
-                            <th>মোবাইল নাম্বার</th>
-                            <th>মোট জমা (Credit)</th>
-                            <th>মোট মাল ক্রয় (Debit)</th>
-                            <th>বর্তমান বকেয়া ব্যালেন্স</th>
-                            <th>অ্যাকশন বাটনসমূহ</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>১</td>
-                            <td>সদরগর ট্রেডার্স, পাবনা</td>
-                            <td>০১৮০৭-৫৬৪৪৩৪</td>
-                            <td>৬০০</td>
-                            <td>৮০০</td>
-                            <td class="fw-bold text-danger">২০০</td>
-                            <td>
-                                <button class="btn btn-sm btn-info mb-1" onclick="openAction('profile', 1)">প্রোফাইল</button>
-                                <button class="btn btn-sm btn-success mb-1" onclick="openAction('deposit', 1)">জমা এন্ট্রি</button>
-                                <button class="btn btn-sm btn-warning mb-1" onclick="openAction('edit', 1)">এডিট</button>
-                                <button class="btn btn-sm btn-secondary mb-1" onclick="openAction('statement', 1)">স্টেটমেন্ট</button>
-                                <button class="btn btn-sm btn-danger mb-1" onclick="deleteSupplier(1)">ডিলিট</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- ডাইনামিক হিডেন অ্যাকশন ফর্ম বক্স (কোনো বাটনে ক্লিক করলে এটি ওপেন হবে) -->
-            <div id="dynamicActionContainer" class="action-form-section">
-                <h5 id="actionTitle" class="text-primary mb-3"></h5>
-                <div id="actionFormContent">
-                    <!-- জাভাস্ক্রিপ্ট দিয়ে এখানে নির্দিষ্ট ফর্ম লোড হবে -->
-                </div>
-                <button class="btn btn-sm btn-dark mt-3" onclick="closeActionBox()">বন্ধ করুন</button>
-            </div>
-        </div>
-
-        <!-- ৪. পার্টির লেনদেনের বিবরণ টেবিল -->
-        <div class="panel-card">
-            <h4 class="mb-3 text-success">পার্টির লেনদেনের বিবরণ ও ব্যালেন্স হিসাব</h4>
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-custom">
-                    <thead>
-                        <tr>
-                            <th>তারিখ</th>
-                            <th>বিবরণ</th>
-                            <th>জমা</th>
-                            <th>মাল ক্রয়</th>
-                            <th>Dr/Cr</th>
-                            <th>অবশিষ্ট ব্যালেন্স</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>১৫/০৫/২০২৬</td>
-                            <td>৬০০</td>
-                            <td>২০০০</td>
-                            <td>০০০</td>
-                            <td>Cr</td>
-                            <td class="text-danger">-৫০০</td>
-                        </tr>
-                        <tr>
-                            <td>১৮/০৫/২০২৬</td>
-                            <td>২০০</td>
-                            <td>১০০০</td>
-                            <td>৯০০</td>
-                            <td>Dr</td>
-                            <td class="text-danger">-১১০০</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- জাভাস্ক্রিপ্ট লজিক -->
+    <title>সরবরাহ অফিসার ও সরবরাহ পার্টি ম্যানেজমেন্ট প্যানেল</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
-        // টগল সেকশন ফাংশন
-        function toggleSection(id) {
-            let elem = document.getElementById(id);
-            if (elem.style.display === "block") {
-                elem.style.display = "none";
-            } else {
-                elem.style.display = "block";
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forest: '#1b4d3e',
+                    }
+                }
             }
         }
-
-        // বাটন অনুযায়ী ডাইনামিক ফর্ম ওপেন করার ফাংশন
-        function openAction(type, id) {
-            let container = document.getElementById('dynamicActionContainer');
-            let title = document.getElementById('actionTitle');
-            let content = document.getElementById('actionFormContent');
-            
-            container.style.display = "block";
-
-            if (type === 'profile') {
-                title.innerText = "👤 সাপ্লায়ারের বিস্তারিত প্রোফাইল তথ্য";
-                content.innerHTML = `<p><strong>নাম:</strong> সদরগর ট্রেডার্স, পাবনা</p><p><strong>মোবাইল:</strong> ০১৮০৭-৫৬৪৪৩৪</p><p>স্ট্যাটাস: সক্রিয়</p>`;
-            } else if (type === 'deposit') {
-                title.innerText = "💰 নতুন জমা এন্ট্রি ফরম";
-                content.innerHTML = `<input type='number' class='form-control mb-2' placeholder='জমার পরিমাণ লিখুন'><input type='text' class='form-control mb-2' placeholder='বিবরণ'><button class='btn btn-success btn-sm'>জমা সেভ করুন</button>`;
-            } else if (type === 'edit') {
-                title.innerText = "✏️ সাপ্লায়ার তথ্য সংশোধন (Edit Form)";
-                content.innerHTML = `<input type='text' class='form-control mb-2' value='সদরগর ট্রেডার্স, পাবনা'><input type='text' class='form-control mb-2' value='০১৮০৭-৫৬৪৪৩৪'><button class='btn btn-warning btn-sm'>সংশোধন সেভ করুন</button>`;
-            } else if (type === 'statement') {
-                title.innerText = "📊 সাপ্লায়ার স্টেটমেন্ট ও লেনদেন বিবরণী";
-                content.innerHTML = `<p>এই সাপ্লায়ারের সমস্ত পেমেন্ট ও ক্রয়ের হিসাব এখানে তালিকা আকারে দেখাবে।</p>`;
-            }
-        }
-
-        function closeActionBox() {
-            document.getElementById('dynamicActionContainer').style.display = "none";
-        }
-
-        function deleteSupplier(id) {
-            if(confirm('আপনি কি নিশ্চিতভাবে এই সাপ্লায়ারকে ডিলিট করতে চান?')) {
-                alert('সাপ্লায়ার সফলভাবে ডিলিট করা হয়েছে!');
-            }
-        }
-
-        document.getElementById('officerProfileForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('অফিসারের প্রোফাইল সফলভাবে আপডেট করা হয়েছে!');
-        });
     </script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- হেডার বা নবার -->
+    <header class="bg-forest text-white p-4 shadow-md flex justify-between items-center">
+        <h1 class="text-xl font-bold flex items-center gap-2">
+            ⚙️ সরবরাহ অফিসার ও সরবরাহ পার্টি ম্যানেজমেন্ট প্যানেল[span_0](start_span)[span_0](end_span)
+        </h1>
+        <a href="admindashboard.html" class="bg-amber-400 text-black px-4 py-2 rounded-lg font-bold hover:bg-amber-500 transition">
+            ড্যাশবোর্ড[span_1](start_span)[span_1](end_span)
+        </a>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
+
+        <!-- ১. অফিসার প্রোফাইল নোটিশ বোর্ড এডিট -->
+        <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-forest">
+            <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
+                📁 অফিসার প্রোফাইল নোটিশ বোর্ড এডিট[span_2](start_span)[span_2](end_span)
+            </h2>
+            <div class="space-y-3">
+                <div class="border p-3 rounded-lg bg-gray-50 text-gray-500">১.[span_3](start_span)[span_3](end_span)</div>
+                <div class="border p-3 rounded-lg bg-gray-50 text-gray-500">২.[span_4](start_span)[span_4](end_span)</div>
+                <div class="border p-3 rounded-lg bg-gray-50 text-gray-500">৩.[span_5](start_span)[span_5](end_span)</div>
+            </div>
+        </section>
+
+        <!-- ২. নতুন সরবরাহ অফিসার সংরক্ষণ করুন -->
+        <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-forest">
+            <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
+                ➕ নতুন সরবরাহ অফিসার সংরক্ষণ করুন[span_6](start_span)[span_6](end_span)
+            </h2>
+            <p class="text-sm text-gray-700 mb-4 bg-emerald-50 p-3 rounded border border-emerald-200">
+                ক্রমিক নং: নং লিখুন, অফিসার নাম: নাম লিখুন, মোবাইল: নাম্বার লিখুন, কর্মরত এরিয়া: এরিয়ার নাম লিখুন, ইউজার আইডি: ইউজার আইডি লিখুন, পাসওয়ার্ড: একটি ছয় ডিজিটের পাসওয়ার্ড লিখুন[span_7](start_span)[span_7](end_span)
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <input type="text" placeholder="ক্রমিক নং" class="border p-2 rounded-lg">
+                <input type="text" placeholder="অফিসারের নাম" class="border p-2 rounded-lg">
+                <input type="text" placeholder="মোবাইল নাম্বার" class="border p-2 rounded-lg">
+                <input type="text" placeholder="কর্মরত এরিয়া" class="border p-2 rounded-lg">
+                <input type="text" placeholder="ইউজার আইডি" class="border p-2 rounded-lg">
+                <input type="password" placeholder="পাসওয়ার্ড (৬ ডিজিট)" class="border p-2 rounded-lg">
+            </div>
+            <button class="bg-emerald-600 text-white px-5 py-2 rounded font-bold hover:bg-emerald-700">
+                সংরক্ষণ[span_8](start_span)[span_8](end_span)
+            </button>
+        </section>
+
+        <!-- ৩. সরবরাহ অফিসার লিস্ট -->
+        <section class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
+                🟩 সরবরাহ অফিসার লিস্ট[span_9](start_span)[span_9](end_span)
+            </h2>
+            <div class="bg-gray-50 p-4 rounded-lg border text-sm space-y-1 text-gray-800">
+                <p><strong>ক্রমিক নং:</strong> ০১[span_10](start_span)[span_10](end_span)</p>
+                <p><strong>অফিসারের নাম:</strong> মুজাহিদ সরদার[span_11](start_span)[span_11](end_span)</p>
+                <p><strong>মোবাইল নাম্বার:</strong> ০১৭৪৮৪২১৫৬৬৪[span_12](start_span)[span_12](end_span)</p>
+                <p><strong>কর্মরত এরিয়া:</strong> পাবনা ব্রাঞ্চ[span_13](start_span)[span_13](end_span)</p>
+                <p><strong>ইউজার আইডি:</strong> muzahid-01[span_14](start_span)[span_14](end_span)</p>
+                <p><strong>পাসওয়ার্ড:</strong> M1234#[span_15](start_span)[span_15](end_span)</p>
+                <p class="text-emerald-700 font-semibold mt-2">একশন বাটন-এডিট ও ডিলিট[span_16](start_span)[span_16](end_span)</p>
+            </div>
+            <button class="mt-4 bg-emerald-600 text-white px-5 py-2 rounded font-bold hover:bg-emerald-700">
+                সংরক্ষণ[span_17](start_span)[span_17](end_span)
+            </button>
+        </section>
+
+        <!-- ৪. নতুন সরবরাহ পার্টি সংরক্ষণ করুন -->
+        <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-forest">
+            <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
+                ➕ নতুন সরবরাহ পার্টি সংরক্ষণ করুন[span_18](start_span)[span_18](end_span)
+            </h2>
+            <p class="text-sm text-gray-700 mb-4 bg-emerald-50 p-3 rounded border border-emerald-200">
+                ক্রমিক নং: ক্রমিক নং লিখুন, পার্টির নাম ও ঠিকানা: নাম ঠিকানা লিখুন, পার্টির মোবাইল নাম্বার: নাম্বার লিখুন, পূর্বের বকেয়া ব্যালেন্স, পূর্বের পাওনা টাকা[span_19](start_span)[span_19](end_span)
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <input type="text" placeholder="ক্রমিক নং" class="border p-2 rounded-lg">
+                <input type="text" placeholder="পার্টির নাম ও ঠিকানা" class="border p-2 rounded-lg">
+                <input type="text" placeholder="পার্টির মোবাইল নাম্বার" class="border p-2 rounded-lg">
+                <input type="number" placeholder="পূর্বের বকেয়া ব্যালেন্স" class="border p-2 rounded-lg">
+                <input type="number" placeholder="পূর্বের পাওনা টাকা" class="border p-2 rounded-lg">
+            </div>
+            <button class="bg-emerald-600 text-white px-5 py-2 rounded font-bold hover:bg-emerald-700">
+                সংরক্ষণ[span_20](start_span)[span_20](end_span)
+            </button>
+        </section>
+
+        <!-- ৫. সরবরাহ পার্টির লিস্ট -->
+        <section class="bg-white p-6 rounded-xl shadow-md">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-base font-bold text-forest flex items-center gap-2">
+                    🟩 সরবরাহ পার্টির লিস্ট[span_21](start_span)[span_21](end_span)
+                </h2>
+                <button class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-600">
+                    প্রিন্ট বাটন[span_22](start_span)[span_22](end_span)
+                </button>
+            </div>
+            <p class="text-xs text-gray-600 mb-3">ক্রমিক নং+পার্টির নাম ও ঠিকানা+মোবাইল+মোট জমা+মাল ক্রয়+বকেয়া+একশন[span_23](start_span)[span_23](end_span)</p>
+            <div class="space-y-3 text-sm">
+                <div class="p-3 bg-gray-50 border rounded flex flex-wrap justify-between items-center">
+                    <span>০১ + মুজাহিদ স্টোর, পাবনা + ০১৩৪......... + ৫০০ + ১০০০ + ৫০০[span_24](start_span)[span_24](end_span)</span>
+                    <span class="text-emerald-700 font-bold">জমা এন্ট্রি + এডিট + স্টেটমেন্ট + ডিলিট[span_25](start_span)[span_25](end_span)</span>
+                </div>
+                <div class="p-3 bg-gray-50 border rounded flex flex-wrap justify-between items-center">
+                    <span>০২ + মুজাহিদ স্টোর, পাবনা + ০১৩৪......... + ৫০০ + ১০০০ + ৫০০[span_26](start_span)[span_26](end_span)</span>
+                    <span class="text-emerald-700 font-bold">জমা এন্ট্রি + এডিট + স্টেটমেন্ট + ডিলিট[span_27](start_span)[span_27](end_span)</span>
+                </div>
+            </div>
+            <!-- মোট লেনদেন সারাংশ -->
+            <div class="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg flex justify-between font-bold text-gray-800">
+                <span>মোট লেনদেন=১০০০ + ২০০০[span_28](start_span)[span_28](end_span)</span>
+                <span class="text-emerald-700">+১০০০[span_29](start_span)[span_29](end_span)</span>
+            </div>
+        </section>
+
+        <!-- ৬. পার্টি স্টেটমেন্ট (হিডেন ফরম থাকবে) -->
+        <section class="bg-white p-6 rounded-xl shadow-md border">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-base font-bold text-forest flex items-center gap-2">
+                    📊 পার্টি স্টেটমেন্ট-(হিডেন ফরম থাকবে)[span_30](start_span)[span_30](end_span)
+                </h2>
+                <button class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-600">
+                    প্রিন্ট বাটন[span_31](start_span)[span_31](end_span)
+                </button>
+            </div>
+            <p class="text-xs text-gray-600 mb-2">তারিখ+বিবরণ+জমা+মাল ক্রয়+Dr/Cr+অবশিষ্ট+একশন[span_32](start_span)[span_32](end_span)</p>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="p-2 border">তারিখ[span_33](start_span)[span_33](end_span)</th>
+                            <th class="p-2 border">বিবরণ[span_34](start_span)[span_34](end_span)</th>
+                            <th class="p-2 border">জমা[span_35](start_span)[span_35](end_span)</th>
+                            <th class="p-2 border">মাল ক্রয়[span_36](start_span)[span_36](end_span)</th>
+                            <th class="p-2 border">Dr/Cr[span_37](start_span)[span_37](end_span)</th>
+                            <th class="p-2 border">অবশিষ্ট[span_38](start_span)[span_38](end_span)</th>
+                            <th class="p-2 border">একশন[span_39](start_span)[span_39](end_span)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="p-2 border">১২/১০/২৬[span_40](start_span)[span_40](end_span)</td>
+                            <td class="p-2 border">ক্যাশ[span_41](start_span)[span_41](end_span)</td>
+                            <td class="p-2 border">+৫০০[span_42](start_span)[span_42](end_span)</td>
+                            <td class="p-2 border">+০০[span_43](start_span)[span_43](end_span)</td>
+                            <td class="p-2 border">Cr[span_44](start_span)[span_44](end_span)</td>
+                            <td class="p-2 border">-৫০০চি[span_45](start_span)[span_45](end_span)</td>
+                            <td class="p-2 border">এডিট+ডিলিট[span_46](start_span)[span_46](end_span)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ৭. পার্টি জমা এন্ট্রি ফরম-(হিডেন ফরম থাকবে) -->
+        <section class="bg-white p-6 rounded-xl shadow-md border-2 border-emerald-600">
+            <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
+                ✍️ পার্টি জমা এন্ট্রি ফরম-(হিডেন ফরম থাকবে)[span_47](start_span)[span_47](end_span)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 text-sm">
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">তারিখ:[span_48](start_span)[span_48](end_span)</label>
+                    <input type="date" class="w-full border p-2 rounded-lg">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">বিবরণ:[span_49](start_span)[span_49](end_span)</label>
+                    <input type="text" placeholder="বিবরণ লিখুন" class="w-full border p-2 rounded-lg">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">জমা:[span_50](start_span)[span_50](end_span)</label>
+                    <input type="number" placeholder="জমা টাকার পরিমাণ" class="w-full border p-2 rounded-lg">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">মাল ক্রয়:[span_51](start_span)[span_51](end_span)</label>
+                    <input type="number" placeholder="মাল ক্রয়ের পরিমাণ" class="w-full border p-2 rounded-lg">
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button class="bg-emerald-600 text-white px-6 py-2 rounded font-bold hover:bg-emerald-700">
+                    জমা দিন[span_52](start_span)[span_52](end_span)
+                </button>
+                <button class="bg-amber-500 text-white px-6 py-2 rounded font-bold hover:bg-amber-600">
+                    বাতিল[span_53](start_span)[span_53](end_span)
+                </button>
+            </div>
+        </section>
+
+    </main>
 
 </body>
 </html>
