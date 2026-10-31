@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>এডমিন প্যানেল - সরবরাহ অফিসার এডিট ও নিয়ন্ত্রণ</title>
+    <title>সরবরাহ অফিসার এডিট ও লাইভ কন্ট্রোল প্যানেল</title>
     <!-- বুটস্ট্রাপ সিডিএন (Bootstrap 5 CSS) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -18,9 +18,6 @@
             box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
             margin-bottom: 25px;
         }
-        h2, h4 {
-            color: #2c3e50;
-        }
     </style>
 </head>
 <body>
@@ -28,136 +25,96 @@
     <div class="container my-4">
         <!-- হেডার অংশ -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>🔐 এডমিন কন্ট্রোল প্যানেল: সরবরাহ অফিসার ও সাপ্লায়ার ম্যানেজমেন্ট</h2>
+            <h2>🔐 সরবরাহ অফিসার লাইভ এডিট প্যানেল</h2>
             <a href="admin-dashboard.html" class="btn btn-secondary">← এডমিন ড্যাশবোর্ডে ফিরে যান</a>
         </div>
 
-        <!-- ১. অফিসার প্রোফাইল ও লগইন ক্রেডেনশিয়াল এডিট বক্সসমূহ -->
+        <!-- ১. অফিসার প্রোফাইল ও নোটিশ বোর্ড এডিট ফর্ম -->
         <div class="admin-panel-card">
-            <form id="adminSupplierProfileForm">
-                <h4 class="mb-3 text-primary">অফিসার প্রোফাইল ও ইউজারনেম-পাসওয়ার্ড এডিট বক্সসমূহ</h4>
+            <form id="supplierEditForm">
+                <h4 class="mb-3 text-primary">অফিসার প্রোফাইল ও নোটিশ এডিট বক্সসমূহ</h4>[span_2](start_span)[span_2](end_span)
                 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="officerDesignation" class="form-label">পদবী এডিট বক্স</label>
-                        <input type="text" class="form-control" id="officerDesignation" placeholder="যেমন: সরবরাহ অফিসার" required>
+                        <label for="officerDesignation" class="form-label">পদবী (যেমন: সরবরাহ অফিসার)</label>[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)
+                        <input type="text" class="form-control" id="officerDesignation" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="officerName" class="form-label">নামের এডিট বক্স</label>
-                        <input type="text" class="form-control" id="officerName" placeholder="অফিসারের নাম লিখুন" required>
+                        <label for="officerName" class="form-label">অফিসারের নাম</label>[span_5](start_span)[span_5](end_span)[span_6](start_span)[span_6](end_span)
+                        <input type="text" class="form-control" id="officerName" required>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="officerPhone" class="form-label">মোবাইল নাম্বারে এডিট বক্স</label>
-                        <input type="text" class="form-control" id="officerPhone" placeholder="মোবাইল নাম্বার দিন" required>
+                        <label for="officerPhone" class="form-label">মোবাইল নাম্বার</label>[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)
+                        <input type="text" class="form-control" id="officerPhone" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="officerAddress" class="form-label">এরিয়া বা ঠিকানা এডিট বক্স</label>
-                        <input type="text" class="form-control" id="officerAddress" placeholder="কাজের এরিয়া বা ঠিকানা">
+                        <label for="officerAddress" class="form-label">ঠিকানা বা এরিয়া</label>[span_9](start_span)[span_9](end_span)[span_10](start_span)[span_10](end_span)
+                        <input type="text" class="form-control" id="officerAddress">
                     </div>
                 </div>
 
-                <!-- ইউজারনেম ও পাসওয়ার্ড পরিবর্তনের বিশেষ সিকিউরিটি বক্স -->
+                <!-- লগইন সিকিউরিটি সেটিংস -->
                 <div class="row bg-light p-3 rounded mb-3 border">
-                    <h5 class="text-secondary mb-3">উইজার্ড লগইন সিকিউরিটি (ইউজারনেম ও পাসওয়ার্ড)</h5>
+                    <h5 class="text-secondary mb-3">লগইন সিকিউরিটি (ইউজারনেম ও পাসওয়ার্ড)</h5>
                     <div class="col-md-6 mb-3">
-                        <label for="userUsername" class="form-label">ইউজারনেম (Username)</label>
-                        <input type="text" class="form-control" id="userUsername" placeholder="ইউজারের লগইন আইডি" required>
+                        <label for="userUsername" class="form-label">ইউজারনেম</label>
+                        <input type="text" class="form-control" id="userUsername" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="userPassword" class="form-label">পাসওয়ার্ড (Password)</label>
-                        <input type="text" class="form-control" id="userPassword" placeholder="লগইন পাসওয়ার্ড সেট করুন" required>
+                        <label for="userPassword" class="form-label">পাসওয়ার্ড</label>
+                        <input type="text" class="form-control" id="userPassword" required>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="noticeBoard" class="form-label">নোটিশ বোর্ডের এডিট বক্স</label>
-                    <textarea class="form-control" id="noticeBoard" rows="3" placeholder="ইউজার ড্যাশবোর্ডে প্রদর্শনের জন্য জরুরি নোটিশ লিখুন"></textarea>
+                    <label for="noticeBoard" class="form-label">নোটিশ বোর্ডের আপডেট</label>[span_11](start_span)[span_11](end_span)[span_12](start_span)[span_12](end_span)
+                    <textarea class="form-control" id="noticeBoard" rows="3" placeholder="জরুরি নোটিশ লিখুন"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-success w-100 py-2">🔄 ইউজারের লাইভ ডাটা আপডেট করুন</button>
+                <button type="submit" class="btn btn-success w-100 py-2">🔄 ইউজারের ড্যাশবোর্ডে লাইভ আপডেট করুন</button>
             </form>
         </div>
 
         <!-- ২. নতুন সাপ্লায়ার যুক্ত করার ফর্ম -->
         <div class="admin-panel-card">
-            <form id="adminNewSupplierForm">
-                <h4 class="mb-3 text-primary">নতুন সাপ্লায়ার যুক্ত করার ফরম</h4>
+            <form id="newSupplierForm">
+                <h4 class="mb-3 text-primary">নতুন সাপ্লায়ার যুক্ত করার ফরম</h4>[span_13](start_span)[span_13](end_span)
 
                 <div class="row">
                     <div class="col-md-2 mb-3">
-                        <label for="serialNumber" class="form-label">সিরিয়াল নম্বর</label>
+                        <label for="serialNumber" class="form-label">সিরিয়াল</label>[span_14](start_span)[span_14](end_span)[span_15](start_span)[span_15](end_span)
                         <input type="text" class="form-control" id="serialNumber" placeholder="০১">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="supplierNameAddress" class="form-label">নাম ও ঠিকানা</label>
-                        <input type="text" class="form-control" id="supplierNameAddress" placeholder="সাপ্লায়ারের নাম ও ঠিকানা">
+                        <label for="supplierNameAddress" class="form-label">নাম ও ঠিকানা</label>[span_16](start_span)[span_16](end_span)[span_17](start_span)[span_17](end_span)
+                        <input type="text" class="form-control" id="supplierNameAddress" placeholder="নাম ও ঠিকানা">
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="supplierPhone" class="form-label">মোবাইল নাম্বার</label>
-                        <input type="text" class="form-control" id="supplierPhone" placeholder="মোবাইল নাম্বার">
+                        <label for="supplierPhone" class="form-label">মোবাইল নাম্বার</label>[span_18](start_span)[span_18](end_span)[span_19](start_span)[span_19](end_span)
+                        <input type="text" class="form-control" id="supplierPhone" placeholder="মোবাইল">
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="openingBalance" class="form-label">বর্তমান বকেয়া (প্রারম্ভিক)</label>
-                        <input type="number" class="form-control" id="openingBalance" placeholder="টাকার পরিমাণ">
+                        <label for="openingBalance" class="form-label">প্রারম্ভিক বকেয়া</label>[span_20](start_span)[span_20](end_span)[span_21](start_span)[span_21](end_span)
+                        <input type="number" class="form-control" id="openingBalance" placeholder="টাকা">
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100 py-2">➕ নতুন সাপ্লায়ার ডাটাবেজে যুক্ত করুন</button>
+                <button type="submit" class="btn btn-primary w-100 py-2">➕ সাপ্লায়ার তালিকাভুক্ত করুন</button>
             </form>
-        </div>
-
-        <!-- ৩. সাপ্লায়ারের লিস্ট ও টেবিল কলামসমূহ (ডেবিট-ক্রেডিট ও ব্যালেন্স হিসাব সহ) -->
-        <div class="admin-panel-card">
-            <h4 class="mb-3 text-primary">সাপ্লায়ারের লিস্ট ও হিসাব বিবরণী (ম্যানেজমেন্ট টেবিল)</h4>
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped align-middle text-center">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>সিরিয়াল নম্বর</th>
-                            <th>নাম ও ঠিকানা</th>
-                            <th>মোবাইল নাম্বার</th>
-                            <th>মোট জমা (Total Credit)</th>
-                            <th>মোট মাল ক্রয় (Total Debit)</th>
-                            <th>বর্তমান বকেয়া (ব্যালেন্স)</th>
-                            <th>অ্যাকশন বাটনসমূহ</th>
-                        </tr>
-                    </thead>
-                    <tbody id="adminSupplierTableBody">
-                        <tr>
-                            <td>০১</td>
-                            <td>মেসার্স ট্রেডার্স, পাবনা</td>
-                            <td>০১৭০০-০০০০০০</td>
-                            <td class="text-success">৫,০০০ ৳</td>
-                            <td class="text-danger">১২,০০০ ৳</td>
-                            <td class="fw-bold text-primary">৭,০০০ ৳</td>
-                            <td>
-                                <button class="btn btn-sm btn-info mb-1" title="প্রোফাইল দেখার বাটন">প্রোফাইল</button>
-                                <button class="btn btn-sm btn-success mb-1" title="জমা এন্ট্রি বাটন">জমা এন্ট্রি</button>
-                                <button class="btn btn-sm btn-warning mb-1" title="এডিট বাটন">এডিট</button>
-                                <button class="btn btn-sm btn-secondary mb-1" title="স্টেটমেন্ট দেখার বাটন">স্টেটমেন্ট</button>
-                                <button class="btn btn-sm btn-danger mb-1" title="ডিলিট বাটন">ডিলিট</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
 
     </div>
 
-    <!-- জাভাস্ক্রিপ্ট স্ক্রিপ্ট -->
-    <script>
-        document.getElementById('adminSupplierProfileForm').addEventListener('submit', function(e) {
+    <!-- ফায়ারবেজ এবং লাইভ সিঙ্ক স্ক্রিপ্ট (আপনার প্রজেক্টের ফায়ারবেজ কনফিগারেশন এখানে যুক্ত করুন) -->
+    <script type="module">
+        // আপনার ফায়ারবেজ প্রজেক্টের ইনিশিয়ালাইজেশন কোড এখানে যুক্ত হবে
+        document.getElementById('supplierEditForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('সফলভাবে আপডেট করা হয়েছে! এটি ইউজারের লাইভ ড্যাশবোর্ডে প্রতিফলিত হবে।');
-        });
-
-        document.getElementById('adminNewSupplierForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('নতুন সাপ্লায়ার সফলভাবে সংরক্ষণ করা হয়েছে!');
+            // এখানে ডাটাবেজে ডাটা সেভ করার কোড বসবে
+            alert('সফলভাবে লাইভ আপডেট করা হয়েছে!');
         });
     </script>
 
