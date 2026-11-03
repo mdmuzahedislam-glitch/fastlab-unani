@@ -347,8 +347,7 @@
             db.ref('supply_officers/' + key).remove();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        // সরবরাহ পার্টি সংরক্ষণ (প্রারম্ভিক বকেয়া বা পাওনা সহ)
+                // সরবরাহ পার্টি সংরক্ষণ (প্রারম্ভিক বকেয়া বা পাওনা সহ)
         function saveSupplyParty() {
             const serial = document.getElementById('party-serial').value;
             const name = document.getElementById('party-name').value;
@@ -364,17 +363,7 @@
             const partyData = { serial, name, phone, due, advance };
 
             db.ref('supply_parties').push(partyData)
-                .then((ref) => {
-                    if (due > 0 || advance > 0) {
-                        const initialTrans = {
-                            date: new Date().toISOString().split('T')[0],
-                            desc: "প্রারম্ভিক ব্যালেন্স (পূর্বের বকেয়া/পাওনা)",
-                            amount: advance, // পাওনা (Cr)
-                            purchase: due  // বকেয়া (Dr)
-                        };
-                        db.ref(`supply_transactions/${ref.key}`).push(initialTrans);
-                    }
-
+                .then(() => {
                     alert("পার্টি সফলভাবে সংরক্ষিত হয়েছে!");
                     document.getElementById('party-serial').value = '';
                     document.getElementById('party-name').value = '';
@@ -385,8 +374,7 @@
                 })
                 .catch(err => alert("ত্রুটি: " + err.message));
         }
-
-        // সরবরাহ পার্টির লিস্ট এবং সর্বমোট হিসাব
+                // সরবরাহ পার্টির লিস্ট এবং সর্বমোট হিসাব
         function loadSupplyParties() {
             const tbody = document.getElementById('supply-party-list');
             db.ref('supply_parties').on('value', snapshot => {
@@ -406,10 +394,13 @@
                     parties.forEach((party, index) => {
                         const key = party.key;
                         const data = party.data;
+                        const initialDue = parseFloat(data.due) || 0;
+                        const initialAdvance = parseFloat(data.advance) || 0;
 
                         db.ref(`supply_transactions/${key}`).on('value', transSnap => {
-                            let totalDeposit = 0;
-                            let totalBuy = 0;
+                            let totalDeposit = initialAdvance; 
+                            let totalBuy = initialDue;       
+                            
                             if(transSnap.exists()) {
                                 transSnap.forEach(tSnap => {
                                     const tVal = tSnap.val();
@@ -420,6 +411,10 @@
 
                             let currentDue = totalBuy - totalDeposit;
                             let serialNo = data.serial || (index + 1);
+
+                            grandTotalDeposit += totalDeposit;
+                            grandTotalBuy += totalBuy;
+                            grandTotalDue += currentDue;
 
                             let rowHTML = `
                                 <td class="p-2 border">${serialNo}</td>
@@ -446,7 +441,37 @@
                                 newRow.innerHTML = rowHTML;
                                 tbody.appendChild(newRow);
                             }
+
+                            processedCount++;
+                            if (processedCount === parties.length) {
+                                renderGrandTotal(tbody, grandTotalDeposit, grandTotalBuy, grandTotalDue);
+                            }
                         });
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">কোনো সরবরাহ পার্টি পাওয়া যায়নি</td></tr>`;
+                }
+            });
+        }
+
+        // টেবিলের নিচে সর্বমোট সারি রেন্ডার করার ফাংশন
+        function renderGrandTotal(tbody, totalDep, totalBuy, totalDue) {
+            const existingTotal = document.getElementById('grand-total-row');
+            if (existingTotal) existingTotal.remove();
+
+            const totalRow = document.createElement('tr');
+            totalRow.id = 'grand-total-row';
+            totalRow.className = "bg-gray-200 font-bold border-t-2 border-gray-400";
+            totalRow.innerHTML = `
+                <td colspan="3" class="p-2 border text-right">সর্বমোট:</td>
+                <td class="p-2 border text-emerald-600">${totalDep}</td>
+                <td class="p-2 border text-blue-600">${totalBuy}</td>
+                <td class="p-2 border text-red-600">${totalDue}</td>
+                <td class="p-2 border"></td>
+            `;
+            tbody.appendChild(totalRow);
+        }
+             });
                     });
                 } else {
                     tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">কোনো সরবরাহ পার্টি পাওয়া যায়নি</td></tr>`;
