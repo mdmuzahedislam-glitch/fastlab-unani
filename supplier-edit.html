@@ -25,12 +25,12 @@
 </head>
 <body class="bg-gray-100 font-sans">
     <!-- হেডার বা নবার -->
-<header class="bg-forest text-white p-4 shadow-md flex justify-between items-center">
-    <h1 class="text-xl font-bold flex items-center gap-2">
-        <i class="fa-solid fa-truck-fast"></i> সরবরাহ অফিসার ও সরবরাহ পার্টি ম্যানেজমেন্ট প্যানেল
-    </h1>
-    <a href="admin-dashboard.html" class="bg-amber-400 text-black px-4 py-2 rounded-lg font-bold hover:bg-amber-500 transition">ড্যাশবোর্ড</a>
-</header>
+    <header class="bg-forest text-white p-4 shadow-md flex justify-between items-center">
+        <h1 class="text-xl font-bold flex items-center gap-2">
+            <i class="fa-solid fa-truck-fast"></i> সরবরাহ অফিসার ও সরবরাহ পার্টি ম্যানেজমেন্ট প্যানেল
+        </h1>
+        <a href="admin-dashboard.html" class="bg-amber-400 text-black px-4 py-2 rounded-lg font-bold hover:bg-amber-500 transition">ড্যাশবোর্ড</a>
+    </header>
 
     <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
         <!-- অফিসার প্রোফাইল নোটিশ বোর্ড এডিট -->
@@ -65,6 +65,7 @@
                 সংরক্ষণ
             </button>
         </section>
+
         <!-- ২. সরবরাহ অফিসার লিস্ট -->
         <section class="bg-white p-6 rounded-xl shadow-md">
             <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
@@ -108,13 +109,13 @@
         </section>
 
         <!-- ৪. সরবরাহ পার্টির লিস্ট -->
-        <section class="bg-white p-6 rounded-xl shadow-md">
+        <section id="party-list-section" class="bg-white p-6 rounded-xl shadow-md">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base font-bold text-forest flex items-center gap-2">
                     <i class="fa-solid fa-list"></i> সরবরাহ পার্টির লিস্ট
                 </h2>
-                <button onclick="printSpecificSection('party-list-section', 'সরবরাহ পার্টির তালিকা')" class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-650">
-                  প্রিন্ট
+                <button onclick="printSpecificSection('party-list-section', 'সরবরাহ পার্টির তালিকা')" class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-600">
+                    প্রিন্ট
                 </button>
             </div>
             <div class="overflow-x-auto">
@@ -136,6 +137,7 @@
                 </table>
             </div>
         </section>
+
         <!-- ৫. পার্টি জমা এন্ট্রি ফরম -->
         <section id="deposit-form-section" class="bg-white p-6 rounded-xl shadow-md border-2 border-emerald-600 hidden">
             <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
@@ -168,16 +170,14 @@
                 </button>
             </div>
         </section>
-
         <!-- ৬. পার্টি স্টেটমেন্ট -->
         <section id="statement-section" class="bg-white p-6 rounded-xl shadow-md border hidden">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base font-bold text-forest flex items-center gap-2">
                     <i class="fa-solid fa-chart-line"></i> পার্টি স্টেটমেন্ট <span id="statement-party-title" class="text-xs text-emerald-700 ml-2"></span>
                 </h2>
-                <button onclick="printSpecificSection('statement-section', 'পার্টি লেনদেন স্টেটমেন্ট')" class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-650">
-                 প্রিন্ট
-                </button>
+                <button onclick="printSpecificSection('statement-section', 'পার্টি লেনদেন স্টেটমেন্ট')" class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-600">
+                    প্রিন্ট
                 </button>
             </div>
             <div class="overflow-x-auto">
@@ -202,7 +202,6 @@
                 <button onclick="hideStatement()" class="bg-gray-500 text-white px-4 py-1 rounded text-sm">বন্ধ করুন</button>
             </div>
         </section>
-
     </main>
 
     <!-- ফায়ারবেজ ও কার্যকারী স্ক্রিপ্ট -->
@@ -231,6 +230,26 @@
             loadNotices();
         };
 
+        // নির্দিষ্ট সেকশন প্রিন্ট করার ফাংশন
+        function printSpecificSection(sectionId, titleText) {
+            const sectionContent = document.getElementById(sectionId).innerHTML;
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>প্রিন্ট - ফাস্টল্যাব ইউনানী</title>');
+            printWindow.document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
+            printWindow.document.write('<style>body { font-family: sans-serif; padding: 20px; }</style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(`<h2 class="text-xl font-bold mb-4 text-center">${titleText}</h2>`);
+            printWindow.document.write(sectionContent);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+        }
+
         // নোটিশ সংরক্ষণ ও লোড
         function saveNotices() {
             const n1 = document.getElementById('notice-1').value;
@@ -252,7 +271,7 @@
                 }
             });
         }
-         // সরবরাহ অফিসার সংরক্ষণ ও লিস্ট (পাসওয়ার্ডসহ)
+        // সরবরাহ অফিসার সংরক্ষণ ও লিস্ট (পাসওয়ার্ডসহ)
         function saveSupplyOfficer() {
             const serial = document.getElementById('officer-serial').value;
             const name = document.getElementById('officer-name').value;
@@ -314,6 +333,7 @@
                 db.ref('supply_officers/' + key).remove();
             }
         }
+
         // সরবরাহ পার্টি সংরক্ষণ (পূর্বের বকেয়া ও পাওনা সহ)
         function saveSupplyParty() {
             const serial = document.getElementById('party-serial').value;
@@ -331,7 +351,6 @@
 
             db.ref('supply_parties').push(partyData)
                 .then((ref) => {
-                    // পূর্বের বকেয়া বা পাওনা থাকলে তা প্রথম লেনদেন বা প্রারম্ভিক হিসেবে যুক্ত করা
                     if(due > 0 || advance > 0) {
                         const initialTrans = {
                             date: new Date().toISOString().split('T')[0],
