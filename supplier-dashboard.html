@@ -191,11 +191,11 @@
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
                             <tr class="table-header text-xs">
-                                <th class="p-3 border">ক্রমিক</th>
+                                <th class="p-3 border">ক্রমিক নং</th>
                                 <th class="p-3 border">সরবরাহকারীর নাম ও ঠিকানা</th>
                                 <th class="p-3 border">মোবাইল</th>
-                                <th class="p-3 border">মোট জমা</th>
-                                <th class="p-3 border">মাল ক্রয়</th>
+                                <th class="p-3 border">মোট জমা/প্রদান</th>
+                                <th class="p-3 border">পণ্য ক্রয়</th>
                                 <th class="p-3 border">বকেয়া</th>
                                 <th class="p-3 border">অগ্রিম জমা</th>
                                 <th class="p-3 border text-center">অ্যাকশন</th>
@@ -223,10 +223,10 @@
                             <tr class="table-header text-xs">
                                 <th class="p-3 border">তারিখ</th>
                                 <th class="p-3 border">বিবরণ</th>
-                                <th class="p-3 border">জমা</th>
-                                <th class="p-3 border">মাল ক্রয়</th>
+                                <th class="p-3 border">জমা/প্রদান</th>
+                                <th class="p-3 border">পণ্য ক্রয়</th>
                                 <th class="p-3 border">Dr/Cr</th>
-                                <th class="p-3 border">অবশিষ্ট ব্যালেন্স</th>
+                                <th class="p-3 border">অবশিষ্ট</th>
                             </tr>
                         </thead>
                         <tbody id="statement-list" class="divide-y divide-gray-200">
@@ -262,14 +262,8 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Secure Admin & User Credentials
-        let systemAuth = {
-            id: "supplier01",
-            pass: "Unani02",
-            name: "মোঃ আব্দুল রহিম"
         };
-
-        function togglePassword() {
+                function togglePassword() {
             const passwordInput = document.getElementById('password');
             const eyeIcon = document.getElementById('eye-icon');
             if (passwordInput.type === 'password') {
@@ -297,28 +291,71 @@
             }
         });
 
+        // পেজ রিফ্রেশ হলে অটো লগইন চেক করার জন্য
+        window.onload = function() {
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                const savedName = localStorage.getItem('loggedInName') || "সরবরাহ অফিসার";
+                const savedPhone = localStorage.getItem('loggedInPhone') || "";
+
+                document.getElementById('profile-name').innerText = savedName;
+                if(document.getElementById('profile-phone')) {
+                    document.getElementById('profile-phone').innerText = savedPhone;
+                }
+
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('dashboard-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('flex');
+                
+                loadSupplyParties();
+                loadNotices();
+            }
+        };
+
+        // ফায়ারবেস থেকে সরাসরি অ্যাডমিন প্যানেল বা ইউজার লিস্ট চেক করে লগইন লজিক
         function handleLogin(event) {
             event.preventDefault();
             const inputId = document.getElementById('user-id').value.trim();
             const inputPass = document.getElementById('password').value.trim();
             const errorAlert = document.getElementById('error-alert');
 
-            if (inputId === systemAuth.id && inputPass === systemAuth.pass) {
-                errorAlert.classList.add('hidden');
-                document.getElementById('profile-name').innerText = systemAuth.name;
-                document.getElementById('login-section').classList.add('hidden');
-                document.getElementById('dashboard-section').classList.remove('hidden');
-                document.getElementById('dashboard-section').classList.add('flex');
-                
-                // ফায়ারবেজ থেকে লাইভ ডাটা লোড করা (Read-only মোড)
-                loadSupplyParties();
-            } else {
+            db.ref('supply_users/' + inputId).once('value', snapshot => {
+                const userData = snapshot.val();
+
+                if (userData && (userData.pass === inputPass || userData.password === inputPass)) {
+                    errorAlert.classList.add('hidden');
+                    
+                    const userName = userData.name || "সরবরাহ অফিসার";
+                    const userPhone = userData.phone || "";
+
+                    // লোকাল স্টোরেজে সেভ করা যাতে রিফ্রেশ করলে লগআউট না হয়
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('loggedInUser', inputId);
+                    localStorage.setItem('loggedInName', userName);
+                    localStorage.setItem('loggedInPhone', userPhone);
+
+                    document.getElementById('profile-name').innerText = userName;
+                    if(document.getElementById('profile-phone')) {
+                        document.getElementById('profile-phone').innerText = userPhone;
+                    }
+
+                    document.getElementById('login-section').classList.add('hidden');
+                    document.getElementById('dashboard-section').classList.remove('hidden');
+                    document.getElementById('dashboard-section').classList.add('flex');
+                    
+                    loadSupplyParties();
+                    loadNotices();
+                } else {
+                    errorAlert.classList.remove('hidden');
+                    document.getElementById('error-text').innerText = "ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
+                }
+            }).catch(err => {
                 errorAlert.classList.remove('hidden');
-                document.getElementById('error-text').innerText = "ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
-            }
+                document.getElementById('error-text').innerText = "লগইন সমস্যা: " + err.message;
+            });
         }
 
         function handleLogout() {
+            localStorage.clear();
             document.getElementById('dashboard-section').classList.add('hidden');
             document.getElementById('dashboard-section').classList.remove('flex');
             document.getElementById('login-section').classList.remove('hidden');
