@@ -309,9 +309,39 @@
                 loadNotices();
             }
         };
-                function loadNotices() {
-            // নোটিশ লোড করার ফাংশন যদি থাকে
+                        // ফায়ারবেস থেকে রিয়েল-টাইম নোটিশ লোড করার ফাংশন
+        function loadNotices() {
+            const noticeList = document.getElementById('notice-list');
+            
+            db.ref('supply_notices').on('value', snapshot => {
+                const data = snapshot.val();
+                noticeList.innerHTML = ''; // আগের স্ট্যাটিক নোটিশ মুছে ফেলা
+
+                if (data) {
+                    let hasNotice = false;
+                    
+                    // n1, n2, n3 প্রতিটি নোটিশ চেক করে রেন্ডার করা
+                    [data.n1, data.n2, data.n3].forEach(noticeText => {
+                        if (noticeText && noticeText.trim() !== '') {
+                            hasNotice = true;
+                            noticeList.innerHTML += `
+                                <li class="flex items-start gap-2 border-b border-gray-100 pb-1.5 last:border-0">
+                                    <i class="fa-solid fa-circle-dot text-green-700 mt-1 text-[10px]"></i>
+                                    <span class="text-xs text-gray-800 font-medium">${noticeText}</span>
+                                </li>
+                            `;
+                        }
+                    });
+
+                    if (!hasNotice) {
+                        noticeList.innerHTML = `<li class="text-xs text-gray-400">বর্তমানে কোনো নোটিশ নেই।</li>`;
+                    }
+                } else {
+                    noticeList.innerHTML = `<li class="text-xs text-gray-400">বর্তমানে কোনো নোটিশ নেই।</li>`;
+                }
+            });
         }
+        
                 // ফায়ারবেস থেকে সরাসরি সরবরাহ অফিসার লিস্ট চেক করে লগইন লজিক
         function handleLogin(event) {
             event.preventDefault();
