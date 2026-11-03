@@ -78,7 +78,6 @@
 
     <!-- Dashboard Section (Hidden by default until login) -->
     <div id="dashboard-section" class="hidden flex-col min-h-screen">
-        <!-- Top Header with Three-Dot / Hamburger Menu on Right -->
         <header class="forest-green text-white shadow-md">
             <div class="container mx-auto px-4 py-3 flex justify-between items-center relative">
                 <div class="flex items-center gap-3">
@@ -91,22 +90,18 @@
                     </div>
                 </div>
                 
-                <!-- Right Side: Notification & Hamburger Menu -->
                 <div class="flex items-center gap-3">
-                    <!-- Notification Icon -->
                     <div class="relative cursor-pointer">
                         <span class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] rounded-full px-1">৩</span>
                         <i class="fa-solid fa-bell text-lg"></i>
                     </div>
 
-                    <!-- Hamburger Menu Button -->
                     <div class="relative">
                         <button onclick="toggleMenu()" class="flex items-center gap-1.5 bg-green-900 text-white px-2.5 py-1 rounded text-xs font-medium focus:outline-none">
                             <i class="fa-solid fa-bars"></i>
                             <span>মেনুবার</span>
                         </button>
 
-                        <!-- Dropdown Menu -->
                         <div id="dropdown-menu" class="hidden absolute right-0 top-10 w-56 bg-white rounded-xl shadow-2xl border border-gray-200 py-2 z-50 text-gray-800">
                             <a href="#" class="flex items-center gap-3 px-4 py-2 hover:bg-green-50 hover:text-green-800 font-medium text-sm">
                                 <i class="fa-solid fa-chart-line forest-green-text"></i> ড্যাশবোর্ড
@@ -130,12 +125,9 @@
             </div>
         </header>
 
-        <!-- Main Content Area -->
         <div class="container mx-auto px-4 mt-6 space-y-6 flex-grow">
             
-            <!-- Top Info Cards: Officer Profile & Notice Board -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Officer Profile Card -->
                 <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100 flex items-center gap-4">
                     <div class="bg-green-100 p-4 rounded-full text-green-800 text-3xl">
                         <i class="fa-solid fa-mortar-pestle"></i>
@@ -143,12 +135,11 @@
                     <div>
                         <h3 class="text-lg font-bold text-gray-800" id="profile-role-title">সরবরাহ অফিসার</h3>
                         <p class="text-sm font-semibold text-gray-600" id="profile-name">মোঃ সাজেদুল করিম মৃদুল</p>
-                        <p class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="fa-solid fa-phone"></i>01707-851685</p>
+                        <p class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="fa-solid fa-phone"></i><span id="profile-phone">01707-851685</span></p>
                         <p class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-location-dot"></i> ফ্যাক্টরি অফিস: আফুরিয়া,হিমাইতপুর,পাবনা।</p>
                     </div>
                 </div>
 
-                <!-- Notice Board Card -->
                 <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
                     <div class="flex items-center justify-between mb-3 border-b pb-2">
                         <h3 class="text-md font-bold forest-green-text flex items-center gap-2">
@@ -156,24 +147,15 @@
                         </h3>
                         <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">গুরুত্বপূর্ণ</span>
                     </div>
-                    <ul class="space-y-2 text-xs text-gray-700">
+                    <ul class="space-y-2 text-xs text-gray-700" id="notice-list">
                         <li class="flex items-start gap-2">
                             <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
                             <span>আগামী ২০ তারিখের মধ্যে স্টকের তথ্য জমা দিন। <br><span class="text-gray-400">২০ জানুয়ারি ২০২৬</span></span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
-                            <span>নতুন সরবরাহ নীতিমালার বিজ্ঞপ্তি। <br><span class="text-gray-400">১৯ জানুয়ারি ২০২৬</span></span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
-                            <span>মাসিক হিসাব ৩০ তারিখের মধ্যে জমা দেওয়ার অনুরোধ রইলো। <br><span class="text-gray-400">১৮ জানুয়ারি ২০২৬</span></span>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <!-- Party List Table -->
             <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
                 <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
                     <h3 class="text-lg font-bold forest-green-text flex items-center gap-2">
@@ -208,7 +190,6 @@
                 </div>
             </div>
 
-            <!-- Transaction Ledger Details -->
             <div id="ledger-section" class="bg-white rounded-xl shadow-md p-5 border border-gray-100 hidden">
                 <div class="flex justify-between items-center mb-4 border-b pb-2">
                     <h3 class="text-lg font-bold forest-green-text flex items-center gap-2">
@@ -237,12 +218,11 @@
             </div>
         </div>
 
-        <!-- Footer -->
         <footer class="mt-12 bg-white border-t py-4 text-center text-xs text-gray-500">
             © ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত
         </footer>
-    </div>
-    <!-- Firebase SDKs -->
+            </div>
+            <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
@@ -262,8 +242,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        };
-                function togglePassword() {
+        function togglePassword() {
             const passwordInput = document.getElementById('password');
             const eyeIcon = document.getElementById('eye-icon');
             if (passwordInput.type === 'password') {
@@ -282,7 +261,6 @@
             menu.classList.toggle('hidden');
         }
 
-        // Close menu when clicking outside
         window.addEventListener('click', function(e) {
             const menu = document.getElementById('dropdown-menu');
             const btn = e.target.closest('button');
@@ -291,9 +269,29 @@
             }
         });
 
-        // পেজ রিফ্রেশ হলে অটো লগইন চেক করার জন্য
+        // পেজ রিফ্রেশ হলে অটো লগইন চেক এবং ফায়ারবেস থেকে লাইভ ডাটা সিঙ্ক
         window.onload = function() {
             if (localStorage.getItem('isLoggedIn') === 'true') {
+                const loggedInUserKey = localStorage.getItem('loggedInUser');
+                
+                if (loggedInUserKey) {
+                    db.ref('supply_users/' + loggedInUserKey).once('value', snapshot => {
+                        const userData = snapshot.val();
+                        if (userData) {
+                            const userName = userData.name || "সরবরাহ অফিসার";
+                            const userPhone = userData.phone || "";
+                            
+                            localStorage.setItem('loggedInName', userName);
+                            localStorage.setItem('loggedInPhone', userPhone);
+
+                            document.getElementById('profile-name').innerText = userName;
+                            if(document.getElementById('profile-phone')) {
+                                document.getElementById('profile-phone').innerText = userPhone;
+                            }
+                        }
+                    });
+                }
+
                 const savedName = localStorage.getItem('loggedInName') || "সরবরাহ অফিসার";
                 const savedPhone = localStorage.getItem('loggedInPhone') || "";
 
@@ -311,6 +309,10 @@
             }
         };
 
+        function loadNotices() {
+            // নোটিশ লোড করার ফাংশন যদি থাকে
+        }
+
         // ফায়ারবেস থেকে সরাসরি অ্যাডমিন প্যানেল বা ইউজার লিস্ট চেক করে লগইন লজিক
         function handleLogin(event) {
             event.preventDefault();
@@ -327,7 +329,6 @@
                     const userName = userData.name || "সরবরাহ অফিসার";
                     const userPhone = userData.phone || "";
 
-                    // লোকাল স্টোরেজে সেভ করা যাতে রিফ্রেশ করলে লগআউট না হয়
                     localStorage.setItem('isLoggedIn', 'true');
                     localStorage.setItem('loggedInUser', inputId);
                     localStorage.setItem('loggedInName', userName);
@@ -353,7 +354,6 @@
                 document.getElementById('error-text').innerText = "লগইন সমস্যা: " + err.message;
             });
         }
-
         function handleLogout() {
             localStorage.clear();
             document.getElementById('dashboard-section').classList.add('hidden');
@@ -366,27 +366,10 @@
             document.getElementById('ledger-section').classList.add('hidden');
         }
 
-        // রিয়েল-টাইম সাপ্লাই পার্টি লিস্ট ও হিসাব লোড করার ফাংশন (রিড-অনলি ভিউ)
-        function loadSupplyParties() {
-            const tbody = document.getElementById('supply-party-list');
-            db.ref('supply_parties').on('value', snapshot => {
-                tbody.innerHTML = '';
-                
-                let grandTotalDeposit = 0;
-                let grandTotalBuy = 0;
-                let grandTotalDue = 0;
-                let grandTotalAdvance = 0;
-
-                if(snapshot.exists()) {
-                    let parties = [];
-                    snapshot.forEach(childSnap => {
-                        parties.push({ key: childSnap.key, data: childSnap.val() });
-                    });
-                            // রিয়েল-টাইম সাপ্লাই পার্টি লিস্ট ও হিসাব লোড করার ফাংশন
+        // রিয়েল-টাইম সাপ্লাই পার্টি লিস্ট ও হিসাব লোড করার ফাংশন
         function loadSupplyParties() {
             const tbody = document.getElementById('supply-party-list');
             
-            // ডাটাবেস পরিবর্তন হলে যাতে আগের লিসেনার ঝামেলা না করে
             db.ref('supply_parties').on('value', snapshot => {
                 tbody.innerHTML = '';
                 
@@ -520,7 +503,6 @@
                     let drCr = runningBalance >= 0 ? "Dr" : "Cr";
                     let balanceClass = runningBalance < 0 ? "text-red-600 font-semibold" : "font-semibold";
 
-                    // প্রারম্ভিক বকেয়া বা পাওনা সারি
                     statementList.innerHTML += `
                         <tr class="border-b bg-gray-50 font-medium">
                             <td class="p-3 border">-</td>
