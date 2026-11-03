@@ -535,7 +535,7 @@
                 })
                 .catch(err => alert("ত্রুটি: " + err.message));
             }
-        // স্টেটমেন্ট ও Dr/Cr কালার লজিক (প্রারম্ভিক জের সহ)
+                // স্টেটমেন্ট ও Dr/Cr কালার লজিক (প্রারম্ভিক জের শূন্য রেখে স্টেটমেন্ট দেখানোর জন্য)
         function openStatement(key, name) {
             selectedPartyKey = key;
             document.getElementById('statement-party-title').innerText = `(পার্টি: ${name})`;
@@ -550,17 +550,18 @@
                 db.ref(`supply_transactions/${key}`).on('value', snapshot => {
                     statementList.innerHTML = '';
                     
+                    // প্রারম্ভিক জের স্টেটমেন্টের প্রথম লাইনে শূন্য রেখে রানিং ব্যালেন্স শুধু মূল due থেকে শুরু হবে
                     let runningBalance = initDue - initAdv; 
                     let drCr = runningBalance >= 0 ? "Dr" : "Cr";
                     let balanceClass = runningBalance < 0 ? "text-red-600 font-semibold" : "font-semibold";
 
-                    // প্রারম্ভিক জেরের প্রথম সারি
+                    // প্রারম্ভিক জেরের প্রথম সারি যেখানে মাল ক্রয় বা জমা শূন্য (0) থাকবে
                     statementList.innerHTML = `
                         <tr class="border-b bg-gray-50 font-medium">
                             <td class="p-2 border">-</td>
                             <td class="p-2 border">পূর্বের বকেয়া / পাওনা ব্যালেন্স (প্রারম্ভিক)</td>
-                            <td class="p-2 border text-emerald-600">${initAdv}</td>
-                            <td class="p-2 border text-blue-600">${initDue}</td>
+                            <td class="p-2 border text-emerald-600">0</td>
+                            <td class="p-2 border text-blue-600">0</td>
                             <td class="p-2 border font-bold">${drCr}</td>
                             <td class="p-2 border ${balanceClass}">${Math.abs(runningBalance)}</td>
                             <td class="p-2 border">-</td>
@@ -599,7 +600,6 @@
 
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
-
         function hideStatement() {
             document.getElementById('statement-section').classList.add('hidden');
         }
