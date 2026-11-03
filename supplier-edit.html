@@ -127,7 +127,7 @@
                             <th class="p-2 border">ক্রমিক নং</th>
                             <th class="p-2 border">পার্টির নাম ও ঠিকানা</th>
                             <th class="p-2 border">মোবাইল</th>
-                            <th class="p-2 border">মোট জমা</th>
+                            <th class="p-2 border">মোট জমা/প্রদান</th>
                             <th class="p-2 border">পণ্য ক্রয়</th>
                             <th class="p-2 border">বকেয়া</th>
                             <th class="p-2 border">অগ্রিম জমা</th>
@@ -156,7 +156,7 @@
                     <input type="text" id="dep-desc" placeholder="বিবরণ লিখুন" class="w-full border p-2 rounded-lg">
                 </div>
                 <div>
-                    <label class="block font-semibold text-gray-700 mb-1">জমা:</label>
+                    <label class="block font-semibold text-gray-700 mb-1">জমা/প্রদান:</label>
                     <input type="number" id="dep-amount" placeholder="জমা টাকার পরিমাণ" class="w-full border p-2 rounded-lg">
                 </div>
                 <div>
@@ -176,7 +176,7 @@
          <!-- ৬. পার্টি স্টেটমেন্ট -->
         <section id="statement-section" class="bg-white p-6 rounded-xl shadow-md border hidden">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold text-forest flex items-center gap-2">
+                <h2 class="text-base font-bold text-forest flex items-center gap-2">
                     <i class="fa-solid fa-chart-line"></i> পার্টি স্টেটমেন্ট <span id="statement-party-title" class="text-xs text-emerald-700 ml-2"></span>
                 </h2>
                 <button onclick="exportTableToExcel('statement-section', 'পার্টি_স্টেটমেন্ট')" class="bg-emerald-600 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-emerald-700 flex items-center gap-1">
@@ -189,7 +189,7 @@
                         <tr class="bg-gray-100">
                             <th class="p-2 border">তারিখ</th>
                             <th class="p-2 border">বিবরণ</th>
-                            <th class="p-2 border">জমা</th>
+                            <th class="p-2 border">জমা/প্রদান</th>
                             <th class="p-2 border">পণ্য ক্রয়</th>
                             <th class="p-2 border">Dr/Cr</th>
                             <th class="p-2 border">অবশিষ্ট</th>
@@ -547,7 +547,7 @@
                 // স্টেটমেন্ট ও Dr/Cr কালার লজিক (প্রারম্ভিক জের শূন্য রেখে স্টেটমেন্ট দেখানোর জন্য)
         function openStatement(key, name) {
             selectedPartyKey = key;
-            document.getElementById('statement-party-title').innerText = `(পার্টি: ${name})`;
+            document.getElementById('statement-party-title').innerHTML = `(পার্টি: <span class="text-2xl font-bold text-forest">${name}</span>)`;
             document.getElementById('statement-section').classList.remove('hidden');
             
             db.ref(`supply_parties/${key}`).once('value', partySnap => {
