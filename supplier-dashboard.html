@@ -314,16 +314,18 @@
         }
 
         // ফায়ারবেস থেকে সরাসরি অ্যাডমিন প্যানেল বা ইউজার লিস্ট চেক করে লগইন লজিক
-        function handleLogin(event) {
+                function handleLogin(event) {
             event.preventDefault();
             const inputId = document.getElementById('user-id').value.trim();
             const inputPass = document.getElementById('password').value.trim();
             const errorAlert = document.getElementById('error-alert');
 
+            // ফায়ারবেস থেকে ডেটা ফেচ করার সময় কনসোলে চেক করার জন্য
             db.ref('supply_users/' + inputId).once('value', snapshot => {
                 const userData = snapshot.val();
+                console.log("Database User Data for ID (" + inputId + "):", userData); // ব্রাউজার কনসোলে ডাটা দেখতে পাবেন
 
-                if (userData && (userData.pass === inputPass || userData.password === inputPass)) {
+                if (userData && (userData.pass === inputPass || userData.password === inputPass || userData.passw === inputPass)) {
                     errorAlert.classList.add('hidden');
                     
                     const userName = userData.name || "সরবরাহ অফিসার";
@@ -353,7 +355,7 @@
                 errorAlert.classList.remove('hidden');
                 document.getElementById('error-text').innerText = "লগইন সমস্যা: " + err.message;
             });
-        }
+                }
         function handleLogout() {
             localStorage.clear();
             document.getElementById('dashboard-section').classList.add('hidden');
