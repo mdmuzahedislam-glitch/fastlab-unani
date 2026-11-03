@@ -129,7 +129,8 @@
                 </div>
             </div>
         </header>
-         <!-- Main Content Area -->
+
+        <!-- Main Content Area -->
         <div class="container mx-auto px-4 mt-6 space-y-6 flex-grow">
             
             <!-- Top Info Cards: Officer Profile & Notice Board -->
@@ -179,7 +180,7 @@
                         <i class="fa-solid fa-users"></i> সরবরাহকারীর তালিকা
                     </h3>
                     <div class="relative w-full md:w-72">
-                        <input type="text" placeholder="সরবরাহকারীর নাম বা মোবাইল নাম্বার খুঁজুন..." class="w-full pl-3 pr-10 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
+                        <input type="text" id="search-party" placeholder="সরবরাহকারীর নাম বা মোবাইল নাম্বার খুঁজুন..." class="w-full pl-3 pr-10 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
                         <button class="absolute inset-y-0 right-0 px-3 forest-green text-white rounded-r-lg hover:bg-green-900">
                             <i class="fa-solid fa-search"></i>
                         </button>
@@ -193,66 +194,25 @@
                                 <th class="p-3 border">ক্রমিক</th>
                                 <th class="p-3 border">সরবরাহকারীর নাম ও ঠিকানা</th>
                                 <th class="p-3 border">মোবাইল</th>
-                                <th class="p-3 border">জমা</th>
+                                <th class="p-3 border">মোট জমা</th>
                                 <th class="p-3 border">মাল ক্রয়</th>
-                                <th class="p-3 border">বর্তমান বকেয়া</th>
+                                <th class="p-3 border">বকেয়া</th>
+                                <th class="p-3 border">অগ্রিম জমা</th>
                                 <th class="p-3 border text-center">অ্যাকশন</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">১</td>
-                                <td class="p-3 border font-medium">সদাগর ট্রেডার্স, পাবনা</td>
-                                <td class="p-3 border">০১৮০৬৭৬৪৪৪</td>
-                                <td class="p-3 border">১০০</td>
-                                <td class="p-3 border">৬০০</td>
-                                <td class="p-3 border">২০০</td>
-                                <td class="p-3 border text-center">
-                                    <button onclick="showDetails('সদাগর ট্রেডার্স, পাবনা')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">২</td>
-                                <td class="p-3 border font-medium">রহিম স্টোর, চাটমোহর</td>
-                                <td class="p-3 border">০১৭২২৩৪৪৭৯৮</td>
-                                <td class="p-3 border">৩০০</td>
-                                <td class="p-3 border">৪০০</td>
-                                <td class="p-3 border">২০০</td>
-                                <td class="p-3 border text-center">
-                                    <button onclick="showDetails('রহিম স্টোর, চাটমোহর')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">৩</td>
-                                <td class="p-3 border font-medium">মদিনা ট্রেডার্স, আউড়িয়া</td>
-                                <td class="p-3 border">০১৮১৯৭৬২৪০২</td>
-                                <td class="p-3 border">১০০</td>
-                                <td class="p-3 border">৯০০</td>
-                                <td class="p-3 border">২০০</td>
-                                <td class="p-3 border text-center">
-                                    <button onclick="showDetails('মদিনা ট্রেডার্স, আউড়িয়া')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">৪</td>
-                                <td class="p-3 border font-medium">আনিক এন্টারপ্রাইজ, ঈশ্বরদী</td>
-                                <td class="p-3 border">০১৮৭৫৪৮০২১০</td>
-                                <td class="p-3 border">৪০০</td>
-                                <td class="p-3 border">৫০০</td>
-                                <td class="p-3 border">১০০</td>
-                                <td class="p-3 border text-center">
-                                    <button onclick="showDetails('আনিক এন্টারপ্রাইজ, ঈশ্বরদী')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
-                                </td>
-                            </tr>
+                        <tbody id="supply-party-list" class="divide-y divide-gray-200">
+                            <!-- Firebase Data Will Load Here Dynamically -->
                         </tbody>
                     </table>
                 </div>
             </div>
+
             <!-- Transaction Ledger Details -->
-            <div id="ledger-section" class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+            <div id="ledger-section" class="bg-white rounded-xl shadow-md p-5 border border-gray-100 hidden">
                 <div class="flex justify-between items-center mb-4 border-b pb-2">
                     <h3 class="text-lg font-bold forest-green-text flex items-center gap-2">
-                        <i class="fa-solid fa-file-invoice-dollar"></i> <span id="selected-party-title">পার্টির লেনদেনের বিবরণ</span>
+                        <i class="fa-solid fa-file-invoice-dollar"></i> <span id="statement-party-title">পার্টির লেনদেনের বিবরণ</span>
                     </h3>
                     <span class="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-600">হিসাব বিবরণী</span>
                 </div>
@@ -269,23 +229,8 @@
                                 <th class="p-3 border">অবশিষ্ট ব্যালেন্স</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">১৫/০১/২০২৬</td>                                
-                                <td class="p-3 border">১০০</td>
-                                <td class="p-3 border">২০০০</td>
-                                <td class="p-3 border">০০০</td>
-                                <td class="p-3 border font-semibold text-red-600">Cr</td>
-                                <td class="p-3 border font-bold">-৫০০</td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 border">১৮/০১/২০২৬</td>                                
-                                <td class="p-3 border">২০০</td>
-                                <td class="p-3 border">৬০০০</td>
-                                <td class="p-3 border">৬০০</td>
-                                <td class="p-3 border font-semibold text-blue-600">Dr</td>
-                                <td class="p-3 border font-bold">-১১০০</td>
-                            </tr>
+                        <tbody id="statement-list" class="divide-y divide-gray-200">
+                            <!-- Statement Data Will Load Here Dynamically -->
                         </tbody>
                     </table>
                 </div>
@@ -297,7 +242,6 @@
             © ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত
         </footer>
     </div>
-
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -316,7 +260,7 @@
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const db = firebase.database();
 
         // Secure Admin & User Credentials
         let systemAuth = {
@@ -366,8 +310,8 @@
                 document.getElementById('dashboard-section').classList.remove('hidden');
                 document.getElementById('dashboard-section').classList.add('flex');
                 
-                // ফায়ারবেজ থেকে লাইভ ডেটা সিঙ্ক শুরু করা
-                loadRealtimeData();
+                // ফায়ারবেজ থেকে লাইভ ডাটা লোড করা (Read-only মোড)
+                loadSupplyParties();
             } else {
                 errorAlert.classList.remove('hidden');
                 document.getElementById('error-text').innerText = "ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
@@ -382,22 +326,166 @@
             document.getElementById('password').value = '';
             document.getElementById('error-alert').classList.add('hidden');
             document.getElementById('dropdown-menu').classList.add('hidden');
+            document.getElementById('ledger-section').classList.add('hidden');
         }
 
-        function showDetails(partyName) {
-            document.getElementById('selected-party-title').innerText = partyName + ' - পার্টির লেনদেনের বিবরণ';
-            document.getElementById('ledger-section').scrollIntoView({ behavior: 'smooth' });
-        }
+        // রিয়েল-টাইম সাপ্লাই পার্টি লিস্ট ও হিসাব লোড করার ফাংশন (রিড-অনলি ভিউ)
+        function loadSupplyParties() {
+            const tbody = document.getElementById('supply-party-list');
+            db.ref('supply_parties').on('value', snapshot => {
+                tbody.innerHTML = '';
+                
+                let grandTotalDeposit = 0;
+                let grandTotalBuy = 0;
+                let grandTotalDue = 0;
+                let grandTotalAdvance = 0;
 
-        // ফায়ারবেজ রিয়েলটাইম ডেটাবেজ সিঙ্ক ফাংশন
-        function loadRealtimeData() {
-            database.ref('fastlab_supplier_data/').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    console.log("Firebase Realtime Data Synced:", data);
+                if(snapshot.exists()) {
+                    let parties = [];
+                    snapshot.forEach(childSnap => {
+                        parties.push({ key: childSnap.key, data: childSnap.val() });
+                    });
+
+                    let processedCount = 0;
+                    parties.forEach((party, index) => {
+                        const key = party.key;
+                        const data = party.data;
+                        const initialDue = parseFloat(data.due) || 0;
+                        const initialAdvance = parseFloat(data.advance) || 0;
+
+                        db.ref(`supply_transactions/${key}`).on('value', transSnap => {
+                            let totalDeposit = initialAdvance; 
+                            let totalBuy = 0;        
+                            
+                            if(transSnap.exists()) {
+                                transSnap.forEach(tSnap => {
+                                    const tVal = tSnap.val();
+                                    totalDeposit += parseFloat(tVal.amount) || 0;
+                                    totalBuy += parseFloat(tVal.purchase) || 0;
+                                });
+                            }
+
+                            let currentBalance = (initialDue + totalBuy) - totalDeposit;
+                            let dueAmount = currentBalance > 0 ? currentBalance : 0;
+                            let advanceAmount = currentBalance < 0 ? Math.abs(currentBalance) : 0;
+                            let serialNo = data.serial || (index + 1);
+
+                            grandTotalDeposit += totalDeposit;
+                            grandTotalBuy += totalBuy;
+                            grandTotalDue += dueAmount;
+                            grandTotalAdvance += advanceAmount;
+
+                            let rowHTML = `
+                                <td class="p-3 border">${serialNo}</td>
+                                <td class="p-3 border font-medium">${data.name || ''}</td>
+                                <td class="p-3 border">${data.phone || ''}</td>
+                                <td class="p-3 border text-emerald-600 font-semibold">${totalDeposit}</td>
+                                <td class="p-3 border text-blue-600 font-semibold">${totalBuy}</td>
+                                <td class="p-3 border text-red-600 font-semibold">${dueAmount}</td>
+                                <td class="p-3 border text-purple-600 font-semibold">${advanceAmount}</td>
+                                <td class="p-3 border text-center">
+                                    <button onclick="openStatement('${key}', '${data.name}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
+                                </td>
+                            `;
+
+                            let row = document.getElementById(`party-row-${key}`);
+                            if(row) {
+                                row.innerHTML = rowHTML;
+                            } else {
+                                const newRow = document.createElement('tr');
+                                newRow.id = `party-row-${key}`;
+                                newRow.className = "hover:bg-gray-50 border-b";
+                                newRow.innerHTML = rowHTML;
+                                tbody.appendChild(newRow);
+                            }
+
+                            processedCount++;
+                            if (processedCount === parties.length) {
+                                renderGrandTotal(tbody, grandTotalDeposit, grandTotalBuy, grandTotalDue, grandTotalAdvance);
+                            }
+                        });
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-500">কোনো সরবরাহ পার্টি পাওয়া যায়নি</td></tr>`;
                 }
             });
         }
+        // সর্বমোট সারি রেন্ডার করার ফাংশন
+        function renderGrandTotal(tbody, totalDep, totalBuy, totalDue, totalAdv) {
+            const existingTotal = document.getElementById('grand-total-row');
+            if (existingTotal) existingTotal.remove();
+
+            const totalRow = document.createElement('tr');
+            totalRow.id = 'grand-total-row';
+            totalRow.className = "bg-gray-200 font-bold border-t-2 border-gray-400";
+            totalRow.innerHTML = `
+                <td colspan="3" class="p-3 border text-right">সর্বমোট:</td>
+                <td class="p-3 border text-emerald-600">${totalDep}</td>
+                <td class="p-3 border text-blue-600">${totalBuy}</td>
+                <td class="p-3 border text-red-600">${totalDue}</td>
+                <td class="p-3 border text-purple-600">${totalAdv}</td>
+                <td class="p-3 border"></td>
+            `;
+            tbody.appendChild(totalRow);
+        }
+
+        // নির্দিষ্ট পার্টির স্টেটমেন্ট বা লেনদেনের বিবরণ দেখার ফাংশন
+        function openStatement(key, name) {
+            document.getElementById('ledger-section').classList.remove('hidden');
+            document.getElementById('statement-party-title').innerHTML = `<span class="text-xl font-bold forest-green-text">${name}</span> - পার্টির লেনদেনের বিবরণ`;
+            
+            db.ref(`supply_parties/${key}`).once('value', partySnap => {
+                const partyVal = partySnap.val() || {};
+                const initDue = parseFloat(partyVal.due) || 0;
+                const initAdv = parseFloat(partyVal.advance) || 0;
+
+                const statementList = document.getElementById('statement-list');
+                db.ref(`supply_transactions/${key}`).on('value', snapshot => {
+                    statementList.innerHTML = '';
+
+                    let runningBalance = initDue - initAdv;
+                    let drCr = runningBalance >= 0 ? "Dr" : "Cr";
+                    let balanceClass = runningBalance < 0 ? "text-red-600 font-semibold" : "font-semibold";
+
+                    // প্রারম্ভিক বকেয়া বা পাওনা সারি
+                    statementList.innerHTML += `
+                        <tr class="border-b bg-gray-50 font-medium">
+                            <td class="p-3 border">-</td>
+                            <td class="p-3 border">পূর্বের বকেয়া / পাওনা ব্যালেন্স (প্রারম্ভিক)</td>
+                            <td class="p-3 border text-emerald-600">${initAdv}</td>
+                            <td class="p-3 border text-blue-600">${initDue}</td>
+                            <td class="p-3 border font-bold">${drCr}</td>
+                            <td class="p-3 border ${balanceClass}">${Math.abs(runningBalance)}</td>
+                        </tr>
+                    `;
+
+                    if(snapshot.exists()) {
+                        snapshot.forEach(childSnap => {
+                            const tVal = childSnap.val();
+                            const dep = parseFloat(tVal.amount) || 0;
+                            const buy = parseFloat(tVal.purchase) || 0;
+
+                            runningBalance = (runningBalance + buy) - dep;
+                            let currentDrCr = runningBalance >= 0 ? "Dr" : "Cr";
+                            let currentClass = runningBalance < 0 ? "text-red-600 font-semibold" : "font-semibold";
+
+                            statementList.innerHTML += `
+                                <tr class="hover:bg-gray-50 border-b">
+                                    <td class="p-3 border">${tVal.date || ''}</td>
+                                    <td class="p-3 border">${tVal.desc || 'লেনদেন'}</td>
+                                    <td class="p-3 border text-emerald-600">${dep}</td>
+                                    <td class="p-3 border text-blue-600">${buy}</td>
+                                    <td class="p-3 border font-semibold">${currentDrCr}</td>
+                                    <td class="p-3 border ${currentClass}">${Math.abs(runningBalance)}</td>
+                                </tr>
+                            `;
+                        });
+                    }
+                });
+            });
+
+            document.getElementById('ledger-section').scrollIntoView({ behavior: 'smooth' });
+        }
     </script>
 </body>
-</html> 
+</html>
