@@ -309,19 +309,20 @@
                         const key = childSnap.key;
                         const data = childSnap.val();
                         tbody.innerHTML += `
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="p-2 border">${data.serial || ''}</td>
-                                <td class="p-2 border font-medium">${data.name || ''}</td>
-                                <td class="p-2 border">${data.phone || ''}</td>
-                                <td class="p-2 border">${data.area || ''}</td>
-                                <td class="p-2 border">${data.userId || ''}</td>
-                                <td class="p-2 border">${data.pass || ''}</td>
-                                <td class="p-2 border flex gap-1">
-                                    <button onclick="deleteOfficer('${key}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">ডিলিট</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
+                              <tr class="border-b hover:bg-gray-50">
+        <td class="p-2 border">${data.serial || ''}</td>
+        <td class="p-2 border font-medium">${data.name || ''}</td>
+        <td class="p-2 border">${data.phone || ''}</td>
+        <td class="p-2 border">${data.area || ''}</td>
+        <td class="p-2 border">${data.userId || ''}</td>
+        <td class="p-2 border font-mono text-emerald-700">${data.pass || ''}</td>
+        <td class="p-2 border flex gap-1 items-center">
+            <button onclick="deleteOfficer('${key}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">ডিলিট</button>
+            <button onclick="editOfficer('${key}', '${data.serial || ''}', '${data.name || ''}', '${data.phone || ''}', '${data.area || ''}', '${data.userId || ''}', '${data.pass || ''}')" class="bg-amber-500 text-white px-2 py-1 rounded text-xs hover:bg-amber-600">এডিট</button>
+        </td>
+    </tr>
+`;
+        });
                 } else {
                     tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">কোনো সরবরাহ অফিসার পাওয়া যায়নি</td></tr>`;
                 }
@@ -332,6 +333,17 @@
             if(confirm("আপনি কি এই অফিসারকে ডিলিট করতে চান?")) {
                 db.ref('supply_officers/' + key).remove();
             }
+        }
+        function editOfficer(key, serial, name, phone, area, userId, pass) {
+    document.getElementById('officer-serial').value = serial;
+    document.getElementById('officer-name').value = name;
+    document.getElementById('officer-phone').value = phone;
+    document.getElementById('officer-area').value = area;
+    document.getElementById('officer-id').value = userId;
+    document.getElementById('officer-pass').value = pass;
+
+    db.ref('supply_officers/' + key).remove();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // সরবরাহ পার্টি সংরক্ষণ (পূর্বের বকেয়া ও পাওনা সহ)
