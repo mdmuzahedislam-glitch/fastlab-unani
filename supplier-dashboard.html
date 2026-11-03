@@ -221,8 +221,9 @@
         <footer class="mt-12 bg-white border-t py-4 text-center text-xs text-gray-500">
             © ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত
         </footer>
-            </div>
-            <!-- Firebase SDKs -->
+    </div>
+
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
@@ -308,22 +309,20 @@
                 loadNotices();
             }
         };
-
-        function loadNotices() {
+                function loadNotices() {
             // নোটিশ লোড করার ফাংশন যদি থাকে
         }
 
-        // ফায়ারবেস থেকে সরাসরি অ্যাডমিন প্যানেল বা ইউজার লিস্ট চেক করে লগইন লজিক
-                function handleLogin(event) {
+        // ফায়ারবেস থেকে সরাসরি ইউজার লিস্ট চেক করে লগইন লজিক
+        function handleLogin(event) {
             event.preventDefault();
             const inputId = document.getElementById('user-id').value.trim();
             const inputPass = document.getElementById('password').value.trim();
             const errorAlert = document.getElementById('error-alert');
 
-            // ফায়ারবেস থেকে ডেটা ফেচ করার সময় কনসোলে চেক করার জন্য
             db.ref('supply_users/' + inputId).once('value', snapshot => {
                 const userData = snapshot.val();
-                console.log("Database User Data for ID (" + inputId + "):", userData); // ব্রাউজার কনসোলে ডাটা দেখতে পাবেন
+                console.log("Database User Data for ID (" + inputId + "):", userData);
 
                 if (userData && (userData.pass === inputPass || userData.password === inputPass || userData.passw === inputPass)) {
                     errorAlert.classList.add('hidden');
@@ -355,7 +354,8 @@
                 errorAlert.classList.remove('hidden');
                 document.getElementById('error-text').innerText = "লগইন সমস্যা: " + err.message;
             });
-                }
+        }
+
         function handleLogout() {
             localStorage.clear();
             document.getElementById('dashboard-section').classList.add('hidden');
