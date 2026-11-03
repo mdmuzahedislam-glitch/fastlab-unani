@@ -108,14 +108,14 @@
             </button>
         </section>
 
-        <!-- ৪. সরবরাহ পার্টির লিস্ট -->
-        <section class="bg-white p-6 rounded-xl shadow-md">
+        <!-- ৪. সরবরাহ পার্টির লিস্ট (প্রিন্টের জন্য আইডি যুক্ত করা হয়েছে) -->
+        <section id="party-list-section" class="bg-white p-6 rounded-xl shadow-md">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base font-bold text-forest flex items-center gap-2">
                     <i class="fa-solid fa-list"></i> সরবরাহ পার্টির লিস্ট
                 </h2>
                 <button onclick="printSpecificSection('party-list-section', 'সরবরাহ পার্টির তালিকা')" class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-650">
-                  প্রিন্ট
+                    প্রিন্ট
                 </button>
             </div>
             <div class="overflow-x-auto">
@@ -137,6 +137,7 @@
                 </table>
             </div>
         </section>
+
         <!-- ৫. পার্টি জমা এন্ট্রি ফরম -->
         <section id="deposit-form-section" class="bg-white p-6 rounded-xl shadow-md border-2 border-emerald-600 hidden">
             <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
@@ -177,8 +178,7 @@
                     <i class="fa-solid fa-chart-line"></i> পার্টি স্টেটমেন্ট <span id="statement-party-title" class="text-xs text-emerald-700 ml-2"></span>
                 </h2>
                 <button onclick="printSpecificSection('statement-section', 'পার্টি লেনদেন স্টেটমেন্ট')" class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-650">
-                 প্রিন্ট
-                </button>
+                    প্রিন্ট
                 </button>
             </div>
             <div class="overflow-x-auto">
@@ -205,7 +205,6 @@
         </section>
 
     </main>
-
     <!-- ফায়ারবেজ ও কার্যকারী স্ক্রিপ্ট -->
     <script>
         const firebaseConfig = {
@@ -231,6 +230,26 @@
             loadSupplyParties();
             loadNotices();
         };
+
+        // নির্দিষ্ট সেকশন প্রিন্ট করার ফাংশন
+        function printSpecificSection(sectionId, titleText) {
+            const sectionContent = document.getElementById(sectionId).innerHTML;
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>প্রিন্ট - ফাস্টল্যাব ইউনানী</title>');
+            printWindow.document.write('<script src="https://cdn.tailwindcss.com"></script>');
+            printWindow.document.write('<style>body { font-family: sans-serif; padding: 20px; }</style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(`<h2 class="text-xl font-bold mb-4 text-center">${titleText}</h2>`);
+            printWindow.document.write(sectionContent);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+        }
 
         // নোটিশ সংরক্ষণ ও লোড
         function saveNotices() {
@@ -316,6 +335,7 @@
                 db.ref('supply_officers/' + key).remove();
             }
         }
+
         // সরবরাহ পার্টি সংরক্ষণ (পূর্বের বকেয়া ও পাওনা সহ)
         function saveSupplyParty() {
             const serial = document.getElementById('party-serial').value;
@@ -333,7 +353,6 @@
 
             db.ref('supply_parties').push(partyData)
                 .then((ref) => {
-                    // পূর্বের বকেয়া বা পাওনা থাকলে তা প্রথম লেনদেন বা প্রারম্ভিক হিসেবে যুক্ত করা
                     if(due > 0 || advance > 0) {
                         const initialTrans = {
                             date: new Date().toISOString().split('T')[0],
@@ -479,7 +498,6 @@
                         runningBalance += (buy - dep);
                         let drCr = runningBalance >= 0 ? "Cr" : "Dr";
                         let balanceClass = drCr === "Cr" ? "text-red-600 font-semibold" : "text-black font-semibold";
-
                         statementList.innerHTML += `
                             <tr class="border-b hover:bg-gray-50">
                                 <td class="p-2 border">${tVal.date || ''}</td>
