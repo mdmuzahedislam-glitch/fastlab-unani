@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <!-- XLSX Library for Excel Export -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- Firebase SDK (v8) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -618,6 +620,29 @@
 
             db.ref(`supply_transactions/${partyKey}/${transKey}`).remove();
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+                // টেবিল থেকে এক্সেল ডাউনলোড করার ফাংশন
+        function exportTableToExcel(sectionId, fileName) {
+            const section = document.getElementById(sectionId);
+            const table = section.querySelector('table');
+
+            if (!table) {
+                alert("ডাউনলোড করার মতো কোনো টেবিল পাওয়া যায়নি!");
+                return;
+            }
+
+            const cloneTable = table.cloneNode(true);
+
+            // এক্সেল ফাইল থেকে 'একশন' কলাম রিমুভ করা
+            const rows = cloneTable.querySelectorAll('tr');
+            rows.forEach(row => {
+                if (row.cells.length > 0) {
+                    row.deleteCell(-1); 
+                }
+            });
+
+            const wb = XLSX.utils.table_to_book(cloneTable, { sheet: "Sheet1", raw: true });
+            XLSX.writeFile(wb, `${fileName}_${new Date().toISOString().slice(0,10)}.xlsx`);
         }
     </script>
 </body>
