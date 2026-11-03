@@ -170,8 +170,7 @@
                 </button>
             </div>
         </section>
-
-        <!-- ৬. পার্টি স্টেটমেন্ট -->
+         <!-- ৬. পার্টি স্টেটমেন্ট -->
         <section id="statement-section" class="bg-white p-6 rounded-xl shadow-md border hidden">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base font-bold text-forest flex items-center gap-2">
@@ -230,6 +229,7 @@
             loadSupplyParties();
             loadNotices();
         };
+
         // নির্দিষ্ট সেকশন প্রিন্ট করার ফাংশন
         function printSpecificSection(sectionId, titleText) {
             const sectionContent = document.getElementById(sectionId).innerHTML;
@@ -347,7 +347,7 @@
             db.ref('supply_officers/' + key).remove();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-                // সরবরাহ পার্টি সংরক্ষণ (প্রারম্ভিক বকেয়া বা পাওনা সহ)
+         // সরবরাহ পার্টি সংরক্ষণ (প্রারম্ভিক বকেয়া বা পাওনা সহ)
         function saveSupplyParty() {
             const serial = document.getElementById('party-serial').value;
             const name = document.getElementById('party-name').value;
@@ -374,7 +374,8 @@
                 })
                 .catch(err => alert("ত্রুটি: " + err.message));
         }
-                // সরবরাহ পার্টির লিস্ট এবং সর্বমোট হিসাব
+
+        // সরবরাহ পার্টির লিস্ট এবং সর্বমোট হিসাব
         function loadSupplyParties() {
             const tbody = document.getElementById('supply-party-list');
             db.ref('supply_parties').on('value', snapshot => {
@@ -471,13 +472,7 @@
             `;
             tbody.appendChild(totalRow);
         }
-             });
-                    });
-                } else {
-                    tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">কোনো সরবরাহ পার্টি পাওয়া যায়নি</td></tr>`;
-                }
-            });
-        }
+
         function editParty(key, serial, name, phone, due, advance) {
             document.getElementById('party-serial').value = serial;
             document.getElementById('party-name').value = name;
@@ -539,48 +534,67 @@
                     hideDepositForm();
                 })
                 .catch(err => alert("ত্রুটি: " + err.message));
-        }
-
-        // স্টেটমেন্ট ও Dr/Cr কালার লজিক (এডিট ও ডিলিট সহ)
+            }
+        // স্টেটমেন্ট ও Dr/Cr কালার লজিক (প্রারম্ভিক জের সহ)
         function openStatement(key, name) {
             selectedPartyKey = key;
             document.getElementById('statement-party-title').innerText = `(পার্টি: ${name})`;
             document.getElementById('statement-section').classList.remove('hidden');
             
-            const statementList = document.getElementById('statement-list');
-            db.ref(`supply_transactions/${key}`).on('value', snapshot => {
-                statementList.innerHTML = '';
-                let runningBalance = 0;
+            db.ref(`supply_parties/${key}`).once('value', partySnap => {
+                const partyVal = partySnap.val() || {};
+                const initDue = parseFloat(partyVal.due) || 0;
+                const initAdv = parseFloat(partyVal.advance) || 0;
 
-                if(snapshot.exists()) {
-                    snapshot.forEach(childSnap => {
-                        const tKey = childSnap.key;
-                        const tVal = childSnap.val();
-                        const dep = parseFloat(tVal.amount) || 0;
-                        const buy = parseFloat(tVal.purchase) || 0;
-                        
-                        runningBalance += (buy - dep);
-                        let drCr = runningBalance < 0 ? "Cr" : "Dr";
-                        let balanceClass = runningBalance < 0 ? "text-red-600 font-semibold" : "font-semibold";
+                const statementList = document.getElementById('statement-list');
+                db.ref(`supply_transactions/${key}`).on('value', snapshot => {
+                    statementList.innerHTML = '';
+                    
+                    let runningBalance = initDue - initAdv; 
+                    let drCr = runningBalance >= 0 ? "Dr" : "Cr";
+                    let balanceClass = runningBalance < 0 ? "text-red-600 font-semibold" : "font-semibold";
 
-                        statementList.innerHTML += `
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="p-2 border">${tVal.date || ''}</td>
-                                <td class="p-2 border">${tVal.desc || ''}</td>
-                                <td class="p-2 border text-emerald-600">${dep}</td>
-                                <td class="p-2 border text-blue-600">${buy}</td>
-                                <td class="p-2 border font-bold">${drCr}</td>
-                                <td class="p-2 border ${balanceClass}">${Math.abs(runningBalance)}</td>
-                                <td class="p-2 border flex gap-1">
-                                    <button onclick="editStatementTrans('${key}', '${tKey}', '${tVal.date || ''}', '${tVal.desc || ''}', '${dep}', '${buy}')" class="bg-amber-500 text-white px-2 py-0.5 rounded text-xs hover:bg-amber-600">এডিট</button>
-                                    <button onclick="deleteTransaction('${key}', '${tKey}')" class="bg-red-600 text-white px-2 py-0.5 rounded text-xs hover:bg-red-700">মুছুন</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                } else {
-                    statementList.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">কোনো লেনদেনের তথ্য পাওয়া যায়নি</td></tr>`;
-                }
+                    // প্রারম্ভিক জেরের প্রথম সারি
+                    statementList.innerHTML = `
+                        <tr class="border-b bg-gray-50 font-medium">
+                            <td class="p-2 border">-</td>
+                            <td class="p-2 border">পূর্বের বকেয়া / পাওনা ব্যালেন্স (প্রারম্ভিক)</td>
+                            <td class="p-2 border text-emerald-600">${initAdv}</td>
+                            <td class="p-2 border text-blue-600">${initDue}</td>
+                            <td class="p-2 border font-bold">${drCr}</td>
+                            <td class="p-2 border ${balanceClass}">${Math.abs(runningBalance)}</td>
+                            <td class="p-2 border">-</td>
+                        </tr>
+                    `;
+
+                    if(snapshot.exists()) {
+                        snapshot.forEach(childSnap => {
+                            const tKey = childSnap.key;
+                            const tVal = childSnap.val();
+                            const dep = parseFloat(tVal.amount) || 0;
+                            const buy = parseFloat(tVal.purchase) || 0;
+                            
+                            runningBalance += (buy - dep);
+                            let tDrCr = runningBalance >= 0 ? "Dr" : "Cr";
+                            let tBalanceClass = runningBalance < 0 ? "text-red-600 font-semibold" : "font-semibold";
+
+                            statementList.innerHTML += `
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-2 border">${tVal.date || ''}</td>
+                                    <td class="p-2 border">${tVal.desc || ''}</td>
+                                    <td class="p-2 border text-emerald-600">${dep}</td>
+                                    <td class="p-2 border text-blue-600">${buy}</td>
+                                    <td class="p-2 border font-bold">${tDrCr}</td>
+                                    <td class="p-2 border ${tBalanceClass}">${Math.abs(runningBalance)}</td>
+                                    <td class="p-2 border flex gap-1">
+                                        <button onclick="editStatementTrans('${key}', '${tKey}', '${tVal.date || ''}', '${tVal.desc || ''}', '${dep}', '${buy}')" class="bg-amber-500 text-white px-2 py-0.5 rounded text-xs hover:bg-amber-600">এডিট</button>
+                                        <button onclick="deleteTransaction('${key}', '${tKey}')" class="bg-red-600 text-white px-2 py-0.5 rounded text-xs hover:bg-red-700">মুছুন</button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    }
+                });
             });
 
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
@@ -608,3 +622,5 @@
     </script>
 </body>
 </html>
+        
+        
