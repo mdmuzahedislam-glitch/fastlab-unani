@@ -348,39 +348,40 @@
 
         // সরবরাহ পার্টি সংরক্ষণ (পূর্বের বকেয়া ও পাওনা সহ)
         function saveSupplyParty() {
-            const serial = document.getElementById('party-serial').value;
-            const name = document.getElementById('party-name').value;
-            const phone = document.getElementById('party-phone').value;
-            const due = parseFloat(document.getElementById('party-due').value) || 0;
-            const advance = parseFloat(document.getElementById('party-advance').value) || 0;
+    const serial = document.getElementById('party-serial').value;
+    const name = document.getElementById('party-name').value;
+    const phone = document.getElementById('party-phone').value;
+    const due = parseFloat(document.getElementById('party-due').value) || 0;
+    const advance = parseFloat(document.getElementById('party-advance').value) || 0;
 
-            if(!name) {
-                alert("দয়া করে পার্টির নাম ও ঠিকানা লিখুন!");
-                return;
+    if (!name) {
+        alert("দয়া করে পার্টির নাম ও ঠিকানা লিখুন!");
+        return;
+    }
+
+    const partyData = { serial, name, phone, due, advance };
+
+    db.ref('supply_parties').push(partyData)
+        .then((ref) => {
+            if (due > 0 || advance > 0) {
+                const initialTrans = {
+                    date: new Date().toISOString().split('T')[0],
+                    desc: "পূর্বের বকেয়া / পাওনা ব্যালেন্স",
+                    amount: advance, // জমা বা পাওনা (Cr)
+                    purchase: due  // মাল ক্রয় বা বকেয়া (Dr)
+                };
+                db.ref(`supply_transactions/${ref.key}`).push(initialTrans);
             }
 
-            const partyData = { serial, name, phone, due, advance };
-
-            db.ref('supply_parties').push(partyData)
-                .then((ref) => {
-                    if(due > 0 || advance > 0) {
-                        const initialTrans = {
-                            date: new Date().toISOString().split('T')[0],
-                            desc: "পূর্বের বকেয়া / পাওনা ব্যালেন্স",
-                            amount: advance,
-                            purchase: due
-                        };
-                        db.ref(`supply_transactions/${ref.key}`).push(initialTrans);
-                    }
-
-                    alert("পার্টি সফলভাবে সংরক্ষিত হয়েছে!");
-                    document.getElementById('party-serial').value = '';
-                    document.getElementById('party-name').value = '';
-                    document.getElementById('party-phone').value = '';
-                    document.getElementById('party-due').value = '';
-                    document.getElementById('party-advance').value = '';
-                })
-                .catch(err => alert("ত্রুটি: " + err.message));
+            alert("পার্টি সফলভাবে সংরক্ষিত হয়েছে!");
+            document.getElementById('party-serial').value = '';
+            document.getElementById('party-name').value = '';
+            document.getElementById('party-phone').value = '';
+            document.getElementById('party-due').value = '';
+            document.getElementById('party-advance').value = '';
+            loadSupplyParties();
+        })
+        .catch(err => alert("ত্রুটি: " + err.message));
         }
 
         function loadSupplyParties() {
@@ -497,8 +498,7 @@
                 })
                 .catch(err => alert("ত্রুটি: " + err.message));
         }
-
-        // স্টেটমেন্ট ও Dr/Cr কালার লজিক
+                // স্টেটমেন্ট ও Dr/Cr কালার লজিক
         function openStatement(key, name) {
             selectedPartyKey = key;
             document.getElementById('statement-party-title').innerText = `(পার্টি: ${name})`;
@@ -517,8 +517,8 @@
                         const buy = parseFloat(tVal.purchase) || 0;
                         
                         runningBalance += (buy - dep);
-                        let drCr = runningBalance >= 0 ? "Cr" : "Dr";
-                        let balanceClass = drCr === "Cr" ? "text-red-600 font-semibold" : "text-black font-semibold";
+                        let drCr = runningBalance < 0 ? "Cr" : "Dr";
+                        let balanceClass = runningBalance < 0 ? "text-red-600 font-semibold" : "font-semibold";
 
                         statementList.innerHTML += `
                             <tr class="border-b hover:bg-gray-50">
@@ -529,6 +529,7 @@
                                 <td class="p-2 border font-bold">${drCr}</td>
                                 <td class="p-2 border ${balanceClass}">${Math.abs(runningBalance)}</td>
                                 <td class="p-2 border flex gap-1">
+                                    <button onclick="editStatementTrans('${key}', '${tKey}', '${tVal.date || ''}', '${tVal.desc || ''}', '${dep}', '${buy}')" class="bg-amber-500 text-white px-2 py-0.5 rounded text-xs hover:bg-amber-600">এডিট</button>
                                     <button onclick="deleteTransaction('${key}', '${tKey}')" class="bg-red-600 text-white px-2 py-0.5 rounded text-xs hover:bg-red-700">মুছুন</button>
                                 </td>
                             </tr>
@@ -550,6 +551,16 @@
             if(confirm("আপনি কি এই লেনদেনটি ডিলিট করতে চান?")) {
                 db.ref(`supply_transactions/${partyKey}/${transKey}`).remove();
             }
+        }
+
+        function editStatementTrans(partyKey, transKey, date, desc, amount, purchase) {
+            document.getElementById('dep-date').value = date;
+            document.getElementById('dep-desc').value = desc;
+            document.getElementById('dep-amount').value = amount > 0 ? amount : '';
+            document.getElementById('dep-purchase').value = purchase > 0 ? purchase : '';
+
+            db.ref(`supply_transactions/${partyKey}/${transKey}`).remove();
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
     </script>
 </body>
