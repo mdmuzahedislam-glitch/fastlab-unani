@@ -547,7 +547,7 @@
                 // স্টেটমেন্ট ও Dr/Cr কালার লজিক (প্রারম্ভিক জের শূন্য রেখে স্টেটমেন্ট দেখানোর জন্য)
         function openStatement(key, name) {
             selectedPartyKey = key;
-            document.getElementById('statement-party-title').innerHTML = `(পার্টি: <span class="text-2xl font-bold text-forest">${name}</span>)`;
+            document.getElementById('statement-party-title').innerHTML = `<span class="text-xl font-bold text-forest">${name}</span>`;
             document.getElementById('statement-section').classList.remove('hidden');
             
             db.ref(`supply_parties/${key}`).once('value', partySnap => {
