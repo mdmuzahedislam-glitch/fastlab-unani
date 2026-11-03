@@ -374,8 +374,7 @@
                 })
                 .catch(err => alert("ত্রুটি: " + err.message));
         }
-
-        // সরবরাহ পার্টির লিস্ট এবং সর্বমোট হিসাব
+                // সরবরাহ পার্টির লিস্ট এবং সর্বমোট হিসাব (প্রারম্ভিক বকেয়া শুধু বকেয়া কলামে থাকবে, ক্রয়ে নয়)
         function loadSupplyParties() {
             const tbody = document.getElementById('supply-party-list');
             db.ref('supply_parties').on('value', snapshot => {
@@ -399,8 +398,8 @@
                         const initialAdvance = parseFloat(data.advance) || 0;
 
                         db.ref(`supply_transactions/${key}`).on('value', transSnap => {
-                            let totalDeposit = initialAdvance; 
-                            let totalBuy = initialDue;       
+                            let totalDeposit = initialAdvance; // শুধু জমার ট্রানজাকশন ও অ্যাডভান্স
+                            let totalBuy = 0;        // মাল ক্রয়ের ঘরে শুধুমাত্র রিয়েল ক্রয় যোগ হবে, প্রারম্ভিক বকেয়া নয়
                             
                             if(transSnap.exists()) {
                                 transSnap.forEach(tSnap => {
@@ -410,7 +409,8 @@
                                 });
                             }
 
-                            let currentDue = totalBuy - totalDeposit;
+                            // মূল বকেয়া = (প্রারম্ভিক বকেয়া + মোট মাল ক্রয়) - মোট জমা (বা প্রারম্ভিক পাওনা)
+                            let currentDue = (initialDue + totalBuy) - totalDeposit;
                             let serialNo = data.serial || (index + 1);
 
                             grandTotalDeposit += totalDeposit;
