@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK (v8) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
@@ -40,11 +40,11 @@
                 <i class="fa-solid fa-bullhorn"></i> অফিসার প্রোফাইল নোটিশ বোর্ড এডিট
             </h2>
             <div class="space-y-3">
-                <input type="text" placeholder="১. নোটিশ বা বার্তা লিখুন..." class="w-full border p-2 rounded-lg">
-                <input type="text" placeholder="২. নোটিশ বা বার্তা লিখুন..." class="w-full border p-2 rounded-lg">
-                <input type="text" placeholder="৩. নোটিশ বা বার্তা লিখুন..." class="w-full border p-2 rounded-lg">
+                <input type="text" id="notice-1" placeholder="১. নোটিশ বা বার্তা লিখুন..." class="w-full border p-2 rounded-lg">
+                <input type="text" id="notice-2" placeholder="২. নোটিশ বা বার্তা লিখুন..." class="w-full border p-2 rounded-lg">
+                <input type="text" id="notice-3" placeholder="৩. নোটিশ বা বার্তা লিখুন..." class="w-full border p-2 rounded-lg">
             </div>
-            <button class="mt-3 bg-emerald-600 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-emerald-700">
+            <button onclick="saveNotices()" class="mt-3 bg-emerald-600 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-emerald-700">
                 সংরক্ষণ
             </button>
         </section>
@@ -142,7 +142,7 @@
         <!-- ৫. পার্টি জমা এন্ট্রি ফরম (শুরুতে হিডেন থাকবে) -->
         <section id="deposit-form-section" class="bg-white p-6 rounded-xl shadow-md border-2 border-emerald-600 hidden">
             <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-pen-to-square"></i> পার্টি জমা এন্ট্রি ফরম
+                <i class="fa-solid fa-pen-to-square"></i> পার্টি জমা এন্ট্রি ফরম <span id="active-party-title" class="text-xs text-emerald-700 ml-2"></span>
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 text-sm">
                 <div>
@@ -172,11 +172,11 @@
             </div>
         </section>
 
-        <!-- ৬. পার্টি স্টেটমেন্ট (শুরুতে হিডেন থাকবে) -->
+          <!-- ৬. পার্টি স্টেটমেন্ট (শুরুতে হিডেন থাকবে) -->
         <section id="statement-section" class="bg-white p-6 rounded-xl shadow-md border hidden">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base font-bold text-forest flex items-center gap-2">
-                    <i class="fa-solid fa-chart-line"></i> পার্টি স্টেটমেন্ট
+                    <i class="fa-solid fa-chart-line"></i> পার্টি স্টেটমেন্ট <span id="statement-party-title" class="text-xs text-emerald-700 ml-2"></span>
                 </h2>
                 <button onclick="window.print()" class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-600">
                     প্রিন্ট বাটন
@@ -225,19 +225,281 @@
         }
         const db = firebase.database();
 
-        // জমা এন্ট্রি ফর্ম দেখানোর ফাংশন (হিডেন থেকে দৃশ্যমান করা)
-        function showDepositForm() {
+        let selectedPartyKey = null;
+
+        // ডাটা রিয়েলটাইম লোড ও লাইভ টেলিকাস্ট শুরু
+        window.onload = function() {
+            loadSupplyOfficers();
+            loadSupplyParties();
+            loadNotices();
+        };
+
+        // ১. নোটিশ সংরক্ষণ ও লোড
+        function saveNotices() {
+            const n1 = document.getElementById('notice-1').value;
+            const n2 = document.getElementById('notice-2').value;
+            const n3 = document.getElementById('notice-3').value;
+
+            db.ref('supply_notices').set({ n1, n2, n3 })
+                .then(() => alert("নোটিশ সফলভাবে সংরক্ষিত হয়েছে!"))
+                .catch(err => alert("ত্রুটি: " + err.message));
+        }
+
+        function loadNotices() {
+            db.ref('supply_notices').on('value', snapshot => {
+                const data = snapshot.val();
+                if(data) {
+                    document.getElementById('notice-1').value = data.n1 || '';
+                    document.getElementById('notice-2').value = data.n2 || '';
+                    document.getElementById('notice-3').value = data.n3 || '';
+                }
+            });
+        }
+
+        // ২. নতুন সরবরাহ অফিসার সংরক্ষণ ও লাইভ লিস্ট রেন্ডার
+        function saveSupplyOfficer() {
+            const serial = document.getElementById('officer-serial').value;
+            const name = document.getElementById('officer-name').value;
+            const phone = document.getElementById('officer-phone').value;
+            const area = document.getElementById('officer-area').value;
+            const userId = document.getElementById('officer-id').value;
+            const pass = document.getElementById('officer-pass').value;
+
+            if(!name || !userId) {
+                alert("দয়া করে অফিসারের নাম এবং ইউজার আইডি লিখুন!");
+                return;
+            }
+
+            const officerData = { serial, name, phone, area, userId, pass };
+
+            db.ref('supply_officers').push(officerData)
+                .then(() => {
+                    alert("অফিসার সফলভাবে সংরক্ষিত হয়েছে!");
+                    document.getElementById('officer-serial').value = '';
+                    document.getElementById('officer-name').value = '';
+                    document.getElementById('officer-phone').value = '';
+                    document.getElementById('officer-area').value = '';
+                    document.getElementById('officer-id').value = '';
+                    document.getElementById('officer-pass').value = '';
+                })
+                .catch(err => alert("ত্রুটি: " + err.message));
+        }
+
+        function loadSupplyOfficers() {
+            const tbody = document.getElementById('supply-officer-list');
+            db.ref('supply_officers').on('value', snapshot => {
+                tbody.innerHTML = '';
+                if(snapshot.exists()) {
+                    snapshot.forEach(childSnap => {
+                        const key = childSnap.key;
+                        const data = childSnap.val();
+                        tbody.innerHTML += `
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="p-2 border">${data.serial || ''}</td>
+                                <td class="p-2 border font-medium">${data.name || ''}</td>
+                                <td class="p-2 border">${data.phone || ''}</td>
+                                <td class="p-2 border">${data.area || ''}</td>
+                                <td class="p-2 border">${data.userId || ''}</td>
+                                <td class="p-2 border">******</td>
+                                <td class="p-2 border">
+                                    <button onclick="deleteOfficer('${key}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">ডিলিট</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">কোনো সরবরাহ অফিসার পাওয়া যায়নি</td></tr>`;
+                }
+            });
+        }
+
+        function deleteOfficer(key) {
+            if(confirm("আপনি কি এই অফিসারকে ডিলিট করতে চান?")) {
+                db.ref('supply_officers/' + key).remove();
+            }
+        }
+
+        // ৩. নতুন সরবরাহ পার্টি সংরক্ষণ ও লাইভ লিস্ট রেন্ডার
+        function saveSupplyParty() {
+            const serial = document.getElementById('party-serial').value;
+            const name = document.getElementById('party-name').value;
+            const phone = document.getElementById('party-phone').value;
+            const due = parseFloat(document.getElementById('party-due').value) || 0;
+            const advance = parseFloat(document.getElementById('party-advance').value) || 0;
+
+            if(!name) {
+                alert("দয়া করে পার্টির নাম ও ঠিকানা লিখুন!");
+                return;
+            }
+
+            const partyData = { serial, name, phone, due, advance };
+
+            db.ref('supply_parties').push(partyData)
+                .then(() => {
+                    alert("পার্টি সফলভাবে সংরক্ষিত হয়েছে!");
+                    document.getElementById('party-serial').value = '';
+                    document.getElementById('party-name').value = '';
+                    document.getElementById('party-phone').value = '';
+                    document.getElementById('party-due').value = '';
+                    document.getElementById('party-advance').value = '';
+                })
+                .catch(err => alert("ত্রুটি: " + err.message));
+        }
+
+        function loadSupplyParties() {
+            const tbody = document.getElementById('supply-party-list');
+            db.ref('supply_parties').on('value', snapshot => {
+                tbody.innerHTML = '';
+                if(snapshot.exists()) {
+                    snapshot.forEach(childSnap => {
+                        const key = childSnap.key;
+                        const data = childSnap.val();
+
+                        // ফায়ারবেজ থেকে সাব-এন্ট্রি বা লেনদেন হিসাব করে মোট জমা, মাল ক্রয় ও বকেয়া বের করা
+                        db.ref(`supply_transactions/${key}`).on('value', transSnap => {
+                            let totalDeposit = 0;
+                            let totalBuy = 0;
+                            transSnap.forEach(tSnap => {
+                                const tVal = tSnap.val();
+                                totalDeposit += parseFloat(tVal.amount) || 0;
+                                totalBuy += parseFloat(tVal.purchase) || 0;
+                            });
+
+                            let currentDue = (parseFloat(data.due) || 0) + totalBuy - totalDeposit - (parseFloat(data.advance) || 0);
+
+                            // রো আপডেট করা
+                            let row = document.getElementById(`party-row-${key}`);
+                            const rowHTML = `
+                                <td class="p-2 border">${data.serial || ''}</td>
+                                <td class="p-2 border font-medium">${data.name || ''}</td>
+                                <td class="p-2 border">${data.phone || ''}</td>
+                                <td class="p-2 border text-emerald-600 font-semibold">${totalDeposit}</td>
+                                <td class="p-2 border text-blue-600 font-semibold">${totalBuy}</td>
+                                <td class="p-2 border text-red-600 font-semibold">${currentDue}</td>
+                                <td class="p-2 border flex gap-1 flex-wrap">
+                                    <button onclick="openDepositForm('${key}', '${data.name}')" class="bg-emerald-600 text-white px-2 py-1 rounded text-xs hover:bg-emerald-700">জমা এন্ট্রি</button>
+                                    <button onclick="openStatement('${key}', '${data.name}')" class="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700">স্টেটমেন্ট</button>
+                                    <button onclick="deleteParty('${key}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">ডিলিট</button>
+                                </td>
+                            `;
+
+                            if(row) {
+                                row.innerHTML = rowHTML;
+                            } else {
+                                const newRow = document.createElement('tr');
+                                newRow.id = `party-row-${key}`;
+                                newRow.className = "hover:bg-gray-50 border-b";
+                                newRow.innerHTML = rowHTML;
+                                tbody.appendChild(newRow);
+                            }
+                        });
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">কোনো সরবরাহ পার্টি পাওয়া যায়নি</td></tr>`;
+                }
+            });
+        }
+
+        function deleteParty(key) {
+            if(confirm("আপনি কি এই পার্টি এবং এর সমস্ত লেনদেন ডিলিট করতে চান?")) {
+                db.ref('supply_parties/' + key).remove();
+                db.ref('supply_transactions/' + key).remove();
+                hideDepositForm();
+                hideStatement();
+            }
+        }
+        function deleteParty(key) {
+            if(confirm("আপনি কি এই পার্টি এবং এর সমস্ত লেনদেন ডিলিট করতে চান?")) {
+                db.ref('supply_parties/' + key).remove();
+                db.ref('supply_transactions/' + key).remove();
+                hideDepositForm();
+                hideStatement();
+            }
+        }
+
+        // ৪. পার্টি জমা এন্ট্রি ফরম সংক্রান্ত ফাংশন
+        function openDepositForm(key, name) {
+            selectedPartyKey = key;
+            document.getElementById('active-party-title').innerText = `(পার্টি: ${name})`;
             document.getElementById('deposit-form-section').classList.remove('hidden');
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
         function hideDepositForm() {
             document.getElementById('deposit-form-section').classList.add('hidden');
+            selectedPartyKey = null;
         }
 
-        // স্টেটমেন্ট দেখানোর ফাংশন
-        function showStatement() {
+        function submitDeposit() {
+            if(!selectedPartyKey) {
+                alert("দয়া করে যেকোনো একটি পার্টি সিলেক্ট করুন!");
+                return;
+            }
+
+            const date = document.getElementById('dep-date').value;
+            const desc = document.getElementById('dep-desc').value;
+            const amount = parseFloat(document.getElementById('dep-amount').value) || 0;
+            const purchase = parseFloat(document.getElementById('dep-purchase').value) || 0;
+
+            if(!date) {
+                alert("দয়া করে তারিখ সিলেক্ট করুন!");
+                return;
+            }
+
+            const transData = { date, desc, amount, purchase };
+
+            db.ref(`supply_transactions/${selectedPartyKey}`).push(transData)
+                .then(() => {
+                    alert("জমা সফলভাবে এন্ট্রি হয়েছে!");
+                    document.getElementById('dep-date').value = '';
+                    document.getElementById('dep-desc').value = '';
+                    document.getElementById('dep-amount').value = '';
+                    document.getElementById('dep-purchase').value = '';
+                    hideDepositForm();
+                })
+                .catch(err => alert("ত্রুটি: " + err.message));
+        }
+
+        // ৫. পার্টি স্টেটমেন্ট দেখানো ও লাইভ রেন্ডার
+        function openStatement(key, name) {
+            selectedPartyKey = key;
+            document.getElementById('statement-party-title').innerText = `(পার্টি: ${name})`;
             document.getElementById('statement-section').classList.remove('hidden');
+            
+            const statementList = document.getElementById('statement-list');
+            db.ref(`supply_transactions/${key}`).on('value', snapshot => {
+                statementList.innerHTML = '';
+                let runningBalance = 0;
+
+                if(snapshot.exists()) {
+                    snapshot.forEach(childSnap => {
+                        const tKey = childSnap.key;
+                        const tVal = childSnap.val();
+                        const dep = parseFloat(tVal.amount) || 0;
+                        const buy = parseFloat(tVal.purchase) || 0;
+                        
+                        runningBalance += (buy - dep);
+                        let drCr = runningBalance >= 0 ? "Dr" : "Cr";
+
+                        statementList.innerHTML += `
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="p-2 border">${tVal.date || ''}</td>
+                                <td class="p-2 border">${tVal.desc || ''}</td>
+                                <td class="p-2 border text-emerald-600">${dep}</td>
+                                <td class="p-2 border text-blue-600">${buy}</td>
+                                <td class="p-2 border font-bold">${drCr}</td>
+                                <td class="p-2 border font-semibold">${Math.abs(runningBalance)}</td>
+                                <td class="p-2 border">
+                                    <button onclick="deleteTransaction('${key}', '${tKey}')" class="bg-red-600 text-white px-2 py-0.5 rounded text-xs hover:bg-red-700">মুছুন</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    statementList.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">কোনো লেনদেনের তথ্য পাওয়া যায়নি</td></tr>`;
+                }
+            });
+
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
@@ -245,18 +507,10 @@
             document.getElementById('statement-section').classList.add('hidden');
         }
 
-        // ডাটা সংরক্ষণ ফাংশনগুলো
-        function saveSupplyOfficer() {
-            alert("অফিসার সংরক্ষণের কাজ এখানে যুক্ত হবে।");
-        }
-
-        function saveSupplyParty() {
-            alert("পার্টি সংরক্ষণের কাজ এখানে যুক্ত হবে।");
-        }
-
-        function submitDeposit() {
-            alert("জমা সফলভাবে এন্ট্রি হয়েছে!");
-            hideDepositForm();
+        function deleteTransaction(partyKey, transKey) {
+            if(confirm("আপনি কি এই লেনদেনটি ডিলিট করতে চান?")) {
+                db.ref(`supply_transactions/${partyKey}/${transKey}`).remove();
+            }
         }
     </script>
 </body>
