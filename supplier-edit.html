@@ -128,7 +128,7 @@
                             <th class="p-2 border">পার্টির নাম ও ঠিকানা</th>
                             <th class="p-2 border">মোবাইল</th>
                             <th class="p-2 border">মোট জমা</th>
-                            <th class="p-2 border">মাল ক্রয়</th>
+                            <th class="p-2 border">পণ্য ক্রয়</th>
                             <th class="p-2 border">বকেয়া</th>
                             <th class="p-2 border">অগ্রিম জমা</th>
                             <th class="p-2 border">একশন</th>
@@ -160,8 +160,8 @@
                     <input type="number" id="dep-amount" placeholder="জমা টাকার পরিমাণ" class="w-full border p-2 rounded-lg">
                 </div>
                 <div>
-                    <label class="block font-semibold text-gray-700 mb-1">মাল ক্রয়:</label>
-                    <input type="number" id="dep-purchase" placeholder="মাল ক্রয়ের পরিমাণ" class="w-full border p-2 rounded-lg">
+                    <label class="block font-semibold text-gray-700 mb-1">পন্য ক্রয়:</label>
+                    <input type="number" id="dep-purchase" placeholder="পণ্য ক্রয়ের পরিমাণ" class="w-full border p-2 rounded-lg">
                 </div>
             </div>
             <div class="flex gap-3">
@@ -176,11 +176,11 @@
          <!-- ৬. পার্টি স্টেটমেন্ট -->
         <section id="statement-section" class="bg-white p-6 rounded-xl shadow-md border hidden">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-base font-bold text-forest flex items-center gap-2">
+                <h2 class="text-xl font-bold text-forest flex items-center gap-2">
                     <i class="fa-solid fa-chart-line"></i> পার্টি স্টেটমেন্ট <span id="statement-party-title" class="text-xs text-emerald-700 ml-2"></span>
                 </h2>
                 <button onclick="exportTableToExcel('statement-section', 'পার্টি_স্টেটমেন্ট')" class="bg-emerald-600 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-emerald-700 flex items-center gap-1">
-               <i class="fa-solid fa-file-excel"></i> Excel 📂ডাউনলোড
+               <i class="fa-solid fa-file-excel"></i> Excel ডাউনলোড
                 </button>
             </div>
             <div class="overflow-x-auto">
@@ -190,7 +190,7 @@
                             <th class="p-2 border">তারিখ</th>
                             <th class="p-2 border">বিবরণ</th>
                             <th class="p-2 border">জমা</th>
-                            <th class="p-2 border">মাল ক্রয়</th>
+                            <th class="p-2 border">পণ্য ক্রয়</th>
                             <th class="p-2 border">Dr/Cr</th>
                             <th class="p-2 border">অবশিষ্ট</th>
                             <th class="p-2 border">একশন</th>
@@ -463,23 +463,6 @@
             });
         }
         
-        // টেবিলের নিচে সর্বমোট সারি রেন্ডার করার ফাংশন
-        function renderGrandTotal(tbody, totalDep, totalBuy, totalDue) {
-            const existingTotal = document.getElementById('grand-total-row');
-            if (existingTotal) existingTotal.remove();
-
-            const totalRow = document.createElement('tr');
-            totalRow.id = 'grand-total-row';
-            totalRow.className = "bg-gray-200 font-bold border-t-2 border-gray-400";
-            totalRow.innerHTML = `
-                <td colspan="3" class="p-2 border text-right">সর্বমোট:</td>
-                <td class="p-2 border text-emerald-600">${totalDep}</td>
-                <td class="p-2 border text-blue-600">${totalBuy}</td>
-                <td class="p-2 border text-red-600">${totalDue}</td>
-                <td class="p-2 border"></td>
-            `;
-            tbody.appendChild(totalRow);
-        }
 
         function editParty(key, serial, name, phone, due, advance) {
             document.getElementById('party-serial').value = serial;
@@ -491,7 +474,25 @@
             db.ref('supply_parties/' + key).remove();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        // টেবিলের নিচে সর্বমোট সারি রেন্ডার করার ফাংশন
+        function renderGrandTotal(tbody, totalDep, totalBuy, totalDue, totalAdv) {
+            const existingTotal = document.getElementById('grand-total-row');
+            if (existingTotal) existingTotal.remove();
 
+            const totalRow = document.createElement('tr');
+            totalRow.id = 'grand-total-row';
+            totalRow.className = "bg-gray-200 font-bold border-t-2 border-gray-400";
+            totalRow.innerHTML = `
+                <td colspan="3" class="p-2 border text-right">সর্বমোট:</td>
+                <td class="p-2 border text-emerald-600">${totalDep}</td>
+                <td class="p-2 border text-blue-600">${totalBuy}</td>
+                <td class="p-2 border text-red-600">${totalDue}</td>
+                <td class="p-2 border text-purple-600">${totalAdv}</td>
+                <td class="p-2 border"></td>
+            `;
+            tbody.appendChild(totalRow);
+        }
+        
         function deleteParty(key) {
             if(confirm("আপনি কি এই পার্টি এবং এর সমস্ত লেনদেন ডিলিট করতে চান?")) {
                 db.ref('supply_parties/' + key).remove();
