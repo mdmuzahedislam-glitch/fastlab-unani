@@ -325,20 +325,100 @@
                 
                 loadSupplyParties();
                 loadNotices();
+        <script>
+                    // Firebase Configuration
+            const firebaseConfig = {
+            apiKey: "AIzaSyDmiZ7Pa0nB9HF29bv6qoT2qSzko4RVEHI",
+            authDomain: "fastlab-unani.firebaseapp.com",
+            databaseURL: "https://fastlab-unani-default-rtdb.firebaseio.com",
+            projectId: "fastlab-unani",
+            storageBucket: "fastlab-unani.firebasestorage.app",
+            messagingSenderId: "1319654847",
+            appId: "1:1319654847:web:cdb5c4813ea8e48877fd0a",
+            measurementId: "G-LDL48BEM76"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('dropdown-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        window.addEventListener('click', function(e) {
+            const menu = document.getElementById('dropdown-menu');
+            const btn = e.target.closest('button');
+            if (!menu.contains(e.target) && (!btn || !btn.getAttribute('onclick')?.includes('toggleMenu'))) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // পেজ লোড হলে লগইন স্ট্যাটাস ও ফায়ারবেস থেকে লাইভ প্রোফাইল ডাটা লোড
+        window.onload = function() {
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                const loggedInUserKey = localStorage.getItem('loggedInUser');
+                
+                if (loggedInUserKey) {
+                    db.ref('supply_officers/' + loggedInUserKey).once('value', snapshot => {
+                        const officerData = snapshot.val();
+                        if (officerData) {
+                            const officerName = officerData.name || "সরবরাহ অফিসার";
+                            const officerPhone = officerData.phone || "";
+                            const officerArea = officerData.area || "";
+                            
+                            localStorage.setItem('loggedInName', officerName);
+                            localStorage.setItem('loggedInPhone', officerPhone);
+                            localStorage.setItem('loggedInArea', officerArea);
+
+                            document.getElementById('profile-name').innerText = officerName;
+                            if(document.getElementById('profile-phone')) {
+                                document.getElementById('profile-phone').innerText = officerPhone;
+                            }
+                            if(document.getElementById('profile-area')) {
+                                document.getElementById('profile-area').innerHTML = `<i class="fa-solid fa-location-dot"></i> কর্মরত এরিয়া: ${officerArea}`;
+                            }
+                        }
+                    });
+                }
+
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('dashboard-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('flex');
+                
+                loadSupplyParties();
+                loadNotices();
             }
         };
-                        // ফায়ারবেস থেকে রিয়েল-টাইম নোটিশ লোড করার ফাংশন
+
+        // ফায়ারবেস থেকে রিয়েল-টাইম নোটিশ লোড করার ফাংশন
         function loadNotices() {
             const noticeList = document.getElementById('notice-list');
             
             db.ref('supply_notices').on('value', snapshot => {
                 const data = snapshot.val();
-                noticeList.innerHTML = ''; // আগের স্ট্যাটিক নোটিশ মুছে ফেলা
+                noticeList.innerHTML = ''; 
 
                 if (data) {
                     let hasNotice = false;
                     
-                    // n1, n2, n3 প্রতিটি নোটিশ চেক করে রেন্ডার করা
                     [data.n1, data.n2, data.n3].forEach(noticeText => {
                         if (noticeText && noticeText.trim() !== '') {
                             hasNotice = true;
@@ -352,21 +432,21 @@
                     });
 
                     if (!hasNotice) {
-                        noticeList.innerHTML = `<li class="text-xs text-gray-400">বর্তমানে কোনো চাহিদা নেই।</li>`;
+                        noticeList.innerHTML = `<li class="text-xs text-gray-400">বর্তমানে কোনো নোটিশ নেই।</li>`;
                     }
                 } else {
-                    noticeList.innerHTML = `<li class="text-xs text-gray-400">বর্তমানে কোনো চাহিদা নেই।</li>`;
+                    noticeList.innerHTML = `<li class="text-xs text-gray-400">বর্তমানে কোনো নোটিশ নেই।</li>`;
                 }
             });
         }
-                // ফায়ারবেস থেকে সরাসরি সরবরাহ অফিসার লিস্ট চেক করে সঠিক লগইন লজিক
+
+        // ফায়ারবেস থেকে সরাসরি সরবরাহ অফিসার লিস্ট চেক করে সঠিক লগইন লজিক
         function handleLogin(event) {
             event.preventDefault();
             const inputId = document.getElementById('user-id').value.trim();
             const inputPass = document.getElementById('password').value.trim();
             const errorAlert = document.getElementById('error-alert');
 
-            // সঠিক পাথ 'supply_officers' ব্যবহার করা হয়েছে
             db.ref('supply_officers').once('value', snapshot => {
                 let matchedOfficer = null;
                 let matchedKey = '';
@@ -376,7 +456,6 @@
                         const val = childSnap.val();
                         const key = childSnap.key;
                         
-                        // ডাটাবেসের userId এবং pass এর সাথে ইনপুট ম্যাচ করা
                         if (val.userId && val.userId.toString().trim() === inputId) {
                             if (val.pass && val.pass.toString().trim() === inputPass) {
                                 matchedOfficer = val;
@@ -423,6 +502,193 @@
             });
         }
         
+        function handleLogout() {
+            localStorage.clear();
+            document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('dashboard-section').classList.remove('flex');
+            document.getElementById('login-section').classList.remove('hidden');
+            document.getElementById('user-id').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('error-alert').classList.add('hidden');
+            document.getElementById('dropdown-menu').classList.add('hidden');
+            document.getElementById('ledger-section').classList.add('hidden');
+        }
+
+        // রিয়েল-টাইম সাপ্লাই পার্টি লিস্ট ও হিসাব লোড করার ফাংশন
+        function loadSupplyParties() {
+            const tbody = document.getElementById('supply-party-list');
+            
+            db.ref('supply_parties').on('value', snapshot => {
+                tbody.innerHTML = '';
+                
+                if (!snapshot.exists()) {
+                    tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-500">কোনো সরবরাহ পার্টি পাওয়া যায়নি</td></tr>`;
+                    return;
+                }
+
+                let parties = [];
+                snapshot.forEach(childSnap => {
+                    parties.push({ key: childSnap.key, data: childSnap.val() });
+                });
+
+                let grandTotalDeposit = 0;
+                let grandTotalBuy = 0;
+                let grandTotalDue = 0;
+                let grandTotalAdvance = 0;
+                
+                let results = {};
+
+                parties.forEach((party, index) => {
+                    const key = party.key;
+                    const data = party.data;
+                    const initialDue = parseFloat(data.due) || 0;
+                    const initialAdvance = parseFloat(data.advance) || 0;
+                    const serialNo = data.serial || (index + 1);
+
+                    db.ref(`supply_transactions/${key}`).on('value', transSnap => {
+                        let totalDeposit = initialAdvance; 
+                        let totalBuy = 0;        
+                        
+                        if(transSnap.exists()) {
+                            transSnap.forEach(tSnap => {
+                                const tVal = tSnap.val();
+                                totalDeposit += parseFloat(tVal.amount) || 0;
+                                totalBuy += parseFloat(tVal.purchase) || 0;
+                            });
+                        }
+
+                        let currentBalance = (initialDue + totalBuy) - totalDeposit;
+                        let dueAmount = currentBalance > 0 ? currentBalance : 0;
+                        let advanceAmount = currentBalance < 0 ? Math.abs(currentBalance) : 0;
+
+                        results[key] = {
+                            serialNo,
+                            name: data.name || '',
+                            phone: data.phone || '',
+                            totalDeposit,
+                            totalBuy,
+                            dueAmount,
+                            advanceAmount
+                        };
+
+                        let activeKeys = Object.keys(results);
+                        if (activeKeys.length === parties.length) {
+                            tbody.innerHTML = '';
+                            grandTotalDeposit = 0;
+                            grandTotalBuy = 0;
+                            grandTotalDue = 0;
+                            grandTotalAdvance = 0;
+
+                            parties.forEach(p => {
+                                let res = results[p.key];
+                                if (!res) return;
+
+                                grandTotalDeposit += res.totalDeposit;
+                                grandTotalBuy += res.totalBuy;
+                                grandTotalDue += res.dueAmount;
+                                grandTotalAdvance += res.advanceAmount;
+
+                                let rowHTML = `
+                                    <td class="p-3 border">${res.serialNo}</td>
+                                    <td class="p-3 border font-medium">${res.name}</td>
+                                    <td class="p-3 border">${res.phone}</td>
+                                    <td class="p-3 border text-emerald-600 font-semibold">${res.totalDeposit}</td>
+                                    <td class="p-3 border text-blue-600 font-semibold">${res.totalBuy}</td>
+                                    <td class="p-3 border text-red-600 font-semibold">${res.dueAmount}</td>
+                                    <td class="p-3 border text-purple-600 font-semibold">${res.advanceAmount}</td>
+                                    <td class="p-3 border text-center">
+                                        <button onclick="openStatement('${p.key}', '${res.name}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
+                                    </td>
+                                `;
+
+                                const newRow = document.createElement('tr');
+                                newRow.id = `party-row-${p.key}`;
+                                newRow.className = "hover:bg-gray-50 border-b";
+                                newRow.innerHTML = rowHTML;
+                                tbody.appendChild(newRow);
+                            });
+
+                            renderGrandTotal(tbody, grandTotalDeposit, grandTotalBuy, grandTotalDue, grandTotalAdvance);
+                        }
+                    });
+                });
+            });
+        }
+
+        function renderGrandTotal(tbody, totalDep, totalBuy, totalDue, totalAdv) {
+            const existingTotal = document.getElementById('grand-total-row');
+            if (existingTotal) existingTotal.remove();
+
+            const totalRow = document.createElement('tr');
+            totalRow.id = 'grand-total-row';
+            totalRow.className = "bg-gray-200 font-bold border-t-2 border-gray-400";
+            totalRow.innerHTML = `
+                <td colspan="3" class="p-3 border text-right">সর্বমোট:</td>
+                <td class="p-3 border text-emerald-600">${totalDep}</td>
+                <td class="p-3 border text-blue-600">${totalBuy}</td>
+                <td class="p-3 border text-red-600">${totalDue}</td>
+                <td class="p-3 border text-purple-600">${totalAdv}</td>
+                <td class="p-3 border"></td>
+            `;
+            tbody.appendChild(totalRow);
+        }
+
+        function openStatement(key, name) {
+            document.getElementById('ledger-section').classList.remove('hidden');
+            document.getElementById('statement-party-title').innerHTML = `<span class="text-xl font-bold forest-green-text">${name}</span> - পার্টির লেনদেনের বিবরণ`;
+            
+            db.ref(`supply_parties/${key}`).once('value', partySnap => {
+                const partyVal = partySnap.val() || {};
+                const initDue = parseFloat(partyVal.due) || 0;
+                const initAdv = parseFloat(partyVal.advance) || 0;
+
+                const statementList = document.getElementById('statement-list');
+                db.ref(`supply_transactions/${key}`).on('value', snapshot => {
+                    statementList.innerHTML = '';
+
+                    let runningBalance = initDue - initAdv;
+                    let drCr = runningBalance >= 0 ? "Dr" : "Cr";
+                    let balanceClass = runningBalance < 0 ? "text-red-600 font-semibold" : "font-semibold";
+
+                    statementList.innerHTML += `
+                        <tr class="border-b bg-gray-50 font-medium">
+                            <td class="p-3 border">-</td>
+                            <td class="p-3 border">পূর্বের বকেয়া / পাওনা ব্যালেন্স (প্রারম্ভিক)</td>
+                            <td class="p-3 border text-emerald-600">${initAdv}</td>
+                            <td class="p-3 border text-blue-600">${initDue}</td>
+                            <td class="p-3 border font-bold">${drCr}</td>
+                            <td class="p-3 border ${balanceClass}">${Math.abs(runningBalance)}</td>
+                        </tr>
+                    `;
+
+                    if(snapshot.exists()) {
+                        snapshot.forEach(childSnap => {
+                            const tVal = childSnap.val();
+                            const dep = parseFloat(tVal.amount) || 0;
+                            const buy = parseFloat(tVal.purchase) || 0;
+
+                            runningBalance = (runningBalance + buy) - dep;
+                            let currentDrCr = runningBalance >= 0 ? "Dr" : "Cr";
+                            let currentClass = runningBalance < 0 ? "text-red-600 font-semibold" : "font-semibold";
+
+                            statementList.innerHTML += `
+                                <tr class="hover:bg-gray-50 border-b">
+                                    <td class="p-3 border">${tVal.date || ''}</td>
+                                    <td class="p-3 border">${tVal.desc || 'লেনদেন'}</td>
+                                    <td class="p-3 border text-emerald-600">${dep}</td>
+                                    <td class="p-3 border text-blue-600">${buy}</td>
+                                    <td class="p-3 border font-semibold">${currentDrCr}</td>
+                                    <td class="p-3 border ${currentClass}">${Math.abs(runningBalance)}</td>
+                                </tr>
+                            `;
+                        });
+                    }
+                });
+            });
+
+            document.getElementById('ledger-section').scrollIntoView({ behavior: 'smooth' });
+            }
+                
         function handleLogout() {
             localStorage.clear();
             document.getElementById('dashboard-section').classList.add('hidden');
