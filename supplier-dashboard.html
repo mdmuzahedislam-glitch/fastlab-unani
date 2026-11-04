@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: #f0fdf4; }
+        body { font-family: 'Hind Siliguri', 'Inter', sans-serif; background-color: #f0fdf4; }
         .forest-green { background-color: #064e3b; }
         .forest-green-text { color: #064e3b; }
         .forest-green-border { border-color: #064e3b; }
@@ -113,7 +113,7 @@
                                 <i class="fa-solid fa-history forest-green-text"></i> সরবরাহ ইতিহাস
                             </a>
                             <a href="#" class="flex items-center gap-3 px-4 py-2 hover:bg-green-50 hover:text-green-800 font-medium text-sm">
-                                <i class="fa-solid fa-bullhorn forest-green-text"></i> নোটিশ বোর্ড
+                                <i class="fa-solid fa-bullhorn forest-green-text"></i> চাহিদা পত্র
                             </a>
                             <hr class="my-1 border-gray-200">
                             <button onclick="handleLogout()" class="w-full text-left flex items-center gap-3 px-4 py-2 hover:bg-red-50 text-red-600 font-medium text-sm">
@@ -126,24 +126,28 @@
         </header>
 
         <div class="container mx-auto px-4 mt-6 space-y-6 flex-grow">
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100 flex items-center gap-4">
-                    <div class="bg-green-100 p-4 rounded-full text-green-800 text-3xl">
-                        <i class="fa-solid fa-mortar-pestle"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-800" id="profile-role-title">সরবরাহ অফিসার</h3>
-                        <p class="text-sm font-semibold text-gray-600" id="profile-name">মোঃ সাজেদুল করিম মৃদুল</p>
-                        <p class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="fa-solid fa-phone"></i><span id="profile-phone">01707-851685</span></p>
-                        <p class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-location-dot"></i> ফ্যাক্টরি অফিস: আফুরিয়া,হিমাইতপুর,পাবনা।</p>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
-                    <div class="flex items-center justify-between mb-3 border-b pb-2">
-                        <h3 class="text-md font-bold forest-green-text flex items-center gap-2">
-                            <i class="fa-solid fa-bullhorn"></i> চাহিদা পত্র
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+             <div class="bg-white p-6 rounded-xl shadow-md border mb-4">
+                <div class="flex items-center gap-4">
+                   <div class="bg-emerald-100 p-4 rounded-full text-emerald-700 text-2xl">
+                       <i class="fa-solid fa-user-tie"></i>
+                  </div>
+                  <div>
+                      <h3 class="text-xs text-gray-500 font-bold">সরবরাহ অফিসার</h3>
+                      <h2 id="profile-name" class="text-lg font-bold text-gray-800">লোড হচ্ছে...</h2>
+                      <p class="text-xs text-gray-600 flex items-center gap-1 mt-0.5">
+                      <i class="fa-solid fa-phone"></i> <span id="profile-phone">লোড হচ্ছে...</span>
+                   </p>
+                      <p class="text-xs text-gray-500 flex items-center gap-1 mt-0.5" id="profile-area">
+                      <i class="fa-solid fa-location-dot"></i> কর্মরত এরিয়া: লোড হচ্ছে...
+                   </p>
+               </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                 <div class="flex items-center justify-between mb-3 border-b pb-2">
+                     <h3 class="text-md font-bold forest-green-text flex items-center gap-2">
+                         <i class="fa-solid fa-bullhorn"></i> চাহিদা পত্র
                         </h3>
                         <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">গুরুত্বপূর্ণ</span>
                     </div>
@@ -271,28 +275,42 @@
         });
 
         // পেজ রিফ্রেশ হলে অটো লগইন চেক এবং ফায়ারবেস থেকে লাইভ ডাটা সিঙ্ক
-        window.onload = function() {
+                window.onload = function() {
             if (localStorage.getItem('isLoggedIn') === 'true') {
                 const loggedInUserKey = localStorage.getItem('loggedInUser');
                 
                 if (loggedInUserKey) {
-                    db.ref('supply_users/' + loggedInUserKey).once('value', snapshot => {
-                        const userData = snapshot.val();
-                        if (userData) {
-                            const userName = userData.name || "সরবরাহ অফিসার";
-                            const userPhone = userData.phone || "";
+                    // সঠিক পাথ 'supply_officers' ব্যবহার করা হয়েছে
+                    db.ref('supply_officers/' + loggedInUserKey).once('value', snapshot => {
+                        const officerData = snapshot.val();
+                        if (officerData) {
+                            const officerName = officerData.name || "সরবরাহ অফিসার";
+                            const officerPhone = officerData.phone || "";
+                            const officerArea = officerData.area || "";
                             
-                            localStorage.setItem('loggedInName', userName);
-                            localStorage.setItem('loggedInPhone', userPhone);
+                            localStorage.setItem('loggedInName', officerName);
+                            localStorage.setItem('loggedInPhone', officerPhone);
+                            localStorage.setItem('loggedInArea', officerArea);
 
-                            document.getElementById('profile-name').innerText = userName;
+                            document.getElementById('profile-name').innerText = officerName;
                             if(document.getElementById('profile-phone')) {
-                                document.getElementById('profile-phone').innerText = userPhone;
+                                document.getElementById('profile-phone').innerText = officerPhone;
+                            }
+                            if(document.getElementById('profile-area')) {
+                                document.getElementById('profile-area').innerHTML = `<i class="fa-solid fa-location-dot"></i> কর্মরত এরিয়া: ${officerArea}`;
                             }
                         }
                     });
                 }
 
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('dashboard-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('flex');
+                
+                loadSupplyParties();
+                loadNotices();
+            }
+        };
                 const savedName = localStorage.getItem('loggedInName') || "সরবরাহ অফিসার";
                 const savedPhone = localStorage.getItem('loggedInPhone') || "";
 
