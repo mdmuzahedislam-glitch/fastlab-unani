@@ -372,12 +372,12 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
-    <script>
+        <script>
         // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDmiZ7Pa0nB9HF29bv6qoT2qSzko4RVEHI",
             authDomain: "fastlab-unani.firebaseapp.com",
+            databaseURL: "https://fastlab-unani-default-rtdb.firebaseio.com",
             projectId: "fastlab-unani",
             storageBucket: "fastlab-unani.firebasestorage.app",
             messagingSenderId: "1319654847",
@@ -386,14 +386,10 @@
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const database = firebase.database();
-
-        let systemAuth = {
-            id: "marketing01",
-            pass: "Unani02",
-            name: "সঞ্জয় ইসলাম"
-        };
 
         function togglePassword() {
             const passwordInput = document.getElementById('password');
@@ -428,25 +424,38 @@
             }
         }
         
+        // ফায়ারবেস থেকে ডাইনামিক ইউজার আইডি ও পাসওয়ার্ড যাচাই করে লগইন
         function handleLogin(event) {
             event.preventDefault();
             const inputId = document.getElementById('user-id').value.trim();
             const inputPass = document.getElementById('password').value.trim();
             const errorAlert = document.getElementById('error-alert');
 
-            if (inputId === systemAuth.id && inputPass === systemAuth.pass) {
-                errorAlert.classList.add('hidden');
-                document.getElementById('profile-name').innerText = systemAuth.name;
-                document.getElementById('top-profile-name').innerText = systemAuth.name + " | মার্কেটিং অফিসার";
-                document.getElementById('login-section').classList.add('hidden');
-                document.getElementById('dashboard-section').classList.remove('hidden');
-                document.getElementById('dashboard-section').classList.add('flex');
+            database.ref('fastlab_marketing_data/profile').once('value', snapshot => {
+                const profile = snapshot.val();
                 
-                loadRealtimeData();
-            } else {
-                errorAlert.classList.remove('hidden');
-                document.getElementById('error-text').innerText = " ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
-            }
+                // ডাটাবেস থেকে ইউজার আইডি ও পাসওয়ার্ড চেক করা (ডাটা না থাকলে ডিফল্ট মান কাজ করবে)
+                const validId = profile && profile.userId ? profile.userId : "marketing01";
+                const validPass = profile && profile.pass ? profile.pass : "Unani02";
+
+                if (inputId === validId && inputPass === validPass) {
+                    errorAlert.classList.add('hidden');
+                    
+                    if (profile) {
+                        document.getElementById('profile-name').innerText = profile.name || "সঞ্জয় ইসলাম";
+                        document.getElementById('top-profile-name').innerText = (profile.name || "সঞ্জয় ইসলাম") + " | মার্কেটিং অফিসার";
+                    }
+
+                    document.getElementById('login-section').classList.add('hidden');
+                    document.getElementById('dashboard-section').classList.remove('hidden');
+                    document.getElementById('dashboard-section').classList.add('flex');
+                    
+                    loadRealtimeMarketingData();
+                } else {
+                    errorAlert.classList.remove('hidden');
+                    document.getElementById('error-text').innerText = " ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
+                }
+            });
         }
 
         function handleLogout() {
@@ -463,14 +472,43 @@
             document.getElementById('ledger-section').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function loadRealtimeData() {
-            database.ref('fastlab_marketing_data/').on('value', (snapshot) => {
+        // ফায়ারবেস থেকে প্রোফাইল ও নোটিশ রিয়েল-টাইম সিঙ্ক করার ফাংশন
+        function loadRealtimeMarketingData() {
+            // লাইভ প্রোফাইল সিঙ্ক
+            database.ref('fastlab_marketing_data/profile').on('value', (snapshot) => {
+                const profile = snapshot.val();
+                if (profile) {
+                    document.getElementById('profile-name').innerText = profile.name || "";
+                    document.getElementById('top-profile-name').innerText = (profile.name || "") + " | মার্কেটিং অফিসার";
+                    
+                    // ফোন ও এরিয়া আপডেট
+                    const phoneEl = document.querySelector('#profile-name').parentElement.querySelector('p.text-xs:nth-of-type(1)');
+                    if(phoneEl) phoneEl.innerHTML = `<i class="fa-solid fa-phone"></i> ${profile.phone || ''}`;
+                    
+                    const areaEl = document.querySelector('#profile-name').parentElement.querySelector('p.text-xs:nth-of-type(2)');
+                    if(areaEl) areaEl.innerHTML = `<i class="fa-solid fa-location-dot"></i> মার্কেটিং এরিয়া: ${profile.area || ''}`;
+                }
+            });
+
+            // লাইভ নোটিশ বোর্ড সিঙ্ক
+            database.ref('fastlab_marketing_data/notices').on('value', (snapshot) => {
                 const data = snapshot.val();
-                if (data) {
-                    console.log("Marketing Realtime Data Synced:", data);
+                const noticeUl = document.querySelector('.bg-white.rounded-xl.shadow-md.p-5.border.border-gray-100 ul.space-y-2');
+                if (noticeUl && data) {
+                    noticeUl.innerHTML = '';
+                    [data.n1, data.n2, data.n3].forEach(noticeText => {
+                        if (noticeText && noticeText.trim() !== '') {
+                            noticeUl.innerHTML += `
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
+                                    <span>${noticeText}</span>
+                                </li>
+                            `;
+                        }
+                    });
                 }
             });
         }
-    </script>
+        </script>
 </body>
 </html>
