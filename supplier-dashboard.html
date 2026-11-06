@@ -229,6 +229,7 @@ if (!firebase.apps.length) {
 firebase.initializeApp(firebaseConfig);
 }
 const db = firebase.database();
+
 function togglePassword() {
 const passwordInput = document.getElementById('password');
 const eyeIcon = document.getElementById('eye-icon');
@@ -242,10 +243,12 @@ eyeIcon.classList.remove('fa-eye-slash');
 eyeIcon.classList.add('fa-eye');
 }
 }
+
 function toggleMenu() {
 const menu = document.getElementById('dropdown-menu');
 menu.classList.toggle('hidden');
 }
+
 window.addEventListener('click', function(e) {
 const menu = document.getElementById('dropdown-menu');
 const btn = e.target.closest('button');
@@ -253,70 +256,66 @@ if (!menu.contains(e.target) && (!btn || !btn.getAttribute('onclick')?.includes(
 menu.classList.add('hidden');
 }
 });
-// ------------------- SECURITY LOGIC -------------------
-let inactivityTimeout;
-const MAX_INACTIVITY_TIME = 5 * 60 * 1000; // 5 Minutes
-function resetInactivityTimer() {
-clearTimeout(inactivityTimeout);
-if (sessionStorage.getItem('isLoggedIn') === 'true') {
-inactivityTimeout = setTimeout(() => {
-alert('নিরাপত্তার স্বার্থে দীর্ঘক্ষণ নিষ্ক্রিয় থাকার কারণে আপনাকে স্বয়ংক্রিয়ভাবে লগআউট করা হয়েছে।');
-handleLogout();
-}, MAX_INACTIVITY_TIME);
-}
-}
-['mousemove', 'keydown', 'click', 'scroll'].forEach(event => {
-window.addEventListener(event, resetInactivityTimer);
-});
+
+// ------------------- LOGIN & LOGOUT LOGIC -------------------
 function handleLogin(event) {
 event.preventDefault();
 const inputId = document.getElementById('user-id').value.trim();
 const inputPass = document.getElementById('password').value.trim();
 const errorAlert = document.getElementById('error-alert');
+
 if (!inputId || !inputPass) {
 errorAlert.classList.remove('hidden');
 document.getElementById('error-text').innerText = "দয়া করে ইউজার আইডি এবং পাসওয়ার্ড উভয়ই দিন।";
 return;
 }
+
 db.ref('supply_officers').once('value', snapshot => {
 let matchedOfficer = null;
 let matchedKey = '';
+
 if (snapshot.exists()) {
 snapshot.forEach(childSnap => {
 const val = childSnap.val();
 const key = childSnap.key;
-if (val.userId && val.userId.toString().trim() === inputId) {
-if (val.pass && val.pass.toString().trim() === inputPass) {
+
+// এডমিন প্যানেল থেকে সেট করা আইডি ও পাসওয়ার্ড নিখুঁতভাবে স্ট্রিম ও ট্রিম করে মেলানো
+const dbUserId = val.userId ? val.userId.toString().trim() : '';
+const dbPass = val.pass ? val.pass.toString().trim() : '';
+
+if (dbUserId === inputId && dbPass === inputPass) {
 matchedOfficer = val;
 matchedKey = key;
 }
-}
 });
 }
+
 if (matchedOfficer) {
 errorAlert.classList.add('hidden');
 const officerName = matchedOfficer.name || "সরবরাহ অফিসার";
 const officerPhone = matchedOfficer.phone || "";
 const officerArea = matchedOfficer.area || "";
+
 sessionStorage.setItem('isLoggedIn', 'true');
 sessionStorage.setItem('loggedInUser', matchedKey);
 sessionStorage.setItem('loggedInName', officerName);
 sessionStorage.setItem('loggedInPhone', officerPhone);
 sessionStorage.setItem('loggedInArea', officerArea);
-localStorage.setItem('global_auth_signal', Date.now());
+
 document.getElementById('profile-name').innerText = officerName;
 if(document.getElementById('profile-phone')) {
 document.getElementById('profile-phone').innerText = officerPhone;
 }
 if(document.getElementById('profile-area')) {
-document.getElementById('profile-area').innerHTML = <i class="fa-solid fa-location-dot"></i> কর্মরত এরিয়া: ${officerArea};
+document.getElementById('profile-area').innerHTML = `<i class="fa-solid fa-location-dot"></i> কর্মরত এরিয়া: ${officerArea}`;
 }
+
 document.getElementById('login-section').classList.add('hidden');
 document.getElementById('dashboard-section').classList.remove('hidden');
 document.getElementById('dashboard-section').classList.add('flex');
+
 loadSupplyParties();
 loadNotices();
-resetInactivityTimer();
 } else {
 errorAlert.classList.remove('hidden');
 document.getElementById('error-text').innerText = "ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
@@ -326,10 +325,9 @@ errorAlert.classList.remove('hidden');
 document.getElementById('error-text').innerText = "লগইন সমস্যা: " + err.message;
 });
 }
+
 function handleLogout() {
 sessionStorage.clear();
-localStorage.removeItem('global_auth_signal');
-clearTimeout(inactivityTimeout);
 document.getElementById('login-section').classList.remove('hidden');
 document.getElementById('dashboard-section').classList.add('hidden');
 document.getElementById('dashboard-section').classList.remove('flex');
@@ -339,35 +337,10 @@ document.getElementById('error-alert').classList.add('hidden');
 document.getElementById('dropdown-menu').classList.add('hidden');
 document.getElementById('ledger-section').classList.add('hidden');
 }
-window.addEventListener('storage', (event) => {
-if (event.key === 'global_auth_signal' && !event.newValue) {
-handleLogout();
-}
-});
+
+// পেজে ঢুকলেই বা রিফ্রেশ করলেই লগইন পেজ আসবে
 window.addEventListener('DOMContentLoaded', () => {
-const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-if (isLoggedIn === 'true') {
-const officerName = sessionStorage.getItem('loggedInName') || "সরবরাহ অফিসার";
-const officerPhone = sessionStorage.getItem('loggedInPhone') || "";
-const officerArea = sessionStorage.getItem('loggedInArea') || "";
-if(document.getElementById('profile-name')) {
-document.getElementById('profile-name').innerText = officerName;
-}
-if(document.getElementById('profile-phone')) {
-document.getElementById('profile-phone').innerText = officerPhone;
-}
-if(document.getElementById('profile-area')) {
-document.getElementById('profile-area').innerHTML = <i class="fa-solid fa-location-dot"></i> কর্মরত এরিয়া: ${officerArea};
-}
-document.getElementById('login-section').classList.add('hidden');
-document.getElementById('dashboard-section').classList.remove('hidden');
-document.getElementById('dashboard-section').classList.add('flex');
-loadSupplyParties();
-loadNotices();
-resetInactivityTimer();
-} else {
 handleLogout();
-}
 });
 // ------------------- APPLICATION LOGIC -------------------
 function loadNotices() {
@@ -380,23 +353,24 @@ let hasNotice = false;
 [data.n1, data.n2, data.n3].forEach(noticeText => {
 if (noticeText && noticeText.trim() !== '') {
 hasNotice = true;
-noticeList.innerHTML += <li class="flex items-start gap-2 border-b border-gray-100 pb-1.5 last:border-0"> <i class="fa-solid fa-circle-dot text-green-700 mt-1 text-[10px]"></i> <span class="text-xs text-gray-800 font-medium">${noticeText}</span> </li>;
+noticeList.innerHTML += `<li class="flex items-start gap-2 border-b border-gray-100 pb-1.5 last:border-0"> <i class="fa-solid fa-circle-dot text-green-700 mt-1 text-[10px]"></i> <span class="text-xs text-gray-800 font-medium">${noticeText}</span> </li>`;
 }
 });
 if (!hasNotice) {
-noticeList.innerHTML = <li class="text-xs text-gray-400">বর্তমানে কোনো নোটিশ নেই।</li>;
+noticeList.innerHTML = `<li class="text-xs text-gray-400">বর্তমানে কোনো নোটিশ নেই।</li>`;
 }
 } else {
-noticeList.innerHTML = <li class="text-xs text-gray-400">বর্তমানে কোনো নোটিশ নেই।</li>;
+noticeList.innerHTML = `<li class="text-xs text-gray-400">বর্তমানে কোনো নোটিশ নেই।</li>`;
 }
 });
 }
+
 function loadSupplyParties() {
 const tbody = document.getElementById('supply-party-list');
 db.ref('supply_parties').on('value', snapshot => {
 tbody.innerHTML = '';
 if (!snapshot.exists()) {
-tbody.innerHTML = <tr><td colspan="8" class="p-4 text-center text-gray-500">কোনো সরবরাহ পার্টি পাওয়া যায়নি</td></tr>;
+tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-500">কোনো সরবরাহ পার্টি পাওয়া যায়নি</td></tr>`;
 return;
 }
 let parties = [];
@@ -414,7 +388,7 @@ const data = party.data;
 const initialDue = parseFloat(data.due) || 0;
 const initialAdvance = parseFloat(data.advance) || 0;
 const serialNo = data.serial || (index + 1);
-db.ref(supply_transactions/${key}).on('value', transSnap => {
+db.ref(`supply_transactions/${key}`).on('value', transSnap => {
 let totalDeposit = initialAdvance;
 let totalBuy = 0;
 if(transSnap.exists()) {
@@ -450,9 +424,9 @@ grandTotalDeposit += res.totalDeposit;
 grandTotalBuy += res.totalBuy;
 grandTotalDue += res.dueAmount;
 grandTotalAdvance += res.advanceAmount;
-let rowHTML = <td class="p-3 border">${res.serialNo}</td> <td class="p-3 border font-medium">${res.name}</td> <td class="p-3 border">${res.phone}</td> <td class="p-3 border text-emerald-600 font-semibold">${res.totalDeposit}</td> <td class="p-3 border text-blue-600 font-semibold">${res.totalBuy}</td> <td class="p-3 border text-red-600 font-semibold">${res.dueAmount}</td> <td class="p-3 border text-purple-600 font-semibold">${res.advanceAmount}</td> <td class="p-3 border text-center"> <button onclick="openStatement('${p.key}', '${res.name}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button> </td>;
+let rowHTML = `<td class="p-3 border">${res.serialNo}</td> <td class="p-3 border font-medium">${res.name}</td> <td class="p-3 border">${res.phone}</td> <td class="p-3 border text-emerald-600 font-semibold">${res.totalDeposit}</td> <td class="p-3 border text-blue-600 font-semibold">${res.totalBuy}</td> <td class="p-3 border text-red-600 font-semibold">${res.dueAmount}</td> <td class="p-3 border text-purple-600 font-semibold">${res.advanceAmount}</td> <td class="p-3 border text-center"> <button onclick="openStatement('${p.key}', '${res.name}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button> </td>`;
 const newRow = document.createElement('tr');
-newRow.id = party-row-${p.key};
+newRow.id = `party-row-${p.key}`;
 newRow.className = "hover:bg-gray-50 border-b";
 newRow.innerHTML = rowHTML;
 tbody.appendChild(newRow);
@@ -463,29 +437,31 @@ renderGrandTotal(tbody, grandTotalDeposit, grandTotalBuy, grandTotalDue, grandTo
 });
 });
 }
+
 function renderGrandTotal(tbody, totalDep, totalBuy, totalDue, totalAdv) {
 const existingTotal = document.getElementById('grand-total-row');
 if (existingTotal) existingTotal.remove();
 const totalRow = document.createElement('tr');
 totalRow.id = 'grand-total-row';
 totalRow.className = "bg-gray-200 font-bold border-t-2 border-gray-400";
-totalRow.innerHTML = <td colspan="3" class="p-3 border text-right">সর্বমোট:</td> <td class="p-3 border text-emerald-600">${totalDep}</td> <td class="p-3 border text-blue-600">${totalBuy}</td> <td class="p-3 border text-red-600">${totalDue}</td> <td class="p-3 border text-purple-600">${totalAdv}</td> <td class="p-3 border"></td>;
+totalRow.innerHTML = `<td colspan="3" class="p-3 border text-right">সর্বমোট:</td> <td class="p-3 border text-emerald-600">${totalDep}</td> <td class="p-3 border text-blue-600">${totalBuy}</td> <td class="p-3 border text-red-600">${totalDue}</td> <td class="p-3 border text-purple-600">${totalAdv}</td> <td class="p-3 border"></td>`;
 tbody.appendChild(totalRow);
 }
+
 function openStatement(key, name) {
 document.getElementById('ledger-section').classList.remove('hidden');
-document.getElementById('statement-party-title').innerHTML = <span class="text-xl font-bold forest-green-text">${name}</span> - পার্টির লেনদেনের বিবরণ;
-db.ref(supply_parties/${key}).once('value', partySnap => {
+document.getElementById('statement-party-title').innerHTML = `<span class="text-xl font-bold forest-green-text">${name}</span> - পার্টির লেনদেনের বিবরণ`;
+db.ref(`supply_parties/${key}`).once('value', partySnap => {
 const partyVal = partySnap.val() || {};
 const initDue = parseFloat(partyVal.due) || 0;
 const initAdv = parseFloat(partyVal.advance) || 0;
 const statementList = document.getElementById('statement-list');
-db.ref(supply_transactions/${key}).on('value', snapshot => {
+db.ref(`supply_transactions/${key}`).on('value', snapshot => {
 statementList.innerHTML = '';
 let runningBalance = initDue - initAdv;
 let drCr = runningBalance >= 0 ? "Dr" : "Cr";
 let balanceClass = runningBalance < 0 ? "text-red-600 font-semibold" : "font-semibold";
-statementList.innerHTML += <tr class="border-b bg-gray-50 font-medium"> <td class="p-3 border">-</td> <td class="p-3 border">পূর্বের বকেয়া / পাওনা ব্যালেন্স (প্রারম্ভিক)</td> <td class="p-3 border text-emerald-600">${initAdv}</td> <td class="p-3 border text-blue-600">${initDue}</td> <td class="p-3 border font-bold">${drCr}</td> <td class="p-3 border ${balanceClass}">${Math.abs(runningBalance)}</td> </tr>;
+statementList.innerHTML += `<tr class="border-b bg-gray-50 font-medium"> <td class="p-3 border">-</td> <td class="p-3 border">পূর্বের বকেয়া / পাওনা ব্যালেন্স (প্রারম্ভিক)</td> <td class="p-3 border text-emerald-600">${initAdv}</td> <td class="p-3 border text-blue-600">${initDue}</td> <td class="p-3 border font-bold">${drCr}</td> <td class="p-3 border ${balanceClass}">${Math.abs(runningBalance)}</td> </tr>`;
 if(snapshot.exists()) {
 snapshot.forEach(childSnap => {
 const tVal = childSnap.val();
@@ -494,7 +470,7 @@ const buy = parseFloat(tVal.purchase) || 0;
 runningBalance = (runningBalance + buy) - dep;
 let currentDrCr = runningBalance >= 0 ? "Dr" : "Cr";
 let currentClass = runningBalance < 0 ? "text-red-600 font-semibold" : "font-semibold";
-statementList.innerHTML += <tr class="hover:bg-gray-50 border-b"> <td class="p-3 border">${tVal.date || ''}</td> <td class="p-3 border">${tVal.desc || 'লেনদেন'}</td> <td class="p-3 border text-emerald-600">${dep}</td> <td class="p-3 border text-blue-600">${buy}</td> <td class="p-3 border font-semibold">${currentDrCr}</td> <td class="p-3 border ${currentClass}">${Math.abs(runningBalance)}</td> </tr>;
+statementList.innerHTML += `<tr class="hover:bg-gray-50 border-b"> <td class="p-3 border">${tVal.date || ''}</td> <td class="p-3 border">${tVal.desc || 'লেনদেন'}</td> <td class="p-3 border text-emerald-600">${dep}</td> <td class="p-3 border text-blue-600">${buy}</td> <td class="p-3 border font-semibold">${currentDrCr}</td> <td class="p-3 border ${currentClass}">${Math.abs(runningBalance)}</td> </tr>`;
 });
 }
 });
