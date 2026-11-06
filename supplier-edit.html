@@ -147,39 +147,95 @@
             </div>
         </section>
 
-        <!-- ৫. পার্টি জমা এন্ট্রি ফরম -->
-        <section id="deposit-form-section" class="bg-white p-6 rounded-xl shadow-md border-2 border-emerald-600 hidden">
-            <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-pen-to-square"></i> পার্টি জমা এন্ট্রি ফরম <span id="active-party-title" class="text-xs text-emerald-700 ml-2"></span>
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 text-sm">
-                <div>
-                    <label class="block font-semibold text-gray-700 mb-1">তারিখ:</label>
-                    <input type="date" id="dep-date" class="w-full border p-2 rounded-lg">
-                </div>
-                <div>
-                    <label class="block font-semibold text-gray-700 mb-1">বিবরণ :</label>
-                    <input type="text" id="dep-desc" placeholder="বিবরণ লিখুন" class="w-full border p-2 rounded-lg">
-                </div>
-                <div>
-                    <label class="block font-semibold text-gray-700 mb-1">জমা:</label>
-                    <input type="text" id="dep-amount" placeholder="জমা টাকার পরিমাণ " class="w-full border p-2 rounded-lg">
-                </div>
-                <div>
-                    <label class="block font-semibold text-gray-700 mb-1">মাল ক্রয়:</label>
-                    <input type="text" id="dep-purchase" placeholder="পণ্য ক্রয়ের পরিমাণ " class="w-full border p-2 rounded-lg">
-                </div>
-            </div>
-            <div class="flex gap-3">
-                <button onclick="submitDeposit()" class="bg-emerald-600 text-white px-6 py-2 rounded font-bold hover:bg-emerald-700">
-                    জমা দিন
-                </button>
-                <button onclick="hideDepositForm()" class="bg-amber-500 text-white px-6 py-2 rounded font-bold hover:bg-amber-600">
-                    বাতিল
-                </button>
-            </div>
-        </section>
+        <!-- ৪. সরবরাহ পার্টির লিস্ট -->
+<section id="party-list-section" class="bg-white p-6 rounded-xl shadow-md">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-base font-bold text-forest flex items-center gap-2">
+            <i class="fa-solid fa-list"></i> সরবরাহ পার্টির লিস্ট
+        </h2>
+        <div class="flex gap-2">
+            <button onclick="exportTableToExcel('party-table', 'সরবরাহ_পার্টির_তালিকা')" class="bg-emerald-600 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-emerald-700">
+                <i class="fa-solid fa-file-excel mr-1"></i> এক্সেল ডাউনলোড
+            </button>
+            <button onclick="printSpecificSection('party-list-section', 'সরবরাহ পার্টির তালিকা')" class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-600">
+                প্রিন্ট
+            </button>
+        </div>
+    </div>
+    <div class="overflow-x-auto">
+        <table id="party-table" class="w-full text-left border-collapse text-sm">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="p-2 border">ক্রমিক নং</th>
+                    <th class="p-2 border">পার্টির নাম ও ঠিকানা</th>
+                    <th class="p-2 border">মোবাইল</th>
+                    <th class="p-2 border">মোট জমা</th>
+                    <th class="p-2 border">পণ্য ক্রয়</th>
+                    <th class="p-2 border">বকেয়া</th>
+                    <th class="p-2 border">অগ্রিম জমা</th>
+                    <th class="p-2 border text-center">একশন</th>
+                </tr>
+            </thead>
+            <tbody id="supply-party-list">
+            <!-- ফায়ারবেজ থেকে ডাইনামিক ডাটা রেন্ডার করার সময় জাভাস্ক্রিপ্ট (JS) কোডে এই বাটনগুলো যুক্ত করতে হবে -->
+            <!-- উদাহরণস্বরূপ টেমপ্লেট নিচে দেওয়া হলো: -->
+            <!--
+                <tr>
+                    <td class="p-2 border">01</td>
+                    <td class="p-2 border">রোশন এন্টারপ্রাইজ...</td>
+                    <td class="p-2 border">01711-...</td>
+                    <td class="p-2 border">৫,০০,০০০</td>
+                    <td class="p-2 border">৪,৮০,৩৫০</td>
+                    <td class="p-2 border">১,০৬,১২,৬৬০</td>
+                    <td class="p-2 border">০</td>
+                    <td class="p-2 border text-center">
+                        <div class="flex items-center justify-center gap-1">
+                            <button onclick="openDepositForm('PARTY_ID')" class="bg-emerald-600 text-white px-2 py-1 rounded text-xs font-semibold hover:bg-emerald-700" title="জমা">জমা</button>
+                            <button onclick="editParty('PARTY_ID')" class="bg-amber-500 text-white px-2 py-1 rounded text-xs font-semibold hover:bg-amber-600" title="এডিট">এডিট</button>
+                            <button onclick="deleteParty('PARTY_ID')" class="bg-red-600 text-white px-2 py-1 rounded text-xs font-semibold hover:bg-red-700" title="ডিলিট">ডিলিট</button>
+                            <button onclick="viewPartyDetails('PARTY_ID')" class="bg-blue-600 text-white px-2.5 py-1 rounded text-xs font-semibold hover:bg-blue-700" title="বিস্তারিত">বিস্তারিত</button>
+                        </div>
+                    </td>
+                </tr>
+            -->
+          </tbody>
+        </table>
+    </div>
+</section>
 
+<!-- ৫. পার্টি জমা এন্ট্রি ফরম -->
+<section id="deposit-form-section" class="bg-white p-6 rounded-xl shadow-md border-2 border-emerald-600 hidden mt-6">
+    <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-pen-to-square"></i> পার্টি জমা এন্ট্রি ফরম <span id="active-party-title" class="text-xs text-emerald-700 ml-2"></span>
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 text-sm">
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">তারিখ:</label>
+            <input type="date" id="dep-date" class="w-full border p-2 rounded-lg">
+        </div>
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">বিবরণ :</label>
+            <input type="text" id="dep-desc" placeholder="বিবরণ লিখুন" class="w-full border p-2 rounded-lg">
+        </div>
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">জমা:</label>
+            <input type="text" id="dep-amount" placeholder="জমা টাকার পরিমাণ " class="w-full border p-2 rounded-lg">
+        </div>
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">মাল ক্রয়:</label>
+            <input type="text" id="dep-purchase" placeholder="পণ্য ক্রয়ের পরিমাণ " class="w-full border p-2 rounded-lg">
+        </div>
+    </div>
+    <div class="flex gap-3">
+        <button onclick="submitDeposit()" class="bg-emerald-600 text-white px-6 py-2 rounded font-bold hover:bg-emerald-700">
+            জমা দিন
+        </button>
+        <button onclick="hideDepositForm()" class="bg-amber-500 text-white px-6 py-2 rounded font-bold hover:bg-amber-600">
+            বাতিল
+        </button>
+    </div>
+</section>
+        
         <!-- ৬. পার্টি স্টেটমেন্ট -->
         <section id="statement-section" class="bg-white p-6 rounded-xl shadow-md border hidden">
             <div class="flex justify-between items-center mb-4">
@@ -432,20 +488,6 @@
                     loadSupplyParties();
                 })
                 .catch(err => alert("ত্রুটি: " + err.message));
-        }
-        
-        function filterSupplyParties() {
-    const input = document.getElementById('search-party').value.toLowerCase().trim();
-    const rows = document.querySelectorAll('#supply-party-list tr:not(#grand-total-row)');
-
-    rows.forEach(row => {
-        const text = row.innerText.toLowerCase();
-        if (text.includes(input)) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    });
         }
         
         function loadSupplyParties() {
