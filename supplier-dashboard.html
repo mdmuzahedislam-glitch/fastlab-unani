@@ -377,7 +377,7 @@
                     const officerPhone = matchedOfficer.phone || "";
                     const officerArea = matchedOfficer.area || "";
 
-                    // localStorage এর পরিবর্তে sessionStorage ব্যবহার করা হলো যাতে ট্যাব বন্ধ বা পেজ ত্যাগ করলে লগइन মুছে যায়
+                    // sessionStorage ব্যবহার করা হচ্ছে যাতে ট্যাব বন্ধ করলে বা সেশন শেষ হলে মুছে যায়
                     sessionStorage.setItem('isLoggedIn', 'true');
                     sessionStorage.setItem('loggedInUser', matchedKey);
                     sessionStorage.setItem('loggedInName', officerName);
@@ -407,8 +407,9 @@
                 document.getElementById('error-text').innerText = "লগইন সমস্যা: " + err.message;
             });
         }
+
         function handleLogout() {
-            sessionStorage.clear(); // সেশন ডাটা মুছে ফেলা
+            sessionStorage.clear(); // সেশন ডাটা সম্পূর্ণ ক্লিয়ার করা
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('dashboard-section').classList.add('hidden');
             document.getElementById('dashboard-section').classList.remove('flex');
@@ -417,7 +418,41 @@
             document.getElementById('error-alert').classList.add('hidden');
             document.getElementById('dropdown-menu').classList.add('hidden');
             document.getElementById('ledger-section').classList.add('hidden');
-         }
+        }
+
+        // পেজ লোড বা রিফ্রেশ হওয়ার সময় সেশন চেক করা
+        window.addEventListener('DOMContentLoaded', () => {
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+
+            if (isLoggedIn === 'true') {
+                // রিফ্রেশ করলেও সেশন থাকবে এবং ড্যাশবোর্ডেই বজায় থাকবে
+                const officerName = sessionStorage.getItem('loggedInName') || "সরবরাহ অফিসার";
+                const officerPhone = sessionStorage.getItem('loggedInPhone') || "";
+                const officerArea = sessionStorage.getItem('loggedInArea') || "";
+
+                if(document.getElementById('profile-name')) {
+                    document.getElementById('profile-name').innerText = officerName;
+                }
+                if(document.getElementById('profile-phone')) {
+                    document.getElementById('profile-phone').innerText = officerPhone;
+                }
+                if(document.getElementById('profile-area')) {
+                    document.getElementById('profile-area').innerHTML = `<i class="fa-solid fa-location-dot"></i> কর্মরত এরিয়া: ${officerArea}`;
+                }
+
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('dashboard-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('flex');
+
+                loadSupplyParties();
+                loadNotices();
+            } else {
+                // সেশন না থাকলে (যেমন নতুন ট্যাব খোলা বা ব্যাক বাটন চাপে বের হওয়ার পর ঢুকলে) সরাসরি লগইন পেজ আসবে
+                document.getElementById('login-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('hidden');
+                document.getElementById('dashboard-section').classList.remove('flex');
+            }
+        });
 
         // পেজ লোড হওয়ার সময় চেক করা যে ইউজার সেশনে আছে কি না
         window.addEventListener('DOMContentLoaded', () => {
