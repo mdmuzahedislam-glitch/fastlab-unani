@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মার্কেটিং অফিসার এডিট প্যানেল - ফাস্টল্যাব ইউনানী</title>
+    <title>মার্কেটিং অফিসার ও ডিলার এডিট প্যানেল - ফাস্টল্যাব ইউনানী</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
@@ -23,68 +23,125 @@
     <!-- হেডার বা নবার -->
     <header class="forest-green text-white p-4 shadow-md flex justify-between items-center">
         <h1 class="text-xl font-bold flex items-center gap-2">
-            <i class="fa-solid fa-user-gear"></i> মার্কেটিং অফিসার কন্ট্রোল ও এডিট প্যানেল
+            <i class="fa-solid fa-user-gear"></i> মার্কেটিং কন্ট্রোল ও ম্যানেজমেন্ট এডিট প্যানেল
         </h1>
         <a href="marketing-dashboard (1).html" target="_blank" class="bg-amber-400 text-black px-4 py-2 rounded-lg font-bold hover:bg-amber-500 transition text-sm">ড্যাশবোর্ড দেখুন</a>
     </header>
 
-    <main class="max-w-4xl mx-auto p-4 md:p-6 space-y-6 flex-grow w-full">
+    <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-6 flex-grow w-full">
         
-        <!-- ১. মার্কেটিং অফিসার প্রোফাইল এডিট সেকশন -->
+        <!-- ১. নতুন মার্কেটিং অফিসার সংরক্ষণ করুন -->
         <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-emerald-800">
             <h2 class="text-base font-bold forest-green-text mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-user-pen"></i> মার্কেটিং অফিসারের তথ্য পরিবর্তন করুন
+                <i class="fa-solid fa-user-plus"></i> নতুন মার্কেটিং অফিসার সংরক্ষণ করুন
             </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">অফিসারের নাম:</label>
-                    <input type="text" id="edit-name" placeholder="নাম লিখুন" class="w-full border p-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">মোবাইল নাম্বার:</label>
-                    <input type="text" id="edit-phone" placeholder="মোবাইল নাম্বার" class="w-full border p-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">মার্কেটিং এরিয়া:</label>
-                    <input type="text" id="edit-area" placeholder="এরিয়া লিখুন" class="w-full border p-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">লগইন ইউজার আইডি (Username):</label>
-                    <input type="text" id="edit-userid" placeholder="ইউজার আইডি" class="w-full border p-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">লগইন পাসওয়ার্ড (Password):</label>
-                    <input type="text" id="edit-pass" placeholder="পাসওয়ার্ড লিখুন" class="w-full border p-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <input type="text" id="officer-name" placeholder="অফিসারের নাম" class="border p-2.5 rounded-lg text-sm">
+                <input type="text" id="officer-phone" placeholder="মোবাইল নাম্বার" class="border p-2.5 rounded-lg text-sm">
+                <input type="text" id="officer-area" placeholder="মার্কেটিং এরিয়া" class="border p-2.5 rounded-lg text-sm">
+                <input type="text" id="officer-id" placeholder="ইউজার আইডি (Username)" class="border p-2.5 rounded-lg text-sm">
+                <input type="text" id="officer-pass" placeholder="পাসওয়ার্ড (Password)" class="border p-2.5 rounded-lg text-sm">
             </div>
-            <button onclick="saveProfile()" class="forest-green text-white px-5 py-2.5 rounded-lg font-bold hover:bg-green-900 transition text-sm shadow">
-                <i class="fa-solid fa-save mr-1"></i> প্রোফাইল সংরক্ষণ করুন
+            <button onclick="saveMarketingOfficer()" class="forest-green text-white px-5 py-2 rounded font-bold hover:bg-green-900 text-sm shadow">
+                অফিসার সংরক্ষণ করুন
             </button>
         </section>
 
-        <!-- ২. নোটিশ বোর্ড এডিট সেকশন -->
+        <!-- ২. মার্কেটিং অফিসার লিস্ট -->
+        <section class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-base font-bold forest-green-text mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-users"></i> মার্কেটিং অফিসার লিস্ট
+            </h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="p-2.5 border">নাম</th>
+                            <th class="p-2.5 border">মোবাইল</th>
+                            <th class="p-2.5 border">এরিয়া</th>
+                            <th class="p-2.5 border">ইউজার আইডি</th>
+                            <th class="p-2.5 border">পাসওয়ার্ড</th>
+                            <th class="p-2.5 border text-center">একশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="marketing-officer-list">
+                        <!-- ফায়ারবেজ থেকে ডাইনামিক ডাটা আসবে -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ৩. নতুন ডিপো/ডিলার পার্টি সংরক্ষণ করুন -->
         <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-emerald-800">
             <h2 class="text-base font-bold forest-green-text mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-bullhorn"></i> নোটিশ বোর্ড এডিট প্যানেল
+                <i class="fa-solid fa-handshake"></i> নতুন ডিপো/ডিলার পার্টি সংরক্ষণ করুন
             </h2>
-            <div class="space-y-3 mb-4">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">নোটিশ ১:</label>
-                    <input type="text" id="notice-1" placeholder="প্রথম নোটিশ লিখুন..." class="w-full border p-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">নোটিশ ২:</label>
-                    <input type="text" id="notice-2" placeholder="দ্বিতীয় নোটিশ লিখুন..." class="w-full border p-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">নোটিশ ৩:</label>
-                    <input type="text" id="notice-3" placeholder="তৃতীয় নোটিশ লিখুন..." class="w-full border p-2.5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <input type="text" id="party-serial" placeholder="ক্রমিক নং" class="border p-2.5 rounded-lg text-sm">
+                <input type="text" id="party-name" placeholder="পার্টির নাম ও ঠিকানা" class="border p-2.5 rounded-lg text-sm">
+                <input type="text" id="party-phone" placeholder="মোবাইল নাম্বার" class="border p-2.5 rounded-lg text-sm">
+                <input type="text" id="party-deposit" placeholder="মোট জমা" class="border p-2.5 rounded-lg text-sm">
+                <input type="text" id="party-purchase" placeholder="মোট মাল ক্রয়" class="border p-2.5 rounded-lg text-sm">
+                <input type="text" id="party-due" placeholder="বর্তমান বকেয়া" class="border p-2.5 rounded-lg text-sm">
             </div>
-            <button onclick="saveNotices()" class="forest-green text-white px-5 py-2.5 rounded-lg font-bold hover:bg-green-900 transition text-sm shadow">
-                <i class="fa-solid fa-save mr-1"></i> নোটিশ সংরক্ষণ করুন
+            <button onclick="saveMarketingParty()" class="forest-green text-white px-5 py-2 rounded font-bold hover:bg-green-900 text-sm shadow">
+                পার্টি সংরক্ষণ করুন
             </button>
         </section>
+
+        <!-- ৪. ডিপো/ডিলার পার্টি লিস্ট ও ম্যানেজমেন্ট -->
+        <section class="bg-white p-6 rounded-xl shadow-md">
+            <h2 class="text-base font-bold forest-green-text mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-list"></i> ডিপো/ডিলার পার্টি লিস্ট
+            </h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="p-2.5 border">ক্রমিক</th>
+                            <th class="p-2.5 border">নাম ও ঠিকানা</th>
+                            <th class="p-2.5 border">মোবাইল</th>
+                            <th class="p-2.5 border">মোট জমা</th>
+                            <th class="p-2.5 border">মাল ক্রয়</th>
+                            <th class="p-2.5 border">বকেয়া</th>
+                            <th class="p-2.5 border text-center">একশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="marketing-party-list">
+                        <!-- ফায়ারবেজ থেকে ডাটা আসবে -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ৫. নোটিশ বোর্ড ও পরামর্শ বক্স এডিট প্যানেল -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- নোটিশ বোর্ড -->
+            <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-emerald-800">
+                <h2 class="text-base font-bold forest-green-text mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-bullhorn"></i> নোটিশ বোর্ড এডিট করুন
+                </h2>
+                <div class="space-y-3 mb-4">
+                    <input type="text" id="notice-1" placeholder="নোটিশ ১..." class="w-full border p-2.5 rounded-lg text-sm">
+                    <input type="text" id="notice-2" placeholder="নোটিশ ২..." class="w-full border p-2.5 rounded-lg text-sm">
+                    <input type="text" id="notice-3" placeholder="নোটিশ ৩..." class="w-full border p-2.5 rounded-lg text-sm">
+                </div>
+                <button onclick="saveNotices()" class="forest-green text-white px-5 py-2 rounded font-bold hover:bg-green-900 text-sm shadow">নোটিশ সংরক্ষণ</button>
+            </section>
+
+            <!-- পরামর্শ বক্স -->
+            <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-emerald-800">
+                <h2 class="text-base font-bold forest-green-text mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-lightbulb"></i> পরামর্শ বক্স এডিট করুন
+                </h2>
+                <div class="space-y-3 mb-4">
+                    <input type="text" id="advice-1" placeholder="পরামর্শ ১..." class="w-full border p-2.5 rounded-lg text-sm">
+                    <input type="text" id="advice-2" placeholder="পরামর্শ ২..." class="w-full border p-2.5 rounded-lg text-sm">
+                    <input type="text" id="advice-3" placeholder="পরামর্শ ৩..." class="w-full border p-2.5 rounded-lg text-sm">
+                </div>
+                <button onclick="saveAdvices()" class="forest-green text-white px-5 py-2 rounded font-bold hover:bg-green-900 text-sm shadow">পরামর্শ সংরক্ষণ</button>
+            </section>
+        </div>
 
     </main>
 
@@ -109,62 +166,164 @@
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
-        const database = firebase.database();
+        const db = firebase.database();
 
-        // পেজ লোড হলে ডাটাবেস থেকে বর্তমান তথ্য ফর্মের ইনপুটে নিয়ে আসা
         window.onload = function() {
-            // প্রোফাইল ডাটা লোড
-            database.ref('fastlab_marketing_data/profile').once('value', snapshot => {
-                const data = snapshot.val();
-                if (data) {
-                    document.getElementById('edit-name').value = data.name || '';
-                    document.getElementById('edit-phone').value = data.phone || '';
-                    document.getElementById('edit-area').value = data.area || '';
-                    document.getElementById('edit-userid').value = data.userId || '';
-                    document.getElementById('edit-pass').value = data.pass || '';
-                }
-            });
-
-            // নোটিশ ডাটা লোড
-            database.ref('fastlab_marketing_data/notices').once('value', snapshot => {
-                const data = snapshot.val();
-                if (data) {
-                    document.getElementById('notice-1').value = data.n1 || '';
-                    document.getElementById('notice-2').value = data.n2 || '';
-                    document.getElementById('notice-3').value = data.n3 || '';
-                }
-            });
+            loadMarketingOfficers();
+            loadMarketingParties();
+            loadNoticesAndAdvices();
         };
 
-        // প্রোফাইল সংরক্ষণ ফাংশন
-        function saveProfile() {
-            const name = document.getElementById('edit-name').value;
-            const phone = document.getElementById('edit-phone').value;
-            const area = document.getElementById('edit-area').value;
-            const userId = document.getElementById('edit-userid').value;
-            const pass = document.getElementById('edit-pass').value;
+        // ১. মার্কেটিং অফিসার সংরক্ষণ
+        function saveMarketingOfficer() {
+            const name = document.getElementById('officer-name').value;
+            const phone = document.getElementById('officer-phone').value;
+            const area = document.getElementById('officer-area').value;
+            const userId = document.getElementById('officer-id').value;
+            const pass = document.getElementById('officer-pass').value;
 
-            database.ref('fastlab_marketing_data/profile').set({
-                name, phone, area, userId, pass
-            }).then(() => {
-                alert("মার্কেটিং অফিসারের তথ্য সফলভাবে আপডেট হয়েছে!");
-            }).catch(error => {
-                alert("ত্রুটি: " + error.message);
+            if(!name || !userId) {
+                alert("নাম এবং ইউজার আইডি দিন!");
+                return;
+            }
+
+            db.ref('marketing_officers').push({ name, phone, area, userId, pass })
+                .then(() => {
+                    alert("মার্কেটিং অফিসার সফলভাবে সংরক্ষিত হয়েছে!");
+                    document.getElementById('officer-name').value = '';
+                    document.getElementById('officer-phone').value = '';
+                    document.getElementById('officer-area').value = '';
+                    document.getElementById('officer-id').value = '';
+                    document.getElementById('officer-pass').value = '';
+                });
+        }
+
+        function loadMarketingOfficers() {
+            const tbody = document.getElementById('marketing-officer-list');
+            db.ref('marketing_officers').on('value', snapshot => {
+                tbody.innerHTML = '';
+                if(snapshot.exists()) {
+                    snapshot.forEach(childSnap => {
+                        const key = childSnap.key;
+                        const data = childSnap.val();
+                        tbody.innerHTML += `
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="p-2.5 border font-medium">${data.name || ''}</td>
+                                <td class="p-2.5 border">${data.phone || ''}</td>
+                                <td class="p-2.5 border">${data.area || ''}</td>
+                                <td class="p-2.5 border">${data.userId || ''}</td>
+                                <td class="p-2.5 border text-emerald-700 font-mono">${data.pass || ''}</td>
+                                <td class="p-2.5 border text-center">
+                                    <button onclick="deleteOfficer('${key}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">ডিলিট</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-500">কোনো অফিসার পাওয়া যায়নি</td></tr>`;
+                }
             });
         }
 
-        // নোটিশ সংরক্ষণ ফাংশন
+        function deleteOfficer(key) {
+            if(confirm("আপনি কি এই অফিসারকে ডিলিট করতে চান?")) {
+                db.ref('marketing_officers/' + key).remove();
+            }
+        }
+
+        // ২. পার্টি বা ডিলার সংরক্ষণ
+        function saveMarketingParty() {
+            const serial = document.getElementById('party-serial').value;
+            const name = document.getElementById('party-name').value;
+            const phone = document.getElementById('party-phone').value;
+            const deposit = document.getElementById('party-deposit').value;
+            const purchase = document.getElementById('party-purchase').value;
+            const due = document.getElementById('party-due').value;
+
+            if(!name) {
+                alert("পার্টির নাম ও ঠিকানা লিখুন!");
+                return;
+            }
+
+            db.ref('marketing_parties').push({ serial, name, phone, deposit, purchase, due })
+                .then(() => {
+                    alert("পার্টি সফলভাবে সংরক্ষিত হয়েছে!");
+                    document.getElementById('party-serial').value = '';
+                    document.getElementById('party-name').value = '';
+                    document.getElementById('party-phone').value = '';
+                    document.getElementById('party-deposit').value = '';
+                    document.getElementById('party-purchase').value = '';
+                    document.getElementById('party-due').value = '';
+                });
+        }
+
+        function loadMarketingParties() {
+            const tbody = document.getElementById('marketing-party-list');
+            db.ref('marketing_parties').on('value', snapshot => {
+                tbody.innerHTML = '';
+                if(snapshot.exists()) {
+                    snapshot.forEach(childSnap => {
+                        const key = childSnap.key;
+                        const data = childSnap.val();
+                        tbody.innerHTML += `
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="p-2.5 border">${data.serial || ''}</td>
+                                <td class="p-2.5 border font-medium">${data.name || ''}</td>
+                                <td class="p-2.5 border">${data.phone || ''}</td>
+                                <td class="p-2.5 border text-emerald-600 font-semibold">${data.deposit || '0'}</td>
+                                <td class="p-2.5 border text-blue-600 font-semibold">${data.purchase || '0'}</td>
+                                <td class="p-2.5 border text-red-600 font-semibold">${data.due || '0'}</td>
+                                <td class="p-2.5 border text-center">
+                                    <button onclick="deleteParty('${key}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">ডিলিট</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">কোনো পার্টি বা ডিলার পাওয়া যায়নি</td></tr>`;
+                }
+            });
+        }
+
+        function deleteParty(key) {
+            if(confirm("আপনি কি এই পার্টি ডিলিট করতে চান?")) {
+                db.ref('marketing_parties/' + key).remove();
+            }
+        }
+
+        // ৩. নোটিশ ও পরামর্শ সংরক্ষণ
         function saveNotices() {
             const n1 = document.getElementById('notice-1').value;
             const n2 = document.getElementById('notice-2').value;
             const n3 = document.getElementById('notice-3').value;
+            db.ref('fastlab_marketing_data/notices').set({ n1, n2, n3 })
+                .then(() => alert("নোটিশ সফলভাবে সংরক্ষিত হয়েছে!"));
+        }
 
-            database.ref('fastlab_marketing_data/notices').set({
-                n1, n2, n3
-            }).then(() => {
-                alert("নোটিশ বোর্ড সফলভাবে আপডেট হয়েছে!");
-            }).catch(error => {
-                alert("ত্রুটি: " + error.message);
+        function saveAdvices() {
+            const a1 = document.getElementById('advice-1').value;
+            const a2 = document.getElementById('advice-2').value;
+            const a3 = document.getElementById('advice-3').value;
+            db.ref('fastlab_marketing_data/advices').set({ a1, a2, a3 })
+                .then(() => alert("পরামর্শ সফলভাবে সংরক্ষিত হয়েছে!"));
+        }
+
+        function loadNoticesAndAdvices() {
+            db.ref('fastlab_marketing_data/notices').on('value', snap => {
+                const d = snap.val();
+                if(d) {
+                    document.getElementById('notice-1').value = d.n1 || '';
+                    document.getElementById('notice-2').value = d.n2 || '';
+                    document.getElementById('notice-3').value = d.n3 || '';
+                }
+            });
+            db.ref('fastlab_marketing_data/advices').on('value', snap => {
+                const d = snap.val();
+                if(d) {
+                    document.getElementById('advice-1').value = d.a1 || '';
+                    document.getElementById('advice-2').value = d.a2 || '';
+                    document.getElementById('advice-3').value = d.a3 || '';
+                }
             });
         }
     </script>
