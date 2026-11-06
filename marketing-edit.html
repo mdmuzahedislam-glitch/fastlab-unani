@@ -37,6 +37,7 @@
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <input type="text" id="officer-name" placeholder="অফিসারের নাম" class="border p-2.5 rounded-lg text-sm">
+                <input type="text" id="title" placeholder="পদবী" class="border p-2.5 rounded-lg text-sm">
                 <input type="text" id="officer-phone" placeholder="মোবাইল নাম্বার" class="border p-2.5 rounded-lg text-sm">
                 <input type="text" id="officer-area" placeholder="মার্কেটিং এরিয়া" class="border p-2.5 rounded-lg text-sm">
                 <input type="text" id="officer-id" placeholder="ইউজার আইডি (Username)" class="border p-2.5 rounded-lg text-sm">
@@ -57,6 +58,7 @@
                     <thead>
                         <tr class="bg-gray-100">
                             <th class="p-2.5 border">নাম</th>
+                            <th class="p-2.5 border">পদবী</th>
                             <th class="p-2.5 border">মোবাইল</th>
                             <th class="p-2.5 border">এরিয়া</th>
                             <th class="p-2.5 border">ইউজার আইডি</th>
@@ -127,8 +129,9 @@
                             <th class="p-2.5 border">নাম ও ঠিকানা</th>
                             <th class="p-2.5 border">মোবাইল</th>
                             <th class="p-2.5 border">মোট জমা</th>
-                            <th class="p-2.5 border">মাল ক্রয়</th>
+                            <th class="p-2.5 border">বিক্রয়</th>
                             <th class="p-2.5 border">বকেয়া</th>
+                            <th class="p-2.5 border">অগ্রিম</th>
                             <th class="p-2.5 border text-center">একশন</th>
                         </tr>
                     </thead>
@@ -139,7 +142,7 @@
             </div>
         </section>
 
-        <!-- ৫. নোটিশ বোর্ড ও পরামর্শ বক্স এডিট প্যানেল -->
+        <!-- ৫. নোটিশ বোর্ড এডিট প্যানেল -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- নোটিশ বোর্ড -->
             <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-emerald-800">
@@ -153,21 +156,6 @@
                 </div>
                 <button onclick="saveNotices()" class="forest-green text-white px-5 py-2 rounded font-bold hover:bg-green-900 text-sm shadow">নোটিশ সংরক্ষণ</button>
             </section>
-
-            <!-- পরামর্শ বক্স -->
-            <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-emerald-800">
-                <h2 class="text-base font-bold forest-green-text mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-lightbulb"></i> পরামর্শ বক্স এডিট করুন
-                </h2>
-                <div class="space-y-3 mb-4">
-                    <input type="text" id="advice-1" placeholder="পরামর্শ ১..." class="w-full border p-2.5 rounded-lg text-sm">
-                    <input type="text" id="advice-2" placeholder="পরামর্শ ২..." class="w-full border p-2.5 rounded-lg text-sm">
-                    <input type="text" id="advice-3" placeholder="পরামর্শ ৩..." class="w-full border p-2.5 rounded-lg text-sm">
-                </div>
-                <button onclick="saveAdvices()" class="forest-green text-white px-5 py-2 rounded font-bold hover:bg-green-900 text-sm shadow">পরামর্শ সংরক্ষণ</button>
-            </section>
-        </div>
-
     </main>
 
     <!-- Footer -->
@@ -203,6 +191,7 @@
         // ১. মার্কেটিং অফিসার সংরক্ষণ
         function saveMarketingOfficer() {
             const name = document.getElementById('officer-name').value;
+            const title = document.getElementById('officer-title').value;
             const phone = document.getElementById('officer-phone').value;
             const area = document.getElementById('officer-area').value;
             const userId = document.getElementById('officer-id').value;
@@ -217,6 +206,7 @@
                 .then(() => {
                     alert("মার্কেটিং অফিসার সফলভাবে সংরক্ষিত হয়েছে!");
                     document.getElementById('officer-name').value = '';
+                    document.getElementById('officer-title').value = '';
                     document.getElementById('officer-phone').value = '';
                     document.getElementById('officer-area').value = '';
                     document.getElementById('officer-id').value = '';
