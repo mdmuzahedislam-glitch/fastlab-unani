@@ -11,6 +11,8 @@
     <!-- Firebase SDK (v8) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- SheetJS (Excel Export) Library -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -25,12 +27,12 @@
 </head>
 <body class="bg-gray-100 font-sans">
     <!-- হেডার বা নবার -->
-<header class="bg-forest text-white p-4 shadow-md flex justify-between items-center">
-    <h1 class="text-xl font-bold flex items-center gap-2">
-        <i class="fa-solid fa-truck-fast"></i> সরবরাহ অফিসার ও সরবরাহ পার্টি ম্যানেজমেন্ট প্যানেল
-    </h1>
-    <a href="admin-dashboard.html" class="bg-amber-400 text-black px-4 py-2 rounded-lg font-bold hover:bg-amber-500 transition">ড্যাশবোর্ড</a>
-</header>
+    <header class="bg-forest text-white p-4 shadow-md flex justify-between items-center">
+        <h1 class="text-xl font-bold flex items-center gap-2">
+            <i class="fa-solid fa-truck-fast"></i> সরবরাহ অফিসার ও সরবরাহ পার্টি ম্যানেজমেন্ট প্যানেল
+        </h1>
+        <a href="admin-dashboard.html" class="bg-amber-400 text-black px-4 py-2 rounded-lg font-bold hover:bg-amber-500 transition">ড্যাশবোর্ড</a>
+    </header>
 
     <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
         <!-- অফিসার প্রোফাইল নোটিশ বোর্ড এডিট -->
@@ -65,6 +67,7 @@
                 সংরক্ষণ
             </button>
         </section>
+
         <!-- ২. সরবরাহ অফিসার লিস্ট -->
         <section class="bg-white p-6 rounded-xl shadow-md">
             <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
@@ -89,7 +92,8 @@
                 </table>
             </div>
         </section>
-          <!-- ৩. নতুন সরবরাহ পার্টি সংরক্ষণ করুন -->
+
+        <!-- ৩. নতুন সরবরাহ পার্টি সংরক্ষণ করুন -->
         <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-forest">
             <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
                 <i class="fa-solid fa-handshake"></i> নতুন সরবরাহ পার্টি সংরক্ষণ করুন
@@ -107,17 +111,22 @@
         </section>
 
         <!-- ৪. সরবরাহ পার্টির লিস্ট -->
-        <section class="bg-white p-6 rounded-xl shadow-md">
+        <section id="party-list-section" class="bg-white p-6 rounded-xl shadow-md">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base font-bold text-forest flex items-center gap-2">
                     <i class="fa-solid fa-list"></i> সরবরাহ পার্টির লিস্ট
                 </h2>
-                <button onclick="printSpecificSection('party-list-section', 'সরবরাহ পার্টির তালিকা')" class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-650">
-                  প্রিন্ট
-                </button>
+                <div class="flex gap-2">
+                    <button onclick="exportTableToExcel('party-table', 'সরবরাহ_পার্টির_তালিকা')" class="bg-emerald-600 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-emerald-700">
+                        <i class="fa-solid fa-file-excel mr-1"></i> এক্সেল ডাউনলোড
+                    </button>
+                    <button onclick="printSpecificSection('party-list-section', 'সরবরাহ পার্টির তালিকা')" class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-600">
+                        প্রিন্ট
+                    </button>
+                </div>
             </div>
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-sm">
+                <table id="party-table" class="w-full text-left border-collapse text-sm">
                     <thead>
                         <tr class="bg-gray-100">
                             <th class="p-2 border">ক্রমিক নং</th>
@@ -135,6 +144,7 @@
                 </table>
             </div>
         </section>
+
         <!-- ৫. পার্টি জমা এন্ট্রি ফরম -->
         <section id="deposit-form-section" class="bg-white p-6 rounded-xl shadow-md border-2 border-emerald-600 hidden">
             <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
@@ -167,19 +177,23 @@
                 </button>
             </div>
         </section>
-          <!-- ৬. পার্টি স্টেটমেন্ট -->
+         <!-- ৬. পার্টি স্টেটমেন্ট -->
         <section id="statement-section" class="bg-white p-6 rounded-xl shadow-md border hidden">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-base font-bold text-forest flex items-center gap-2">
                     <i class="fa-solid fa-chart-line"></i> পার্টি স্টেটমেন্ট <span id="statement-party-title" class="text-xs text-emerald-700 ml-2"></span>
                 </h2>
-                <button onclick="printSpecificSection('statement-section', 'পার্টি লেনদেন স্টেটমেন্ট')" class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-650">
-                 প্রিন্ট
-                </button>
-                </button>
+                <div class="flex gap-2">
+                    <button onclick="exportTableToExcel('statement-table', 'পার্টি_স্টেটমেন্ট')" class="bg-emerald-600 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-emerald-700">
+                        <i class="fa-solid fa-file-excel mr-1"></i> এক্সেল ডাউনলোড
+                    </button>
+                    <button onclick="printSpecificSection('statement-section', 'পার্টি লেনদেন স্টেটমেন্ট')" class="bg-amber-500 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-amber-600">
+                        প্রিন্ট
+                    </button>
+                </div>
             </div>
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-sm">
+                <table id="statement-table" class="w-full text-left border-collapse text-sm">
                     <thead>
                         <tr class="bg-gray-100">
                             <th class="p-2 border">তারিখ</th>
@@ -200,7 +214,6 @@
                 <button onclick="hideStatement()" class="bg-gray-500 text-white px-4 py-1 rounded text-sm">বন্ধ করুন</button>
             </div>
         </section>
-
     </main>
 
     <!-- ফায়ারবেজ ও কার্যকারী স্ক্রিপ্ট -->
@@ -229,6 +242,44 @@
             loadNotices();
         };
 
+        // টেবিল এক্সেল ফরম্যাটে পাওয়ার জন্য এক্সপোর্ট ফাংশন
+        function exportTableToExcel(tableID, filename = '') {
+            const table = document.getElementById(tableID);
+            const cloneTable = table.cloneNode(true);
+            
+            // একশন কলামটি এক্সেল থেকে বাদ দেয়ার জন্য
+            const rows = cloneTable.rows;
+            for (let i = 0; i < rows.length; i++) {
+                if (rows[i].cells.length > 0) {
+                    rows[i].deleteCell(-1); // শেষ কলাম (একশন) মুছে ফেলা
+                }
+            }
+
+            const wb = XLSX.utils.table_to_book(cloneTable, { sheet: "Sheet1" });
+            const fname = (filename ? filename : 'excel_data') + '.xlsx';
+            XLSX.writeFile(wb, fname);
+        }
+
+        // নির্দিষ্ট সেকশন প্রিন্ট করার ফাংশন
+        function printSpecificSection(sectionId, titleText) {
+            const sectionContent = document.getElementById(sectionId).innerHTML;
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>প্রিন্ট - ফাস্টল্যাব ইউনানী</title>');
+            printWindow.document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
+            printWindow.document.write('<style>body { font-family: sans-serif; padding: 20px; }</style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(`<h2 class="text-xl font-bold mb-4 text-center">${titleText}</h2>`);
+            printWindow.document.write(sectionContent);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+        }
+
         // নোটিশ সংরক্ষণ ও লোড
         function saveNotices() {
             const n1 = document.getElementById('notice-1').value;
@@ -250,7 +301,7 @@
                 }
             });
         }
-         // সরবরাহ অফিসার সংরক্ষণ ও লিস্ট (পাসওয়ার্ডসহ)
+        // সরবরাহ অফিসার সংরক্ষণ ও লিস্ট (পাসওয়ার্ডসহ)
         function saveSupplyOfficer() {
             const serial = document.getElementById('officer-serial').value;
             const name = document.getElementById('officer-name').value;
@@ -288,19 +339,20 @@
                         const key = childSnap.key;
                         const data = childSnap.val();
                         tbody.innerHTML += `
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="p-2 border">${data.serial || ''}</td>
-                                <td class="p-2 border font-medium">${data.name || ''}</td>
-                                <td class="p-2 border">${data.phone || ''}</td>
-                                <td class="p-2 border">${data.area || ''}</td>
-                                <td class="p-2 border">${data.userId || ''}</td>
-                                <td class="p-2 border">${data.pass || ''}</td>
-                                <td class="p-2 border flex gap-1">
-                                    <button onclick="deleteOfficer('${key}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">ডিলিট</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
+                              <tr class="border-b hover:bg-gray-50">
+        <td class="p-2 border">${data.serial || ''}</td>
+        <td class="p-2 border font-medium">${data.name || ''}</td>
+        <td class="p-2 border">${data.phone || ''}</td>
+        <td class="p-2 border">${data.area || ''}</td>
+        <td class="p-2 border">${data.userId || ''}</td>
+        <td class="p-2 border font-mono text-emerald-700">${data.pass || ''}</td>
+        <td class="p-2 border flex gap-1 items-center">
+            <button onclick="deleteOfficer('${key}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">ডিলিট</button>
+            <button onclick="editOfficer('${key}', '${data.serial || ''}', '${data.name || ''}', '${data.phone || ''}', '${data.area || ''}', '${data.userId || ''}', '${data.pass || ''}')" class="bg-amber-500 text-white px-2 py-1 rounded text-xs hover:bg-amber-600">এডিট</button>
+        </td>
+    </tr>
+`;
+        });
                 } else {
                     tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">কোনো সরবরাহ অফিসার পাওয়া যায়নি</td></tr>`;
                 }
@@ -312,41 +364,54 @@
                 db.ref('supply_officers/' + key).remove();
             }
         }
+        function editOfficer(key, serial, name, phone, area, userId, pass) {
+    document.getElementById('officer-serial').value = serial;
+    document.getElementById('officer-name').value = name;
+    document.getElementById('officer-phone').value = phone;
+    document.getElementById('officer-area').value = area;
+    document.getElementById('officer-id').value = userId;
+    document.getElementById('officer-pass').value = pass;
+
+    db.ref('supply_officers/' + key).remove();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         // সরবরাহ পার্টি সংরক্ষণ (পূর্বের বকেয়া ও পাওনা সহ)
         function saveSupplyParty() {
-            const serial = document.getElementById('party-serial').value;
-            const name = document.getElementById('party-name').value;
-            const phone = document.getElementById('party-phone').value;
-            const due = parseFloat(document.getElementById('party-due').value) || 0;
-            const advance = parseFloat(document.getElementById('party-advance').value) || 0;
+    const serial = document.getElementById('party-serial').value;
+    const name = document.getElementById('party-name').value;
+    const phone = document.getElementById('party-phone').value;
+    const due = parseFloat(document.getElementById('party-due').value) || 0;
+    const advance = parseFloat(document.getElementById('party-advance').value) || 0;
 
-            if(!name) {
-                alert("দয়া করে পার্টির নাম ও ঠিকানা লিখুন!");
-                return;
+    if (!name) {
+        alert("দয়া করে পার্টির নাম ও ঠিকানা লিখুন!");
+        return;
+    }
+
+    const partyData = { serial, name, phone, due, advance };
+
+    db.ref('supply_parties').push(partyData)
+        .then((ref) => {
+            if (due > 0 || advance > 0) {
+                const initialTrans = {
+                    date: new Date().toISOString().split('T')[0],
+                    desc: "পূর্বের বকেয়া / পাওনা ব্যালেন্স",
+                    amount: advance, // জমা বা পাওনা (Cr)
+                    purchase: due  // মাল ক্রয় বা বকেয়া (Dr)
+                };
+                db.ref(`supply_transactions/${ref.key}`).push(initialTrans);
             }
-            const partyData = { serial, name, phone, due, advance };
 
-            db.ref('supply_parties').push(partyData)
-                .then((ref) => {
-                    // পূর্বের বকেয়া বা পাওনা থাকলে তা প্রথম লেনদেন বা প্রারম্ভিক হিসেবে যুক্ত করা
-                    if(due > 0 || advance > 0) {
-                        const initialTrans = {
-                            date: new Date().toISOString().split('T')[0],
-                            desc: "পূর্বের বকেয়া / পাওনা ব্যালেন্স",
-                            amount: advance,
-                            purchase: due
-                        };
-                        db.ref(`supply_transactions/${ref.key}`).push(initialTrans);
-                    }
-
-                    alert("পার্টি সফলভাবে সংরক্ষিত হয়েছে!");
-                    document.getElementById('party-serial').value = '';
-                    document.getElementById('party-name').value = '';
-                    document.getElementById('party-phone').value = '';
-                    document.getElementById('party-due').value = '';
-                    document.getElementById('party-advance').value = '';
-                })
-                .catch(err => alert("ত্রুটি: " + err.message));
+            alert("পার্টি সফলভাবে সংরক্ষিত হয়েছে!");
+            document.getElementById('party-serial').value = '';
+            document.getElementById('party-name').value = '';
+            document.getElementById('party-phone').value = '';
+            document.getElementById('party-due').value = '';
+            document.getElementById('party-advance').value = '';
+            loadSupplyParties();
+        })
+        .catch(err => alert("ত্রুটি: " + err.message));
         }
 
         function loadSupplyParties() {
@@ -370,19 +435,20 @@
                             let currentDue = totalBuy - totalDeposit;
 
                             let row = document.getElementById(`party-row-${key}`);
-                            const rowHTML = `
-                                <td class="p-2 border">${data.serial || ''}</td>
-                                <td class="p-2 border font-medium">${data.name || ''}</td>
-                                <td class="p-2 border">${data.phone || ''}</td>
-                                <td class="p-2 border text-emerald-600 font-semibold">${totalDeposit}</td>
-                                <td class="p-2 border text-blue-600 font-semibold">${totalBuy}</td>
-                                <td class="p-2 border text-red-600 font-semibold">${currentDue}</td>
-                                <td class="p-2 border flex gap-1 flex-wrap">
-                                    <button onclick="openDepositForm('${key}', '${data.name}')" class="bg-emerald-600 text-white px-2 py-1 rounded text-xs hover:bg-emerald-700">জমা এন্ট্রি</button>
-                                    <button onclick="openStatement('${key}', '${data.name}')" class="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700">স্টেটমেন্ট</button>
-                                    <button onclick="deleteParty('${key}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">ডিলিট</button>
-                                </td>
-                            `;
+                                    let rowHTML = `
+            <td class="p-2 border">${data.serial || ''}</td>
+            <td class="p-2 border font-medium">${data.name || ''}</td>
+            <td class="p-2 border">${data.phone || ''}</td>
+            <td class="p-2 border text-emerald-600 font-semibold">${totalDeposit}</td>
+            <td class="p-2 border text-blue-600 font-semibold">${totalBuy}</td>
+            <td class="p-2 border text-red-600 font-semibold">${currentDue}</td>
+            <td class="p-2 border flex gap-1 flex-wrap items-center">
+                <button onclick="openDepositForm('${key}', '${data.name}')" class="bg-emerald-600 text-white px-2 py-1 rounded text-xs hover:bg-emerald-700">জমা এন্ট্রি</button>
+                <button onclick="openStatement('${key}', '${data.name}')" class="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700">স্টেটমেন্ট</button>
+                <button onclick="editParty('${key}', '${data.serial || ''}', '${data.name || ''}', '${data.phone || ''}', '${data.due || 0}', '${data.advance || 0}')" class="bg-amber-500 text-white px-2 py-1 rounded text-xs hover:bg-amber-600">এডিট</button>
+                <button onclick="deleteParty('${key}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">ডিলিট</button>
+            </td>
+        `;
 
                             if(row) {
                                 row.innerHTML = rowHTML;
@@ -400,6 +466,16 @@
                 }
             });
         }
+function editParty(key, serial, name, phone, due, advance) {
+    document.getElementById('party-serial').value = serial;
+    document.getElementById('party-name').value = name;
+    document.getElementById('party-phone').value = phone;
+    document.getElementById('party-due').value = due;
+    document.getElementById('party-advance').value = advance;
+
+    db.ref('supply_parties/' + key).remove();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         function deleteParty(key) {
             if(confirm("আপনি কি এই পার্টি এবং এর সমস্ত লেনদেন ডিলিট করতে চান?")) {
@@ -409,7 +485,6 @@
                 hideStatement();
             }
         }
-
         // জমা এন্ট্রি ফরম
         function openDepositForm(key, name) {
             selectedPartyKey = key;
@@ -451,8 +526,8 @@
                     hideDepositForm();
                 })
                 .catch(err => alert("ত্রুটি: " + err.message));
-                    }
-          // স্টেটমেন্ট ও Dr/Cr কালার লজিক
+        }
+                // স্টেটমেন্ট ও Dr/Cr কালার লজিক
         function openStatement(key, name) {
             selectedPartyKey = key;
             document.getElementById('statement-party-title').innerText = `(পার্টি: ${name})`;
@@ -471,8 +546,8 @@
                         const buy = parseFloat(tVal.purchase) || 0;
                         
                         runningBalance += (buy - dep);
-                        let drCr = runningBalance >= 0 ? "Cr" : "Dr";
-                        let balanceClass = drCr === "Cr" ? "text-red-600 font-semibold" : "text-black font-semibold";
+                        let drCr = runningBalance < 0 ? "Cr" : "Dr";
+                        let balanceClass = runningBalance < 0 ? "text-red-600 font-semibold" : "font-semibold";
 
                         statementList.innerHTML += `
                             <tr class="border-b hover:bg-gray-50">
@@ -483,6 +558,7 @@
                                 <td class="p-2 border font-bold">${drCr}</td>
                                 <td class="p-2 border ${balanceClass}">${Math.abs(runningBalance)}</td>
                                 <td class="p-2 border flex gap-1">
+                                    <button onclick="editStatementTrans('${key}', '${tKey}', '${tVal.date || ''}', '${tVal.desc || ''}', '${dep}', '${buy}')" class="bg-amber-500 text-white px-2 py-0.5 rounded text-xs hover:bg-amber-600">এডিট</button>
                                     <button onclick="deleteTransaction('${key}', '${tKey}')" class="bg-red-600 text-white px-2 py-0.5 rounded text-xs hover:bg-red-700">মুছুন</button>
                                 </td>
                             </tr>
@@ -504,6 +580,16 @@
             if(confirm("আপনি কি এই লেনদেনটি ডিলিট করতে চান?")) {
                 db.ref(`supply_transactions/${partyKey}/${transKey}`).remove();
             }
+        }
+
+        function editStatementTrans(partyKey, transKey, date, desc, amount, purchase) {
+            document.getElementById('dep-date').value = date;
+            document.getElementById('dep-desc').value = desc;
+            document.getElementById('dep-amount').value = amount > 0 ? amount : '';
+            document.getElementById('dep-purchase').value = purchase > 0 ? purchase : '';
+
+            db.ref(`supply_transactions/${partyKey}/${transKey}`).remove();
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
     </script>
 </body>
