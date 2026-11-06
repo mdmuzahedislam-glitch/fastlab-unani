@@ -345,12 +345,38 @@
                 }
             });
         }
-                // ফায়ারবেস থেকে সরাসরি সরবরাহ অফিসার লিস্ট চেক করে সঠিক লগইন লজিক
+                // ইনঅ্যাক্টিভিটি টাইমআউট সেটআপ (যেমন: ৫ মিনিট বা ৩০০,০০০ মিলিপ্রাক সেকেন্ড পর অটো লগআউট)
+        let inactivityTimeout;
+        const MAX_INACTIVITY_TIME = 5 * 60 * 1000; // ৫ মিনিট
+
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimeout);
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                inactivityTimeout = setTimeout(() => {
+                    alert('নিরাপত্তার স্বার্থে দীর্ঘক্ষণ নিষ্ক্রিয় থাকার কারণে আপনাকে স্বয়ংক্রিয়ভাবে লগআউট করা হয়েছে।');
+                    handleLogout();
+                }, MAX_INACTIVITY_TIME);
+            }
+        }
+
+        // ইউজার পেজে কোনো অ্যাক্টিভিটি (মাউস মুভ, ক্লিক, কীবোর্ড টাইপ) করলে টাইমার রিসেট হবে
+        ['mousemove', 'keydown', 'click', 'scroll'].forEach(event => {
+            window.addEventListener(event, resetInactivityTimer);
+        });
+
+        // ফায়ারবেস থেকে সরাসরি সরবরাহ অফিসার লিস্ট চেক করে সঠিক ও সিক্যুর লগইন লজিক
         function handleLogin(event) {
             event.preventDefault();
             const inputId = document.getElementById('user-id').value.trim();
             const inputPass = document.getElementById('password').value.trim();
             const errorAlert = document.getElementById('error-alert');
+
+            // বেসিক ইনপুট স্যানিটাইজেশন বা চেক
+            if (!inputId || !inputPass) {
+                errorAlert.classList.remove('hidden');
+                document.getElementById('error-text').innerText = "দয়া করে ইউজার আইডি এবং পাসওয়ার্ড উভয়ই দিন।";
+                return;
+            }
 
             db.ref('supply_officers').once('value', snapshot => {
                 let matchedOfficer = null;
@@ -377,12 +403,15 @@
                     const officerPhone = matchedOfficer.phone || "";
                     const officerArea = matchedOfficer.area || "";
 
-                    // sessionStorage ব্যবহার করা হচ্ছে যাতে ট্যাব বন্ধ করলে বা সেশন শেষ হলে মুছে যায়
+                    // সেশন স্টোরেজে সিকিউর ডাটা সংরক্ষণ
                     sessionStorage.setItem('isLoggedIn', 'true');
                     sessionStorage.setItem('loggedInUser', matchedKey);
                     sessionStorage.setItem('loggedInName', officerName);
                     sessionStorage.setItem('loggedInPhone', officerPhone);
                     sessionStorage.setItem('loggedInArea', officerArea);
+                    
+                    // ক্রস-ট্যাব কমিউনিকেশনের জন্য টোকেন বা ফ্ল্যাগ সেট করা
+                    localStorage.setItem('global_auth_signal', Date.now());
 
                     document.getElementById('profile-name').innerText = officerName;
                     if(document.getElementById('profile-phone')) {
@@ -398,6 +427,7 @@
                     
                     loadSupplyParties();
                     loadNotices();
+                    resetInactivityTimer(); // টাইমার চালু করা
                 } else {
                     errorAlert.classList.remove('hidden');
                     document.getElementById('error-text').innerText = "ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
@@ -408,8 +438,12 @@
             });
         }
 
+        // সুরক্ষিত লগআউট ফাংশন
         function handleLogout() {
-            sessionStorage.clear(); // সেশন ডাটা সম্পূর্ণ ক্লিয়ার করা
+            sessionStorage.clear(); // বর্তমান সেশন ক্লিয়ার
+            localStorage.removeItem('global_auth_signal'); // গ্লোবাল সিগন্যাল রিমোভ
+            clearTimeout(inactivityTimeout);
+
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('dashboard-section').classList.add('hidden');
             document.getElementById('dashboard-section').classList.remove('flex');
@@ -420,12 +454,18 @@
             document.getElementById('ledger-section').classList.add('hidden');
         }
 
-        // পেজ লোড বা রিফ্রেশ হওয়ার সময় সেশন চেক করা
+        // অন্য ট্যাবে লগআউট করলে এই ট্যাবেও স্বয়ংক্রিয় লগআউট হয়ে যাওয়ার সিকিউরিটি লজিক
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'global_auth_signal' && !event.newValue) {
+                handleLogout();
+            }
+        });
+
+        // পেজ লোড বা রিফ্রেশ হওয়ার সময় সেশন ও সিকিউরিটি চেক
         window.addEventListener('DOMContentLoaded', () => {
             const isLoggedIn = sessionStorage.getItem('isLoggedIn');
 
             if (isLoggedIn === 'true') {
-                // রিফ্রেশ করলেও সেশন থাকবে এবং ড্যাশবোর্ডেই বজায় থাকবে
                 const officerName = sessionStorage.getItem('loggedInName') || "সরবরাহ অফিসার";
                 const officerPhone = sessionStorage.getItem('loggedInPhone') || "";
                 const officerArea = sessionStorage.getItem('loggedInArea') || "";
@@ -446,37 +486,9 @@
 
                 loadSupplyParties();
                 loadNotices();
+                resetInactivityTimer();
             } else {
-                // সেশন না থাকলে (যেমন নতুন ট্যাব খোলা বা ব্যাক বাটন চাপে বের হওয়ার পর ঢুকলে) সরাসরি লগইন পেজ আসবে
-                document.getElementById('login-section').classList.remove('hidden');
-                document.getElementById('dashboard-section').classList.add('hidden');
-                document.getElementById('dashboard-section').classList.remove('flex');
-            }
-        });
-
-        // পেজ লোড হওয়ার সময় চেক করা যে ইউজার সেশনে আছে কি না
-        window.addEventListener('DOMContentLoaded', () => {
-            if (sessionStorage.getItem('isLoggedIn') === 'true') {
-                const officerName = sessionStorage.getItem('loggedInName') || "সরবরাহ অফিসার";
-                const officerPhone = sessionStorage.getItem('loggedInPhone') || "";
-                const officerArea = sessionStorage.getItem('loggedInArea') || "";
-
-                if(document.getElementById('profile-name')) {
-                    document.getElementById('profile-name').innerText = officerName;
-                }
-                if(document.getElementById('profile-phone')) {
-                    document.getElementById('profile-phone').innerText = officerPhone;
-                }
-                if(document.getElementById('profile-area')) {
-                    document.getElementById('profile-area').innerHTML = `<i class="fa-solid fa-location-dot"></i> কর্মরত এরিয়া: ${officerArea}`;
-                }
-
-                document.getElementById('login-section').classList.add('hidden');
-                document.getElementById('dashboard-section').classList.remove('hidden');
-                document.getElementById('dashboard-section').classList.add('flex');
-                
-                loadSupplyParties();
-                loadNotices();
+                handleLogout();
             }
         });
 
