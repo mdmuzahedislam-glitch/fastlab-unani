@@ -160,12 +160,14 @@
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
                                 <tr class="table-header text-xs">
-                                    <th class="p-3 border">ক্রমিক</th>
+                                    <th class="p-3 border">ক্রমিক নং</th>
                                     <th class="p-3 border">ডিপো/ডিলার নাম ও ঠিকানা</th>
                                     <th class="p-3 border">মোবাইল নাম্বার</th>
                                     <th class="p-3 border">মোট জমা</th>
-                                    <th class="p-3 border">মোট মাল ক্রয়</th>
-                                    <th class="p-3 border">বর্তমান বকেয়া</th>
+                                    <th class="p-3 border">মোট বিক্রয়</th>
+                                    <th class="p-3 border">বকেয়া</th>
+                                    <th class="p-3 border">অগ্রিম</th>
+                                    <th class="p-3 border">একশন</th>
                                 </tr>
                             </thead>
                             <tbody id="party-list-body" class="divide-y divide-gray-200 text-xs">
@@ -174,18 +176,6 @@
                         </table>
                     </div>
                 </div>
-
-                <!-- Advice Card -->
-                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
-                    <div class="bg-[#064e3b] text-white px-4 py-2 rounded-lg font-bold text-sm mb-3 text-center shadow">
-                        পরামর্শ
-                    </div>
-                    <ol class="space-y-2 text-xs text-gray-700 list-decimal list-inside font-medium" id="advice-list">
-                        <li>পরামর্শ লোড হচ্ছে...</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
 
         <footer class="mt-12 bg-white border-t py-4 text-center text-xs text-gray-500">
             © ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত
@@ -299,24 +289,6 @@
                         });
                     } else {
                         noticeUl.innerHTML = '<li>কোনো নোটিশ নেই</li>';
-                    }
-                }
-            });
-
-            // ২. পরামর্শ বোর্ড লাইভ সিঙ্ক
-            database.ref('fastlab_marketing_data/advices').on('value', (snapshot) => {
-                const data = snapshot.val();
-                const adviceOl = document.getElementById('advice-list');
-                if (adviceOl) {
-                    adviceOl.innerHTML = '';
-                    if (data && (data.a1 || data.a2 || data.a3)) {
-                        [data.a1, data.a2, data.a3].forEach(adviceText => {
-                            if (adviceText && adviceText.trim() !== '') {
-                                adviceOl.innerHTML += `<li>${adviceText}</li>`;
-                            }
-                        });
-                    } else {
-                        adviceOl.innerHTML = '<li>কোনো পরামর্শ নেই</li>';
                     }
                 }
             });
