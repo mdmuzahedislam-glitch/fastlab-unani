@@ -345,8 +345,7 @@
                 }
             });
         }
-
-        // ফায়ারবেস থেকে সরাসরি সরবরাহ অফিসার লিস্ট চেক করে সঠিক লগইন লজিক
+                // ফায়ারবেস থেকে সরাসরি সরবরাহ অফিসার লিস্ট চেক করে সঠিক লগইন লজিক
         function handleLogin(event) {
             event.preventDefault();
             const inputId = document.getElementById('user-id').value.trim();
@@ -378,11 +377,12 @@
                     const officerPhone = matchedOfficer.phone || "";
                     const officerArea = matchedOfficer.area || "";
 
-                    localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('loggedInUser', matchedKey);
-                    localStorage.setItem('loggedInName', officerName);
-                    localStorage.setItem('loggedInPhone', officerPhone);
-                    localStorage.setItem('loggedInArea', officerArea);
+                    // localStorage এর পরিবর্তে sessionStorage ব্যবহার করা হলো যাতে ট্যাব বন্ধ বা পেজ ত্যাগ করলে লগइन মুছে যায়
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('loggedInUser', matchedKey);
+                    sessionStorage.setItem('loggedInName', officerName);
+                    sessionStorage.setItem('loggedInPhone', officerPhone);
+                    sessionStorage.setItem('loggedInArea', officerArea);
 
                     document.getElementById('profile-name').innerText = officerName;
                     if(document.getElementById('profile-phone')) {
@@ -407,18 +407,43 @@
                 document.getElementById('error-text').innerText = "লগইন সমস্যা: " + err.message;
             });
         }
-        
         function handleLogout() {
-            localStorage.clear();
+            sessionStorage.clear(); // সেশন ডাটা মুছে ফেলা
+            document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('dashboard-section').classList.add('hidden');
             document.getElementById('dashboard-section').classList.remove('flex');
-            document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('user-id').value = '';
             document.getElementById('password').value = '';
             document.getElementById('error-alert').classList.add('hidden');
             document.getElementById('dropdown-menu').classList.add('hidden');
             document.getElementById('ledger-section').classList.add('hidden');
-        }
+         }
+
+        // পেজ লোড হওয়ার সময় চেক করা যে ইউজার সেশনে আছে কি না
+        window.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                const officerName = sessionStorage.getItem('loggedInName') || "সরবরাহ অফিসার";
+                const officerPhone = sessionStorage.getItem('loggedInPhone') || "";
+                const officerArea = sessionStorage.getItem('loggedInArea') || "";
+
+                if(document.getElementById('profile-name')) {
+                    document.getElementById('profile-name').innerText = officerName;
+                }
+                if(document.getElementById('profile-phone')) {
+                    document.getElementById('profile-phone').innerText = officerPhone;
+                }
+                if(document.getElementById('profile-area')) {
+                    document.getElementById('profile-area').innerHTML = `<i class="fa-solid fa-location-dot"></i> কর্মরত এরিয়া: ${officerArea}`;
+                }
+
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('dashboard-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('flex');
+                
+                loadSupplyParties();
+                loadNotices();
+            }
+        });
 
         // রিয়েল-টাইম সাপ্লাই পার্টি লিস্ট ও হিসাব লোড করার ফাংশন
         function loadSupplyParties() {
