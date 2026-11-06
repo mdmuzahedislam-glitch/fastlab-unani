@@ -77,18 +77,42 @@
                 <i class="fa-solid fa-handshake"></i> নতুন ডিপো/ডিলার পার্টি সংরক্ষণ করুন
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <input type="text" id="party-serial" placeholder="ক্রমিক নং" class="border p-2.5 rounded-lg text-sm">
-                <input type="text" id="party-name" placeholder="পার্টির নাম ও ঠিকানা" class="border p-2.5 rounded-lg text-sm">
-                <input type="text" id="party-phone" placeholder="মোবাইল নাম্বার" class="border p-2.5 rounded-lg text-sm">
-                <input type="text" id="party-deposit" placeholder="মোট জমা" class="border p-2.5 rounded-lg text-sm">
-                <input type="text" id="party-purchase" placeholder="মোট মাল ক্রয়" class="border p-2.5 rounded-lg text-sm">
-                <input type="text" id="party-due" placeholder="বর্তমান বকেয়া" class="border p-2.5 rounded-lg text-sm">
+                <!-- কোন অফিসারের আন্ডারে পার্টি থাকবে তা সিলেক্ট করার ড্রপডাউন -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">দায়িত্বপ্রাপ্ত অফিসার সিলেক্ট করুন:</label>
+                    <select id="party-officer" class="w-full border p-2.5 rounded-lg text-sm bg-white">
+                        <option value="">-- অফিসার সিলেক্ট করুন --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">ক্রমিক নং:</label>
+                    <input type="text" id="party-serial" placeholder="ক্রমিক নং" class="w-full border p-2.5 rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">পার্টির নাম ও ঠিকানা:</label>
+                    <input type="text" id="party-name" placeholder="পার্টির নাম ও ঠিকানা" class="w-full border p-2.5 rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">মোবাইল নাম্বার:</label>
+                    <input type="text" id="party-phone" placeholder="মোবাইল নাম্বার" class="w-full border p-2.5 rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">মোট জমা:</label>
+                    <input type="text" id="party-deposit" placeholder="মোট জমা" class="w-full border p-2.5 rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">মোট মাল ক্রয়:</label>
+                    <input type="text" id="party-purchase" placeholder="মোট মাল ক্রয়" class="w-full border p-2.5 rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">বর্তমান বকেয়া:</label>
+                    <input type="text" id="party-due" placeholder="বর্তমান বকেয়া" class="w-full border p-2.5 rounded-lg text-sm">
+                </div>
             </div>
             <button onclick="saveMarketingParty()" class="forest-green text-white px-5 py-2 rounded font-bold hover:bg-green-900 text-sm shadow">
                 পার্টি সংরক্ষণ করুন
             </button>
         </section>
-
         <!-- ৪. ডিপো/ডিলার পার্টি লিস্ট ও ম্যানেজমেন্ট -->
         <section class="bg-white p-6 rounded-xl shadow-md">
             <h2 class="text-base font-bold forest-green-text mb-4 flex items-center gap-2">
@@ -99,6 +123,7 @@
                     <thead>
                         <tr class="bg-gray-100">
                             <th class="p-2.5 border">ক্রমিক</th>
+                            <th class="p-2.5 border">অফিসার আইডি</th>
                             <th class="p-2.5 border">নাম ও ঠিকানা</th>
                             <th class="p-2.5 border">মোবাইল</th>
                             <th class="p-2.5 border">মোট জমা</th>
@@ -172,6 +197,7 @@
             loadMarketingOfficers();
             loadMarketingParties();
             loadNoticesAndAdvices();
+            loadOfficerDropdown();
         };
 
         // ১. মার্কেটিং অফিসার সংরক্ষণ
@@ -195,9 +221,9 @@
                     document.getElementById('officer-area').value = '';
                     document.getElementById('officer-id').value = '';
                     document.getElementById('officer-pass').value = '';
+                    loadOfficerDropdown();
                 });
         }
-
         function loadMarketingOfficers() {
             const tbody = document.getElementById('marketing-officer-list');
             db.ref('marketing_officers').on('value', snapshot => {
@@ -225,14 +251,31 @@
             });
         }
 
+        // পার্টি ফরমের ড্রপডাউনে অফিসারদের নাম ও আইডি লোড করার ফাংশন
+        function loadOfficerDropdown() {
+            const select = document.getElementById('party-officer');
+            db.ref('marketing_officers').on('value', snapshot => {
+                select.innerHTML = '<option value="">-- অফিসার সিলেক্ট করুন --</option>';
+                if(snapshot.exists()) {
+                    snapshot.forEach(childSnap => {
+                        const data = childSnap.val();
+                        if(data.userId && data.name) {
+                            select.innerHTML += `<option value="${data.userId}">${data.name} (${data.userId})</option>`;
+                        }
+                    });
+                }
+            });
+        }
+
         function deleteOfficer(key) {
             if(confirm("আপনি কি এই অফিসারকে ডিলিট করতে চান?")) {
                 db.ref('marketing_officers/' + key).remove();
             }
         }
 
-        // ২. পার্টি বা ডিলার সংরক্ষণ
+        // ২. পার্টি বা ডিলার সংরক্ষণ (অফিসার আইডি সহ)
         function saveMarketingParty() {
+            const assignedOfficer = document.getElementById('party-officer').value;
             const serial = document.getElementById('party-serial').value;
             const name = document.getElementById('party-name').value;
             const phone = document.getElementById('party-phone').value;
@@ -240,12 +283,17 @@
             const purchase = document.getElementById('party-purchase').value;
             const due = document.getElementById('party-due').value;
 
+            if(!assignedOfficer) {
+                alert("দয়া করে এই পার্টির জন্য একজন দায়িত্বপ্রাপ্ত অফিসার সিলেক্ট করুন!");
+                return;
+            }
+
             if(!name) {
                 alert("পার্টির নাম ও ঠিকানা লিখুন!");
                 return;
             }
 
-            db.ref('marketing_parties').push({ serial, name, phone, deposit, purchase, due })
+            db.ref('marketing_parties').push({ assignedOfficer, serial, name, phone, deposit, purchase, due })
                 .then(() => {
                     alert("পার্টি সফলভাবে সংরক্ষিত হয়েছে!");
                     document.getElementById('party-serial').value = '';
@@ -268,6 +316,7 @@
                         tbody.innerHTML += `
                             <tr class="border-b hover:bg-gray-50">
                                 <td class="p-2.5 border">${data.serial || ''}</td>
+                                <td class="p-2.5 border font-semibold text-emerald-800">${data.assignedOfficer || 'সবার জন্য'}</td>
                                 <td class="p-2.5 border font-medium">${data.name || ''}</td>
                                 <td class="p-2.5 border">${data.phone || ''}</td>
                                 <td class="p-2.5 border text-emerald-600 font-semibold">${data.deposit || '0'}</td>
@@ -280,7 +329,7 @@
                         `;
                     });
                 } else {
-                    tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">কোনো পার্টি বা ডিলার পাওয়া যায়নি</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-500">কোনো পার্টি বা ডিলার পাওয়া যায়নি</td></tr>`;
                 }
             });
         }
