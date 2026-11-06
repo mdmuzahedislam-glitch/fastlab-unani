@@ -389,7 +389,7 @@ const initialDue = parseFloat(data.due) || 0;
 const initialAdvance = parseFloat(data.advance) || 0;
 const serialNo = data.serial || (index + 1);
 db.ref(`supply_transactions/${key}`).on('value', transSnap => {
-let totalDeposit = initialAdvance;
+let totalDeposit = 0;
 let totalBuy = 0;
 if(transSnap.exists()) {
 transSnap.forEach(tSnap => {
