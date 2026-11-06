@@ -20,7 +20,6 @@
     <!-- Login Section -->
     <div id="login-section" class="min-h-screen flex items-center justify-center p-4 bg-cover bg-center absolute inset-0 z-50" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80')">
         <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full border-t-4 forest-green-border relative">
-            
             <div class="text-center mb-6">
                 <div class="inline-block p-3 bg-green-100 rounded-full text-green-800 mb-2">
                     <i class="fa-solid fa-leaf text-3xl"></i>
@@ -32,7 +31,7 @@
                 </div>
             </div>
 
-            <!-- Error Message Box -->
+            <!-- Error Alert -->
             <div id="error-alert" class="hidden mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm flex items-center gap-2">
                 <i class="fa-solid fa-triangle-exclamation text-lg"></i>
                 <span id="error-text">ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।</span>
@@ -75,13 +74,10 @@
             </div>
         </div>
     </div>
-
-    <!-- Dashboard Section (Hidden by default until login) -->
+        <!-- Dashboard Section -->
     <div id="dashboard-section" class="hidden flex-col min-h-screen">
-        
         <header class="forest-green text-white shadow-md relative">
             <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-                <!-- লোগো এবং নাম অংশ -->
                 <div class="flex items-center gap-3">
                     <div class="bg-white p-2 rounded-full text-green-800">
                         <i class="fa-solid fa-leaf text-xl"></i>
@@ -92,34 +88,21 @@
                     </div>
                 </div>
 
-                <!-- ডানপাশে প্রোফাইল, নোটিফিকেশন এবং থ্রি-লাইন মেনু -->
                 <div class="flex items-center gap-4 relative">
-                    <!-- প্রোফাইল তথ্য -->
                     <div class="hidden md:flex items-center gap-2 bg-green-900 px-3 py-1.5 rounded-full">
                         <i class="fa-solid fa-user-circle text-sm"></i>
-                        <span id="top-profile-name" class="text-xs">সঞ্জয় ইসলাম | মার্কেটিং অফিসার</span>
+                        <span id="top-profile-name" class="text-xs">লোড হচ্ছে...</span>
                     </div>
 
-                    <!-- থ্রি-লাইন মেনু বাটন -->
                     <div class="hamburger-menu" onclick="toggleMenu()" style="cursor: pointer; padding: 5px;">
                         <div style="width: 25px; height: 3px; background-color: #fff; margin: 5px 0;"></div>
                         <div style="width: 25px; height: 3px; background-color: #fff; margin: 5px 0;"></div>
                         <div style="width: 25px; height: 3px; background-color: #fff; margin: 5px 0;"></div>
                     </div>
 
-                    <!-- ড্রপডাউন পপআপ মেনু (ডানপাশে ফিক্সড) -->
                     <div id="dropdownMenu" class="hidden absolute right-0 top-12 w-56 bg-white rounded-xl shadow-2xl border border-gray-200 py-2 z-50 text-gray-800">
                         <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-green-50 hover:text-green-800 font-medium text-sm border-b">
                             <i class="fa-solid fa-chart-line forest-green-text"></i> ড্যাশবোর্ড
-                        </a>
-                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-green-50 hover:text-green-800 font-medium text-sm border-b">
-                            <i class="fa-solid fa-users forest-green-text"></i> ডিপো/ডিলার লিস্ট
-                        </a>
-                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-green-50 hover:text-green-800 font-medium text-sm border-b">
-                            <i class="fa-solid fa-file-invoice forest-green-text"></i> ডিপো/ডিলার স্টেটমেন্ট
-                        </a>
-                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-green-50 hover:text-green-800 font-medium text-sm border-b">
-                            <i class="fa-solid fa-bullhorn forest-green-text"></i> নোটিশ বোর্ড
                         </a>
                         <button onclick="handleLogout()" class="w-full text-left flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-red-600 font-medium text-sm">
                             <i class="fa-solid fa-right-from-bracket"></i> লগ আউট
@@ -129,49 +112,32 @@
             </div>
         </header>
 
-        <!-- Main Dashboard Layout -->
         <div class="container mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-4 gap-6 flex-grow">
-            
-            <!-- Left Sidebar Navigation (Desktop View) -->
             <div class="hidden lg:block bg-white rounded-xl shadow-md p-4 h-fit border border-gray-100 space-y-2">
                 <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl forest-green text-white font-medium text-sm shadow">
                     <i class="fa-solid fa-chart-line w-5"></i> ড্যাশবোর্ড
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-50 text-gray-700 font-medium text-sm transition">
-                    <i class="fa-solid fa-users w-5 forest-green-text"></i> ডিপো/ডিলার লিস্ট
-                </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-50 text-gray-700 font-medium text-sm transition">
-                    <i class="fa-solid fa-file-invoice w-5 forest-green-text"></i> ডিপো/ডিলার স্টেটমেন্ট
-                </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-50 text-gray-700 font-medium text-sm transition">
-                    <i class="fa-solid fa-bullhorn w-5 forest-green-text"></i> নোটিশ বোর্ড
-                </a>
-                <hr class="my-2 border-gray-200">
                 <button onclick="handleLogout()" class="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-600 font-medium text-sm transition">
                     <i class="fa-solid fa-right-from-bracket w-5"></i> লগ আউট
                 </button>
             </div>
 
-            <!-- Right Main Content Area (3 Columns) -->
             <div class="lg:col-span-3 space-y-6 w-full">
-                
-                <!-- Top Two Cards: Profile & Notice Board -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
                     <!-- Profile Card -->
                     <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100 flex items-center gap-4">
-                        <div class="w-20 h-20 rounded-full bg-gray-200 overflow-hidden border-2 border-green-700 shrink-0">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" alt="সঞ্জয় ইসলাম" class="w-full h-full object-cover">
+                        <div class="w-20 h-20 rounded-full bg-gray-200 overflow-hidden border-2 border-green-700 shrink-0 flex items-center justify-center text-green-800 text-3xl font-bold">
+                            <i class="fa-solid fa-user"></i>
                         </div>
                         <div>
-                            <h3 class="text-lg font-bold text-gray-800" id="profile-name">সঞ্জয় ইসলাম</h3>
+                            <h3 class="text-lg font-bold text-gray-800" id="profile-name">লোড হচ্ছে...</h3>
                             <p class="text-sm font-semibold text-green-800">মার্কেটিং অফিসার</p>
-                            <p class="text-xs text-gray-500 flex items-center gap-1 mt-1"><i class="fa-solid fa-phone"></i> 01403352045</p>
-                            <p class="text-xs text-gray-500 flex items-center gap-1"><i class="fa-solid fa-location-dot"></i> মার্কেটিং এরিয়া: পাবনা ও সিরাজগঞ্জ</p>
+                            <p class="text-xs text-gray-500 flex items-center gap-1 mt-1" id="profile-phone"><i class="fa-solid fa-phone"></i> -</p>
+                            <p class="text-xs text-gray-500 flex items-center gap-1" id="profile-area"><i class="fa-solid fa-location-dot"></i> মার্কেটিং এরিয়া: -</p>
                         </div>
                     </div>
 
-                    <!-- Notice Board Card -->
+                    <!-- Notice Board -->
                     <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
                         <div class="flex items-center justify-between mb-3 border-b pb-2">
                             <h3 class="text-md font-bold forest-green-text flex items-center gap-2">
@@ -179,37 +145,17 @@
                             </h3>
                             <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">গুরুত্বপূর্ণ</span>
                         </div>
-                        <ul class="space-y-2 text-xs text-gray-700">
-                            <li class="flex items-start gap-2">
-                                <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
-                                <span>আগামী ২০ তারিখের মধ্যে সকল পার্টির বকেয়া পরিশোধের জন্য অনুরোধ করা হলো। <br><span class="text-gray-400">২০ জানুয়ারি ২০২৬</span></span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
-                                <span>নতুন পণ্য সংক্রান্ত একটি বিশেষ অফার আগামী মাস থেকে কার্যকর হবে। <br><span class="text-gray-400">১৮ জানুয়ারি ২০২৬</span></span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
-                                <span>মাসিক রিপোর্ট ৩০ তারিখের মধ্যে জমা দেওয়ার অনুরোধ রইলো। <br><span class="text-gray-400">১৫ জানুয়ারি ২০২৬</span></span>
-                            </li>
+                        <ul class="space-y-2 text-xs text-gray-700" id="notice-list">
+                            <li>নোটিশ লোড হচ্ছে...</li>
                         </ul>
                     </div>
-
                 </div>
+
                 <!-- Party List Table -->
                 <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
-                    <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-3">
-                        <h3 class="text-lg font-bold forest-green-text flex items-center gap-2">
-                            <i class="fa-solid fa-users"></i> ডিপো/ডিলার লিস্ট
-                        </h3>
-                        <div class="relative w-full md:w-72 flex items-center gap-2">
-                            <input type="text" placeholder="ডিপো/ডিলার নাম বা মোবাইল নাম্বার খুঁজুন..." class="w-full pl-3 pr-10 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-700">
-                            <button class="px-3 py-2 forest-green text-white rounded-lg hover:bg-green-900 text-sm">
-                                <i class="fa-solid fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-
+                    <h3 class="text-lg font-bold forest-green-text mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-users"></i> ডিপো/ডিলার লিস্ট
+                    </h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-sm">
                             <thead>
@@ -220,160 +166,35 @@
                                     <th class="p-3 border">মোট জমা</th>
                                     <th class="p-3 border">মোট মাল ক্রয়</th>
                                     <th class="p-3 border">বর্তমান বকেয়া</th>
-                                    <th class="p-3 border text-center">অ্যাকশন</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-200 text-xs">
-                                <tr class="hover:bg-gray-50">
-                                    <td class="p-3 border">১</td>
-                                    <td class="p-3 border font-medium">সঞ্জয় ট্রেডার্স, পাবনা</td>
-                                    <td class="p-3 border">০১৮০৬৭৬৪৪৪</td>
-                                    <td class="p-3 border">৫০০</td>
-                                    <td class="p-3 border">৬০০</td>
-                                    <td class="p-3 border">১০০</td>
-                                    <td class="p-3 border text-center">
-                                        <button onclick="showDetails('সঞ্জয় ট্রেডার্স, পাবনা')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow"><i class="fa-solid fa-eye"></i> ডিটেইলস</button>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="p-3 border">২</td>
-                                    <td class="p-3 border font-medium">রহিম স্টোর, চাটমোহর</td>
-                                    <td class="p-3 border">০১৭২২৩৪৪৭৯৮</td>
-                                    <td class="p-3 border">৩০০</td>
-                                    <td class="p-3 border">৪০০</td>
-                                    <td class="p-3 border">২০০</td>
-                                    <td class="p-3 border text-center">
-                                        <button onclick="showDetails('রহিম স্টোর, চাটমোহর')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow"><i class="fa-solid fa-eye"></i> ডিটেইলস</button>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="p-3 border">৩</td>
-                                    <td class="p-3 border font-medium">মদিনা ট্রেডার্স, আউড়িয়া</td>
-                                    <td class="p-3 border">০১৮১৯৭৬২৪০২</td>
-                                    <td class="p-3 border">৭০০</td>
-                                    <td class="p-3 border">৯০০</td>
-                                    <td class="p-3 border">২০০</td>
-                                    <td class="p-3 border text-center">
-                                        <button onclick="showDetails('মদিনা ট্রেডার্স, আউড়িয়া')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow"><i class="fa-solid fa-eye"></i> ডিটেইলস</button>
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="p-3 border">৪</td>
-                                    <td class="p-3 border font-medium">আনিক এন্টারপ্রাইজ, ঈশ্বরদী</td>
-                                    <td class="p-3 border">০১৮৭৫৪৮০২১০</td>
-                                    <td class="p-3 border">৪০০</td>
-                                    <td class="p-3 border">৫০০</td>
-                                    <td class="p-3 border">১০০</td>
-                                    <td class="p-3 border text-center">
-                                        <button onclick="showDetails('আনিক এন্টারপ্রাইজ, ঈশ্বরদী')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow"><i class="fa-solid fa-eye"></i> ডিটেইলস</button>
-                                    </td>
-                                </tr>
+                            <tbody id="party-list-body" class="divide-y divide-gray-200 text-xs">
+                                <tr><td colspan="6" class="p-3 text-center">পার্টি ডাটা লোড হচ্ছে...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Bottom Section: Advice & Ledger Details -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    
-                    <!-- Advice Card -->
-                    <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
-                        <div class="bg-[#064e3b] text-white px-4 py-2 rounded-lg font-bold text-sm mb-3 text-center shadow">
-                            পরামর্শ
-                        </div>
-                        <ol class="space-y-2 text-xs text-gray-700 list-decimal list-inside font-medium">
-                            <li>নিয়মিত পার্টির সাথে যোগাযোগ রাখুন।</li>
-                            <li>বকেয়া আদায় দ্রুত সম্পন্ন করুন।</li>
-                            <li>নতুন অর্ডার সংগ্রহে সচেষ্ট হোন।</li>
-                            <li>সঠিক সময়ে হিসাব সাবমিট করুন।</li>
-                            <li>গ্রাহক সেবার মান উন্নত করুন।</li>
-                        </ol>
+                <!-- Advice Card -->
+                <div class="bg-white rounded-xl shadow-md p-5 border border-gray-100">
+                    <div class="bg-[#064e3b] text-white px-4 py-2 rounded-lg font-bold text-sm mb-3 text-center shadow">
+                        পরামর্শ
                     </div>
-
-                    <!-- Ledger Details Table (সঠিক হিসাব ও ব্যালেন্স সহ) -->
-                    <div id="ledger-section" class="bg-white rounded-xl shadow-md p-5 border border-gray-100 md:col-span-2">
-                        <div class="flex justify-between items-center mb-3 border-b pb-2">
-                            <h3 class="text-md font-bold forest-green-text flex items-center gap-2">
-                                <i class="fa-solid fa-file-invoice-dollar"></i> <span id="selected-party-title">ডিপো/ডিলার লেনদেনের বিবরণ</span>
-                            </h3>
-                            <span class="text-xs bg-gray-100 px-2.5 py-1 rounded text-gray-600">হিসাব বিবরণী</span>
-                        </div>
-
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse text-xs">
-                                <thead>
-                                    <tr class="table-header text-[11px]">
-                                        <th class="p-2.5 border">তারিখ</th>
-                                        <th class="p-2.5 border">বিবরণ</th>
-                                        <th class="p-2.5 border">জমা</th>
-                                        <th class="p-2.5 border">মাল ক্রয়</th>
-                                        <th class="p-2.5 border">Dr/Cr</th>
-                                        <th class="p-2.5 border">অবশিষ্ট</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200">
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="p-2.5 border">০১/১০/২৬</td>
-                                        <td class="p-2.5 border">জমা ইসলামী ব্যাংক</td>
-                                        <td class="p-2.5 border">৫০০</td>
-                                        <td class="p-2.5 border">০০</td>
-                                        <td class="p-2.5 border font-semibold text-red-600">Cr</td>
-                                        <td class="p-2.5 border font-bold">-৫০০</td>
-                                    </tr>
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="p-2.5 border">০৫/১০/২৬</td>
-                                        <td class="p-2.5 border">মাল ক্রয় (ক্যাশ)</td>
-                                        <td class="p-2.5 border">০০</td>
-                                        <td class="p-2.5 border">৬০০</td>
-                                        <td class="p-2.5 border font-semibold text-blue-600">Dr</td>
-                                        <td class="p-2.5 border font-bold">+১০০</td>
-                                    </tr>
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="p-2.5 border">১০/১০/২৬</td>
-                                        <td class="p-2.5 border">আংশিক পরিশোধ</td>
-                                        <td class="p-2.5 border">৩০০</td>
-                                        <td class="p-2.5 border">০০</td>
-                                        <td class="p-2.5 border font-semibold text-red-600">Cr</td>
-                                        <td class="p-2.5 border font-bold">-২০০</td>
-                                    </tr>
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="p-2.5 border">১৫/১০/২৬</td>
-                                        <td class="p-2.5 border">মাল ক্রয়</td>
-                                        <td class="p-2.5 border">০০</td>
-                                        <td class="p-2.5 border">৪০০</td>
-                                        <td class="p-2.5 border font-semibold text-blue-600">Dr</td>
-                                        <td class="p-2.5 border font-bold">+২০০</td>
-                                    </tr>
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="p-2.5 border">২০/১০/২৬</td>
-                                        <td class="p-2.5 border">জমা ইসলামী ব্যাংক</td>
-                                        <td class="p-2.5 border">৩০০</td>
-                                        <td class="p-2.5 border">০০</td>
-                                        <td class="p-2.5 border font-semibold text-red-600">Cr</td>
-                                        <td class="p-2.5 border font-bold">-১০০</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
+                    <ol class="space-y-2 text-xs text-gray-700 list-decimal list-inside font-medium" id="advice-list">
+                        <li>পরামর্শ লোড হচ্ছে...</li>
+                    </ol>
                 </div>
-
             </div>
-
         </div>
 
-        <!-- Footer -->
         <footer class="mt-12 bg-white border-t py-4 text-center text-xs text-gray-500">
             © ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত
         </footer>
     </div>
-
-    <!-- Firebase SDKs -->
+        <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-        <script>
-        // Firebase Configuration
+    <script>
         const firebaseConfig = {
             apiKey: "AIzaSyDmiZ7Pa0nB9HF29bv6qoT2qSzko4RVEHI",
             authDomain: "fastlab-unani.firebaseapp.com",
@@ -385,7 +206,6 @@
             measurementId: "G-LDL48BEM76"
         };
 
-        // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -407,55 +227,48 @@
 
         function toggleMenu() {
             var menu = document.getElementById("dropdownMenu");
-            if (menu.style.display === "block") {
-                menu.style.display = "none";
-            } else {
-                menu.style.display = "block";
-            }
+            menu.classList.toggle('hidden');
         }
 
-        // মেনুর বাইরে কোথাও ক্লিক করলে যেন মেনু বন্ধ হয়ে যায়
-        window.onclick = function(event) {
-            if (!event.target.closest('.hamburger-menu') && !event.target.closest('#dropdownMenu')) {
-                var menu = document.getElementById("dropdownMenu");
-                if (menu && menu.style.display === "block") {
-                    menu.style.display = "none";
-                }
-            }
-        }
-        
-        // ফায়ারবেস থেকে ডাইনামিক ইউজার আইডি ও পাসওয়ার্ড যাচাই করে লগইন
         function handleLogin(event) {
             event.preventDefault();
             const inputId = document.getElementById('user-id').value.trim();
             const inputPass = document.getElementById('password').value.trim();
             const errorAlert = document.getElementById('error-alert');
 
-            database.ref('fastlab_marketing_data/profile').once('value', snapshot => {
-                const profile = snapshot.val();
-                
-                // ডাটাবেস থেকে ইউজার আইডি ও পাসওয়ার্ড চেক করা (ডাটা না থাকলে ডিফল্ট মান কাজ করবে)
-                const validId = profile && profile.userId ? profile.userId : "marketing01";
-                const validPass = profile && profile.pass ? profile.pass : "Unani02";
+            let matchedOfficer = null;
 
-                if (inputId === validId && inputPass === validPass) {
+            database.ref('marketing_officers').once('value', snapshot => {
+                if (snapshot.exists()) {
+                    snapshot.forEach(childSnap => {
+                        const val = childSnap.val();
+                        if (val.userId && val.userId.trim() === inputId && val.pass && val.pass.trim() === inputPass) {
+                            matchedOfficer = val;
+                        }
+                    });
+                }
+
+                if (matchedOfficer) {
                     errorAlert.classList.add('hidden');
+                    setProfileData(matchedOfficer.name, matchedOfficer.phone, matchedOfficer.area);
                     
-                    if (profile) {
-                        document.getElementById('profile-name').innerText = profile.name || "সঞ্জয় ইসলাম";
-                        document.getElementById('top-profile-name').innerText = (profile.name || "সঞ্জয় ইসলাম") + " | মার্কেটিং অফিসার";
-                    }
-
                     document.getElementById('login-section').classList.add('hidden');
                     document.getElementById('dashboard-section').classList.remove('hidden');
                     document.getElementById('dashboard-section').classList.add('flex');
                     
-                    loadRealtimeMarketingData();
+                    loadRealtimeMarketingData(inputId);
                 } else {
                     errorAlert.classList.remove('hidden');
-                    document.getElementById('error-text').innerText = " ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
+                    document.getElementById('error-text').innerText = "ভুল ইউজার আইডি বা পাসওয়ার্ড! সঠিক তথ্য দিন।";
                 }
             });
+        }
+
+        function setProfileData(name, phone, area) {
+            document.getElementById('profile-name').innerText = name || "মার্কেটিং অফিসার";
+            document.getElementById('top-profile-name').innerText = (name || "অফিসার") + " | মার্কেটিং অফিসার";
+            document.getElementById('profile-phone').innerHTML = `<i class="fa-solid fa-phone"></i> ${phone || '-'}`;
+            document.getElementById('profile-area').innerHTML = `<i class="fa-solid fa-location-dot"></i> মার্কেটিং এরিয়া: ${area || '-'}`;
         }
 
         function handleLogout() {
@@ -466,81 +279,77 @@
             document.getElementById('password').value = '';
             document.getElementById('error-alert').classList.add('hidden');
         }
-
-        function showDetails(partyName) {
-            document.getElementById('selected-party-title').innerText = partyName + ' - ডিপো/ডিলার লেনদেনের বিবরণ';
-            document.getElementById('ledger-section').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // ফায়ারবেস থেকে প্রোফাইল ও নোটিশ রিয়েল-টাইম সিঙ্ক করার ফাংশন
-        function loadRealtimeMarketingData() {
-            // লাইভ প্রোফাইল সিঙ্ক
-            database.ref('fastlab_marketing_data/profile').on('value', (snapshot) => {
-                const profile = snapshot.val();
-                if (profile) {
-                    document.getElementById('profile-name').innerText = profile.name || "";
-                    document.getElementById('top-profile-name').innerText = (profile.name || "") + " | মার্কেটিং অফিসার";
-                    
-                    // ফোন ও এরিয়া আপডেট
-                    const phoneEl = document.querySelector('#profile-name').parentElement.querySelector('p.text-xs:nth-of-type(1)');
-                    if(phoneEl) phoneEl.innerHTML = `<i class="fa-solid fa-phone"></i> ${profile.phone || ''}`;
-                    
-                    const areaEl = document.querySelector('#profile-name').parentElement.querySelector('p.text-xs:nth-of-type(2)');
-                    if(areaEl) areaEl.innerHTML = `<i class="fa-solid fa-location-dot"></i> মার্কেটিং এরিয়া: ${profile.area || ''}`;
-                }
-            });
-        // ফায়ারবেস থেকে প্রোফাইল, নোটিশ ও পরামর্শ রিয়েল-টাইম সিঙ্ক করার ফাংশন
-        function loadRealtimeMarketingData() {
-            // লাইভ প্রোফাইল সিঙ্ক
-            database.ref('fastlab_marketing_data/profile').on('value', (snapshot) => {
-                const profile = snapshot.val();
-                if (profile) {
-                    document.getElementById('profile-name').innerText = profile.name || "";
-                    document.getElementById('top-profile-name').innerText = (profile.name || "") + " | মার্কেটিং অফিসার";
-                    
-                    const phoneEl = document.querySelector('#profile-name').parentElement.querySelector('p.text-xs:nth-of-type(1)');
-                    if(phoneEl) phoneEl.innerHTML = `<i class="fa-solid fa-phone"></i> ${profile.phone || ''}`;
-                    
-                    const areaEl = document.querySelector('#profile-name').parentElement.querySelector('p.text-xs:nth-of-type(2)');
-                    if(areaEl) areaEl.innerHTML = `<i class="fa-solid fa-location-dot"></i> মার্কেটিং এরিয়া: ${profile.area || ''}`;
-                }
-            });
-
-            // লাইভ নোটিশ বোর্ড সিঙ্ক
+                // রিয়েল-টাইম সিঙ্ক (ইউজার ভিত্তিক ডাটা ফিল্টার করা)
+        function loadRealtimeMarketingData(loggedInUserId) {
+            // ১. নোটিশ বোর্ড লাইভ সিঙ্ক
             database.ref('fastlab_marketing_data/notices').on('value', (snapshot) => {
                 const data = snapshot.val();
-                const noticeUl = document.querySelector('.bg-white.rounded-xl.shadow-md.p-5.border.border-gray-100 ul.space-y-2');
-                if (noticeUl && data) {
+                const noticeUl = document.getElementById('notice-list');
+                if (noticeUl) {
                     noticeUl.innerHTML = '';
-                    [data.n1, data.n2, data.n3].forEach(noticeText => {
-                        if (noticeText && noticeText.trim() !== '') {
-                            noticeUl.innerHTML += `
-                                <li class="flex items-start gap-2">
-                                    <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
-                                    <span>${noticeText}</span>
-                                </li>
-                            `;
-                        }
-                    });
+                    if (data && (data.n1 || data.n2 || data.n3)) {
+                        [data.n1, data.n2, data.n3].forEach(noticeText => {
+                            if (noticeText && noticeText.trim() !== '') {
+                                noticeUl.innerHTML += `
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-circle-dot text-green-700 mt-0.5"></i>
+                                        <span>${noticeText}</span>
+                                    </li>`;
+                            }
+                        });
+                    } else {
+                        noticeUl.innerHTML = '<li>কোনো নোটিশ নেই</li>';
+                    }
                 }
             });
 
-            // লাইভ পরামর্শ বক্স সিঙ্ক (নতুন যুক্ত করা হলো)
+            // ২. পরামর্শ বোর্ড লাইভ সিঙ্ক
             database.ref('fastlab_marketing_data/advices').on('value', (snapshot) => {
                 const data = snapshot.val();
-                // পরামর্শ বক্সের <ol> ট্যাগটিকে টার্গেট করা
-                const adviceOl = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3 ol');
-                if (adviceOl && data) {
+                const adviceOl = document.getElementById('advice-list');
+                if (adviceOl) {
                     adviceOl.innerHTML = '';
-                    [data.a1, data.a2, data.a3].forEach(adviceText => {
-                        if (adviceText && adviceText.trim() !== '') {
-                            adviceOl.innerHTML += `<li>${adviceText}</li>`;
+                    if (data && (data.a1 || data.a2 || data.a3)) {
+                        [data.a1, data.a2, data.a3].forEach(adviceText => {
+                            if (adviceText && adviceText.trim() !== '') {
+                                adviceOl.innerHTML += `<li>${adviceText}</li>`;
+                            }
+                        });
+                    } else {
+                        adviceOl.innerHTML = '<li>কোনো পরামর্শ নেই</li>';
+                    }
+                }
+            });
+
+            // ৩. শুধু ঐ নির্দিষ্ট অফিসারের আন্ডারে থাকা ডিলার/পার্টি ফিল্টার করে দেখানো
+            database.ref('marketing_parties').on('value', (snapshot) => {
+                const tbody = document.getElementById('party-list-body');
+                tbody.innerHTML = '';
+                let count = 0;
+
+                if (snapshot.exists()) {
+                    snapshot.forEach(childSnap => {
+                        const data = childSnap.val();
+                        if (!data.assignedOfficer || data.assignedOfficer === loggedInUserId) {
+                            count++;
+                            tbody.innerHTML += `
+                                <tr class="hover:bg-gray-50">
+                                    <td class="p-3 border">${data.serial || count}</td>
+                                    <td class="p-3 border font-medium">${data.name || '-'}</td>
+                                    <td class="p-3 border">${data.phone || '-'}</td>
+                                    <td class="p-3 border text-emerald-600 font-semibold">${data.deposit || '0'}</td>
+                                    <td class="p-3 border text-blue-600 font-semibold">${data.purchase || '0'}</td>
+                                    <td class="p-3 border text-red-600 font-semibold">${data.due || '0'}</td>
+                                </tr>`;
                         }
                     });
                 }
+
+                if (count === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="p-3 text-center text-gray-500">আপনার আন্ডারে কোনো ডিলার বা পার্টি পাওয়া যায়নি</td></tr>';
+                }
             });
         }
-            
-        </script>
+    </script>
 </body>
 </html>
