@@ -489,6 +489,22 @@
                     if(areaEl) areaEl.innerHTML = `<i class="fa-solid fa-location-dot"></i> মার্কেটিং এরিয়া: ${profile.area || ''}`;
                 }
             });
+        // ফায়ারবেস থেকে প্রোফাইল, নোটিশ ও পরামর্শ রিয়েল-টাইম সিঙ্ক করার ফাংশন
+        function loadRealtimeMarketingData() {
+            // লাইভ প্রোফাইল সিঙ্ক
+            database.ref('fastlab_marketing_data/profile').on('value', (snapshot) => {
+                const profile = snapshot.val();
+                if (profile) {
+                    document.getElementById('profile-name').innerText = profile.name || "";
+                    document.getElementById('top-profile-name').innerText = (profile.name || "") + " | মার্কেটিং অফিসার";
+                    
+                    const phoneEl = document.querySelector('#profile-name').parentElement.querySelector('p.text-xs:nth-of-type(1)');
+                    if(phoneEl) phoneEl.innerHTML = `<i class="fa-solid fa-phone"></i> ${profile.phone || ''}`;
+                    
+                    const areaEl = document.querySelector('#profile-name').parentElement.querySelector('p.text-xs:nth-of-type(2)');
+                    if(areaEl) areaEl.innerHTML = `<i class="fa-solid fa-location-dot"></i> মার্কেটিং এরিয়া: ${profile.area || ''}`;
+                }
+            });
 
             // লাইভ নোটিশ বোর্ড সিঙ্ক
             database.ref('fastlab_marketing_data/notices').on('value', (snapshot) => {
@@ -508,7 +524,23 @@
                     });
                 }
             });
+
+            // লাইভ পরামর্শ বক্স সিঙ্ক (নতুন যুক্ত করা হলো)
+            database.ref('fastlab_marketing_data/advices').on('value', (snapshot) => {
+                const data = snapshot.val();
+                // পরামর্শ বক্সের <ol> ট্যাগটিকে টার্গেট করা
+                const adviceOl = document.querySelector('.grid.grid-cols-1.md\\:grid-cols-3 ol');
+                if (adviceOl && data) {
+                    adviceOl.innerHTML = '';
+                    [data.a1, data.a2, data.a3].forEach(adviceText => {
+                        if (adviceText && adviceText.trim() !== '') {
+                            adviceOl.innerHTML += `<li>${adviceText}</li>`;
+                        }
+                    });
+                }
+            });
         }
+            
         </script>
 </body>
 </html>
