@@ -35,15 +35,15 @@
     </header>
 
     <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
-        <!-- অফিসার প্রোফাইল নোটিশ বোর্ড এডিট -->
+        <!-- অফিসার প্রোফাইল চাহিদা বোর্ড এডিট -->
         <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-forest">
             <h2 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-bullhorn"></i> অফিসার প্রোফাইল নোটিশ বোর্ড এডিট
+                <i class="fa-solid fa-bullhorn"></i> অফিসার প্রোফাইল ও চাহিদা পত্র এডিট প্যানেল
             </h2>
             <div class="space-y-3">
-                <input type="text" id="notice-1" placeholder="১. নোটিশ বা বার্তা লিখুন..." class="w-full border p-2 rounded-lg">
-                <input type="text" id="notice-2" placeholder="২. নোটিশ বা বার্তা লিখুন..." class="w-full border p-2 rounded-lg">
-                <input type="text" id="notice-3" placeholder="৩. নোটিশ বা বার্তা লিখুন..." class="w-full border p-2 rounded-lg">
+                <input type="text" id="notice-1" placeholder="১. চাহিদা পত্র লিখুন..." class="w-full border p-2 rounded-lg">
+                <input type="text" id="notice-2" placeholder="২. চাহিদা পত্র লিখুন..." class="w-full border p-2 rounded-lg">
+                <input type="text" id="notice-3" placeholder="৩. চাহিদা পত্র লিখুন..." class="w-full border p-2 rounded-lg">
             </div>
             <button onclick="saveNotices()" class="mt-3 bg-emerald-600 text-white px-4 py-1.5 rounded text-sm font-bold hover:bg-emerald-700">
                 সংরক্ষণ
@@ -100,10 +100,10 @@
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <input type="text" id="party-serial" placeholder="ক্রমিক নং" class="border p-2 rounded-lg">
-                <input type="text" id="party-name" placeholder="পার্টির নাম ও ঠিকানা (কমা ব্যবহার করা যাবে)" class="border p-2 rounded-lg">
+                <input type="text" id="party-name" placeholder="পার্টির নাম ও ঠিকানা" class="border p-2 rounded-lg">
                 <input type="text" id="party-phone" placeholder="পার্টির মোবাইল নাম্বার" class="border p-2 rounded-lg">
-                <input type="text" id="party-due" placeholder="পূর্বের বকেয়া ব্যালেন্স (কমা সহ লিখতে পারেন)" class="border p-2 rounded-lg">
-                <input type="text" id="party-advance" placeholder="পূর্বের পাওনা টাকা (কমা সহ লিখতে পারেন)" class="border p-2 rounded-lg">
+                <input type="text" id="party-due" placeholder="পূর্বের বকেয়া ব্যালেন্স " class="border p-2 rounded-lg">
+                <input type="text" id="party-advance" placeholder="পূর্বের পাওনা টাকা" class="border p-2 rounded-lg">
             </div>
             <button onclick="saveSupplyParty()" class="bg-emerald-600 text-white px-5 py-2 rounded font-bold hover:bg-emerald-700">
                 সংরক্ষণ
@@ -128,19 +128,20 @@
             <div class="overflow-x-auto">
                 <table id="party-table" class="w-full text-left border-collapse text-sm">
                     <thead>
-                        <tr class="bg-gray-100">
-                            <th class="p-2 border">ক্রমিক নং</th>
-                            <th class="p-2 border">পার্টির নাম ও ঠিকানা</th>
-                            <th class="p-2 border">মোবাইল</th>
-                            <th class="p-2 border">মোট জমা</th>
-                            <th class="p-2 border">মাল ক্রয়</th>
-                            <th class="p-2 border">বকেয়া</th>
-                            <th class="p-2 border">একশন</th>
-                        </tr>
-                    </thead>
+                      <tr class="bg-gray-100">
+                       <th class="p-2 border">ক্রমিক নং</th>
+                       <th class="p-2 border">পার্টির নাম ও ঠিকানা</th>
+                       <th class="p-2 border">মোবাইল</th>
+                       <th class="p-2 border">মোট জমা</th>
+                       <th class="p-2 border">পণ্য ক্রয়</th>
+                       <th class="p-2 border">বকেয়া</th>
+                       <th class="p-2 border">অগ্রিম জমা</th>
+                       <th class="p-2 border">একশন</th>
+                       </tr>
+                     </thead>
                     <tbody id="supply-party-list">
-                        <!-- ফায়ারবেজ থেকে ডাইনামিক ডাটা আসবে -->
-                    </tbody>
+                    <!-- ফায়ারবেজ থেকে ডাইনামিক ডাটা আসবে -->
+                  </tbody>
                 </table>
             </div>
         </section>
@@ -156,16 +157,16 @@
                     <input type="date" id="dep-date" class="w-full border p-2 rounded-lg">
                 </div>
                 <div>
-                    <label class="block font-semibold text-gray-700 mb-1">বিবরণ (কমা ব্যবহার করা যাবে):</label>
+                    <label class="block font-semibold text-gray-700 mb-1">বিবরণ :</label>
                     <input type="text" id="dep-desc" placeholder="বিবরণ লিখুন" class="w-full border p-2 rounded-lg">
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700 mb-1">জমা:</label>
-                    <input type="text" id="dep-amount" placeholder="জমা টাকার পরিমাণ (কমা ব্যবহার করা যাবে)" class="w-full border p-2 rounded-lg">
+                    <input type="text" id="dep-amount" placeholder="জমা টাকার পরিমাণ " class="w-full border p-2 rounded-lg">
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-700 mb-1">মাল ক্রয়:</label>
-                    <input type="text" id="dep-purchase" placeholder="মাল ক্রয়ের পরিমাণ (কমা ব্যবহার করা যাবে)" class="w-full border p-2 rounded-lg">
+                    <input type="text" id="dep-purchase" placeholder="পণ্য ক্রয়ের পরিমাণ " class="w-full border p-2 rounded-lg">
                 </div>
             </div>
             <div class="flex gap-3">
@@ -200,7 +201,7 @@
                             <th class="p-2 border">তারিখ</th>
                             <th class="p-2 border">বিবরণ</th>
                             <th class="p-2 border">জমা</th>
-                            <th class="p-2 border">মাল ক্রয়</th>
+                            <th class="p-2 border">পণ্য ক্রয়</th>
                             <th class="p-2 border">Dr/Cr</th>
                             <th class="p-2 border">অবশিষ্ট</th>
                             <th class="p-2 border">একশন</th>
@@ -293,14 +294,14 @@
             }, 500);
         }
 
-        // নোটিশ সংরক্ষণ ও লোড
+        // চাহিদা পত্র সংরক্ষণ ও লোড
         function saveNotices() {
             const n1 = document.getElementById('notice-1').value;
             const n2 = document.getElementById('notice-2').value;
             const n3 = document.getElementById('notice-3').value;
 
             db.ref('supply_notices').set({ n1, n2, n3 })
-                .then(() => alert("নোটিশ সফলভাবে সংরক্ষিত হয়েছে!"))
+                .then(() => alert("চাহিদা পত্র সফলভাবে সংরক্ষিত হয়েছে!"))
                 .catch(err => alert("ত্রুটি: " + err.message));
         }
 
@@ -431,65 +432,128 @@
                 })
                 .catch(err => alert("ত্রুটি: " + err.message));
         }
+        
+        function filterSupplyParties() {
+    const input = document.getElementById('search-party').value.toLowerCase().trim();
+    const rows = document.querySelectorAll('#supply-party-list tr:not(#grand-total-row)');
 
+    rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        if (text.includes(input)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+        }
+        
         function loadSupplyParties() {
-            const tbody = document.getElementById('supply-party-list');
-            db.ref('supply_parties').on('value', snapshot => {
-                tbody.innerHTML = '';
-                if(snapshot.exists()) {
-                    snapshot.forEach(childSnap => {
-                        const key = childSnap.key;
-                        const data = childSnap.val();
+    const tbody = document.getElementById('supply-party-list');
+    
+    db.ref('supply_parties').on('value', snapshot => {
+        tbody.innerHTML = '';
+        
+        if (!snapshot.exists()) {
+            tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-500">কোনো সরবরাহ পার্টি পাওয়া যায়নি</td></tr>`;
+            return;
+        }
 
-                        db.ref(`supply_transactions/${key}`).on('value', transSnap => {
-                            let totalDeposit = 0;
-                            let totalBuy = 0;
-                            let openingBalance = (parseFloat(data.due) || 0) - (parseFloat(data.advance) || 0);
+        let parties = [];
+        snapshot.forEach(childSnap => {
+            parties.push({ key: childSnap.key, data: childSnap.val() });
+        });
 
-                            transSnap.forEach(tSnap => {
-                                const tVal = tSnap.val();
-                                if(tVal.isOpening) {
-                                    // ওপেনিং ব্যালেন্স বর্তমান জমা বা ক্রয়ে যোগ হবে না
-                                } else {
-                                    totalDeposit += parseFloat(tVal.amount) || 0;
-                                    totalBuy += parseFloat(tVal.purchase) || 0;
-                                }
-                            });
+        let results = {};
 
-                            let currentDue = openingBalance + totalBuy - totalDeposit;
+        parties.forEach((party, index) => {
+            const key = party.key;
+            const data = party.data;
+            const initialDue = parseFloat(data.due) || 0;
+            const initialAdvance = parseFloat(data.advance) || 0;
+            const serialNo = data.serial || (index + 1);
 
-                            let row = document.getElementById(`party-row-${key}`);
-                            let rowHTML = `
-                                <td class="p-2 border">${data.serial || ''}</td>
-                                <td class="p-2 border font-medium">${data.name || ''}</td>
-                                <td class="p-2 border">${data.phone || ''}</td>
-                                <td class="p-2 border text-emerald-600 font-semibold">${formatNumber(totalDeposit)}</td>
-                                <td class="p-2 border text-blue-600 font-semibold">${formatNumber(totalBuy)}</td>
-                                <td class="p-2 border text-red-600 font-semibold">${formatNumber(currentDue)}</td>
-                                <td class="p-2 border flex gap-1 flex-wrap items-center">
-                                    <button onclick="openDepositForm('${key}', '${data.name}')" class="bg-emerald-600 text-white px-2 py-1 rounded text-xs hover:bg-emerald-700">জমা এন্ট্রি</button>
-                                    <button onclick="openStatement('${key}', '${data.name}')" class="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700">স্টেটমেন্ট</button>
-                                    <button onclick="editParty('${key}', '${data.serial || ''}', '${data.name || ''}', '${data.phone || ''}', '${data.due || 0}', '${data.advance || 0}')" class="bg-amber-500 text-white px-2 py-1 rounded text-xs hover:bg-amber-600">এডিট</button>
-                                    <button onclick="deleteParty('${key}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">ডিলিট</button>
-                                </td>
-                            `;
-
-                            if(row) {
-                                row.innerHTML = rowHTML;
-                            } else {
-                                const newRow = document.createElement('tr');
-                                newRow.id = `party-row-${key}`;
-                                newRow.className = "hover:bg-gray-50 border-b";
-                                newRow.innerHTML = rowHTML;
-                                tbody.appendChild(newRow);
-                            }
-                        });
+            db.ref(`supply_transactions/${key}`).on('value', transSnap => {
+                let totalDeposit = initialAdvance;
+                let totalBuy = 0;
+                
+                if(transSnap.exists()) {
+                    transSnap.forEach(tSnap => {
+                        const tVal = tSnap.val();
+                        totalDeposit += parseFloat(tVal.amount) || 0;
+                        totalBuy += parseFloat(tVal.purchase) || 0;
                     });
-                } else {
-                    tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">কোনো সরবরাহ পার্টি পাওয়া যায়নি</td></tr>`;
+                }
+
+                let currentBalance = (initialDue + totalBuy) - totalDeposit;
+                let dueAmount = currentBalance > 0 ? currentBalance : 0;
+                let advanceAmount = currentBalance < 0 ? Math.abs(currentBalance) : 0;
+
+                results[key] = {
+                    serialNo,
+                    name: data.name || '',
+                    phone: data.phone || '',
+                    totalDeposit,
+                    totalBuy,
+                    dueAmount,
+                    advanceAmount
+                };
+
+                let activeKeys = Object.keys(results);
+                if (activeKeys.length === parties.length) {
+                    tbody.innerHTML = '';
+                    let grandTotalDeposit = 0;
+                    let grandTotalBuy = 0;
+                    let grandTotalDue = 0;
+                    let grandTotalAdvance = 0;
+
+                    parties.forEach(p => {
+                        let res = results[p.key];
+                        if (!res) return;
+
+                        grandTotalDeposit += res.totalDeposit;
+                        grandTotalBuy += res.totalBuy;
+                        grandTotalDue += res.dueAmount;
+                        grandTotalAdvance += res.advanceAmount;
+
+                        let rowHTML = `
+                            <td class="p-3 border">${res.serialNo}</td>
+                            <td class="p-3 border font-medium">${res.name}</td>
+                            <td class="p-3 border">${res.phone}</td>
+                            <td class="p-3 border text-emerald-600 font-semibold">${res.totalDeposit.toLocaleString('bn-BD')}</td>
+                            <td class="p-3 border text-blue-600 font-semibold">${res.totalBuy.toLocaleString('bn-BD')}</td>
+                            <td class="p-3 border text-red-600 font-semibold">${res.dueAmount.toLocaleString('bn-BD')}</td>
+                            <td class="p-3 border text-purple-600 font-semibold">${res.advanceAmount.toLocaleString('bn-BD')}</td>
+                            <td class="p-3 border text-center">
+                                <button onclick="openStatement('${p.key}', '${res.name}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs shadow">বিস্তারিত</button>
+                            </td>
+                        `;
+
+                        const newRow = document.createElement('tr');
+                        newRow.id = `party-row-${p.key}`;
+                        newRow.className = "hover:bg-gray-50 border-b";
+                        newRow.innerHTML = rowHTML;
+                        tbody.appendChild(newRow);
+                    });
+
+                    // সর্বমোট (Grand Total) সারি
+                    const totalRow = document.createElement('tr');
+                    totalRow.id = 'grand-total-row';
+                    totalRow.className = "bg-gray-200 font-bold border-t-2 border-gray-400";
+                    totalRow.innerHTML = `
+                        <td colspan="3" class="p-3 border text-right font-bold text-gray-800">সর্বমোট:</td>
+                        <td class="p-3 border text-emerald-600 font-bold">${grandTotalDeposit.toLocaleString('bn-BD')}</td>
+                        <td class="p-3 border text-blue-600 font-bold">${grandTotalBuy.toLocaleString('bn-BD')}</td>
+                        <td class="p-3 border text-red-600 font-bold">${grandTotalDue.toLocaleString('bn-BD')}</td>
+                        <td class="p-3 border text-purple-600 font-bold">${grandTotalAdvance.toLocaleString('bn-BD')}</td>
+                        <td class="p-3 border"></td>
+                    `;
+                    tbody.appendChild(totalRow);
                 }
             });
-        }
+        });
+    });
+            }
+        
         function editParty(key, serial, name, phone, due, advance) {
             document.getElementById('party-serial').value = serial;
             document.getElementById('party-name').value = name;
