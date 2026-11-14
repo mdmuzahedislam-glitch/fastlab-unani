@@ -781,7 +781,7 @@
         }
         
         // ১. মূল পার্টি লিস্ট প্রিন্ট করার ফাংশন (একশন কলাম বাদ দিয়ে)
-        function printPartyList() {
+                function printPartyList() {
             const table = document.getElementById('marketing-party-list').closest('table');
             if(!table) return;
             const printContent = table.cloneNode(true);
@@ -796,41 +796,49 @@
 
             const win = window.open('', '', 'height=700,width=900');
             win.document.write('<html><head><title>পার্টি লিস্ট স্টেটমেন্ট</title>');
-            win.document.write('<style>body{font-family:sans-serif;padding:20px;} table{width:100%;border-collapse:collapse;margin-top:10px;} th, td{border:1px solid #ddd;padding:8px;text-align:left;font-size:12px;} th{background-color:#f3f4f6;}</style>');
+            win.document.write('<style>body{font-family:sans-serif;padding:20px;text-align:center;} table{width:100%;border-collapse:collapse;margin-top:15px;text-align:left;} th, td{border:1px solid #ddd;padding:8px;font-size:12px;} th{background-color:#f3f4f6;}</style>');
             win.document.write('</head><body>');
-            win.document.write('<h2 style="text-align:center;color:#064e3b;">ডিপো/ডিলার পার্টি লিস্ট ও হিসাব</h2>');
+            // কোম্পানির নাম, ঠিকানা ও শিরোনাম
+            win.document.write('<h1 style="margin:0;font-size:22px;color:#064e3b;">ফাস্টল্যাব ইউনানী</h1>');
+            win.document.write('<p style="margin:4px 0 12px 0;font-size:13px;color:#555;">ঠিকানা: আফুরিয়া,হিমাইতপুর, পাবনা।</p>');
+            win.document.write('<h2 style="font-size:16px;color:#333;border-bottom:2px solid #333;padding-bottom:5px;display:inline-block;margin-bottom:15px;">ডিপো/ডিলার পার্টি লিস্ট ও হিসাব</h2>');
+            win.document.write(printContent.outerHTML);
+            win.document.write('</body></html>');
+            win.document.close();
+            win.print();
+          }
+        
+        // ২. পার্টি স্টেটমেন্ট প্রিন্ট করার ফাংশন
+        function printStatement() {
+            const table = document.getElementById('statement-tbody').closest('table');
+            if(!table) return;
+            const printContent = table.cloneNode(true);
+            
+            // স্টেটমেন্ট টেবিলের একশন কলাম বাদ দেওয়া
+            const rows = printContent.querySelectorAll('tr');
+            rows.forEach(row => {
+                if (row.lastElementChild) {
+                    row.lastElementChild.remove();
+                }
+            });
+
+            const partyTitleEl = document.getElementById('statement-party-title');
+            const partyTitle = partyTitleEl ? partyTitleEl.innerText : '';
+            const win = window.open('', '', 'height=700,width=900');
+            win.document.write('<html><head><title>পার্টি স্টেটমেন্ট</title>');
+            win.document.write('<style>body{font-family:sans-serif;padding:20px;text-align:center;} table{width:100%;border-collapse:collapse;margin-top:15px;text-align:left;} th, td{border:1px solid #ddd;padding:8px;font-size:12px;} th{background-color:#f3f4f6;}</style>');
+            win.document.write('</head><body>');
+            // কোম্পানির নাম, ঠিকানা ও স্টেটমেন্ট শিরোনাম
+            win.document.write('<h1 style="margin:0;font-size:22px;color:#064e3b;">ফাস্টল্যাব ইউনানী</h1>');
+            win.document.write('<p style="margin:4px 0 12px 0;font-size:13px;color:#555;">ঠিকানা: আফুরিয়া,হিমাইতপুর, পাবনা।</p>');
+            win.document.write(`<h2 style="font-size:16px;color:#1e3a8a;margin-bottom:5px;">পার্টি স্টেটমেন্ট রিপোর্ট</h2>`);
+            win.document.write(`<p style="font-size:13px;margin-bottom:15px;"><strong>${partyTitle}</strong></p>`);
             win.document.write(printContent.outerHTML);
             win.document.write('</body></html>');
             win.document.close();
             win.print();
         }
-
-        // ২. মূল পার্টি লিস্ট এক্সেল (CSV) ডাউনলোড করার ফাংশন
-        function exportPartyExcel() {
-            let csv = [];
-            const table = document.getElementById('marketing-party-list').closest('table');
-            if(!table) return;
-            const rows = table.querySelectorAll('tr');
-
-            rows.forEach((row) => {
-                const cols = row.querySelectorAll('td, th');
-                let data = [];
-                // একশন কলাম বাদে বাকি কলামগুলো নেওয়া (শেষ কলাম বাদ)
-                for (let i = 0; i < cols.length - 1; i++) {
-                    data.push('"' + cols[i].innerText.replace(/(\r\n|\n|\r)/gm, "").trim() + '"');
-                }
-                csv.push(data.join(','));
-            });
-
-            const csvFile = new Blob(["\uFEFF" + csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
-            const downloadLink = document.createElement('a');
-            downloadLink.href = window.URL.createObjectURL(csvFile);
-            downloadLink.download = 'party-list-report.csv';
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-        }
-
+        
         // ৩. পার্টি স্টেটমেন্ট প্রিন্ট করার ফাংশন
         function printStatement() {
             const table = document.getElementById('statement-tbody').closest('table');
@@ -849,10 +857,13 @@
             const partyTitle = partyTitleEl ? partyTitleEl.innerText : '';
             const win = window.open('', '', 'height=700,width=900');
             win.document.write('<html><head><title>পার্টি স্টেটমেন্ট</title>');
-            win.document.write('<style>body{font-family:sans-serif;padding:20px;} table{width:100%;border-collapse:collapse;margin-top:10px;} th, td{border:1px solid #ddd;padding:8px;text-align:left;font-size:12px;} th{background-color:#f3f4f6;}</style>');
+            win.document.write('<style>body{font-family:sans-serif;padding:20px;text-align:center;} table{width:100%;border-collapse:collapse;margin-top:15px;text-align:left;} th, td{border:1px solid #ddd;padding:8px;font-size:12px;} th{background-color:#f3f4f6;}</style>');
             win.document.write('</head><body>');
-            win.document.write(`<h2 style="color:#1e3a8a;">পার্টি স্টেটমেন্ট রিপোর্ট</h2>`);
-            win.document.write(`<p><strong>${partyTitle}</strong></p>`);
+            // কোম্পানির নাম, ঠিকানা ও স্টেটমেন্ট শিরোনাম
+            win.document.write('<h1 style="margin:0;font-size:22px;color:#064e3b;">ফাস্টল্যাব ইউনানী</h1>');
+            win.document.write('<p style="margin:4px 0 12px 0;font-size:13px;color:#555;">ঠিকানা: আফুরিয়া,হিমাইতপুর, পাবনা।</p>');
+            win.document.write(`<h2 style="font-size:16px;color:#1e3a8a;margin-bottom:5px;">পার্টি স্টেটমেন্ট রিপোর্ট</h2>`);
+            win.document.write(`<p style="font-size:13px;margin-bottom:15px;"><strong>${partyTitle}</strong></p>`);
             win.document.write(printContent.outerHTML);
             win.document.write('</body></html>');
             win.document.close();
@@ -882,7 +893,7 @@
             document.body.appendChild(downloadLink);
             downloadLink.click();
             document.body.removeChild(downloadLink);
-        } 
+        }
     </script>
 </body>
 </html>
