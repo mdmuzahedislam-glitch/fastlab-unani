@@ -241,8 +241,7 @@
                     loadOfficerDropdown();
                 });
         }
-
-        function loadMarketingOfficers() {
+                function loadMarketingOfficers() {
             const tbody = document.getElementById('marketing-officer-list');
             db.ref('marketing_officers').on('value', snapshot => {
                 if(!tbody) return;
@@ -259,7 +258,8 @@
                                 <td class="p-2.5 border">${data.area || ''}</td>
                                 <td class="p-2.5 border">${data.userId || ''}</td>
                                 <td class="p-2.5 border text-emerald-700 font-mono">${data.pass || ''}</td>
-                                <td class="p-2.5 border text-center">
+                                <td class="p-2.5 border text-center space-x-1">
+                                    <button onclick="editOfficer('${key}')" class="bg-amber-500 text-white px-2 py-1 rounded text-xs hover:bg-amber-600">এডিট</button>
                                     <button onclick="deleteOfficer('${key}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">ডিলিট</button>
                                 </td>
                             </tr>
@@ -270,6 +270,25 @@
                 }
             });
         }
+
+        // অফিসার এডিট করার ফাংশন
+        function editOfficer(key) {
+            db.ref('marketing_officers/' + key).once('value', snapshot => {
+                const data = snapshot.val();
+                if(data) {
+                    document.getElementById('officer-name').value = data.name || '';
+                    document.getElementById('title').value = data.title || '';
+                    document.getElementById('officer-phone').value = data.phone || '';
+                    document.getElementById('officer-area').value = data.area || '';
+                    document.getElementById('officer-id').value = data.userId || '';
+                    document.getElementById('officer-pass').value = data.pass || '';
+
+                    db.ref('marketing_officers/' + key).remove();
+                    alert("অফিসারের তথ্য ফর্ম লোড করা হয়েছে। পরিবর্তন করে আবার 'অফিসার সংরক্ষণ করুন' এ ক্লিক করুন।");
+                }
+            });
+        }
+        
          // অফিসার ড্রপডাউন লোড করা
         function loadOfficerDropdown() {
             const selectParty = document.getElementById('party-officer');
