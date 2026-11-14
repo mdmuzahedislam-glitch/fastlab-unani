@@ -178,7 +178,7 @@
                                     <th class="p-3 border">মোট বিক্রয়</th>
                                     <th class="p-3 border">বকেয়া</th>
                                     <th class="p-3 border">অগ্রিম</th>
-                                    <th class="p-3 border text-center">একشن</th>
+                                    <th class="p-3 border text-center">একশন</th>
                                 </tr>
                             </thead>
                             <tbody id="party-list-body" class="divide-y divide-gray-200 text-xs">
@@ -187,50 +187,50 @@
                         </table>
                     </div>
                 </div>
+                <!-- Statement Panel (Hidden by default, no empty gap) -->
+                <section id="statement-panel" class="hidden bg-white p-6 rounded-xl shadow-lg border-t-4 forest-green-border">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-3 gap-2">
+                        <div>
+                            <h2 class="text-base font-bold text-blue-900 flex items-center gap-2">
+                                <i class="fa-solid fa-file-invoice-dollar"></i>
+                                <span id="statement-party-title" class="text-base bg-blue-100 text-blue-900 px-3 py-1 rounded-lg"></span>
+                            </h2>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="printStatement()" class="bg-gray-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-gray-800 flex items-center gap-1">
+                                <i class="fa-solid fa-print"></i> প্রিন্ট
+                            </button>
+                            <button onclick="exportStatementExcel()" class="bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-emerald-800 flex items-center gap-1">
+                                <i class="fa-solid fa-file-excel"></i> এক্সেল
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto mt-4">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-gray-100 text-xs">
+                                    <th class="p-2.5 border">তারিখ</th>
+                                    <th class="p-2.5 border">বিবরণ</th>
+                                    <th class="p-2.5 border">জমা</th>
+                                    <th class="p-2.5 border">বিক্রয়</th>
+                                    <th class="p-2.5 border text-center">Dr/Cr</th>
+                                    <th class="p-2.5 border">অবশিষ্ট</th>
+                                    <th class="p-2.5 border text-center">একশন</th>
+                                </tr>
+                            </thead>
+                            <tbody id="statement-tbody" class="divide-y divide-gray-200 text-xs"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-4">
+                        <button onclick="closeStatementPanel()" class="bg-gray-500 text-white px-5 py-2 rounded-lg text-xs font-medium hover:bg-gray-600">
+                            বন্ধ করুন
+                        </button>
+                    </div>
+                </section>
             </div>
         </div>
-         <!-- Statement Panel (Hidden by default) -->
-        <section id="statement-panel" class="hidden bg-white p-6 rounded-xl shadow-lg border-t-4 forest-green-border mt-6 container mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-3 gap-2">
-                <div>
-                    <h2 class="text-base font-bold text-blue-900 flex items-center gap-2">
-                        <i class="fa-solid fa-file-invoice-dollar"></i>
-                        <span id="statement-party-title" class="text-base bg-blue-100 text-blue-900 px-3 py-1 rounded-lg"></span>
-                    </h2>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="printStatement()" class="bg-gray-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-gray-800 flex items-center gap-1">
-                        <i class="fa-solid fa-print"></i> প্রিন্ট
-                    </button>
-                    <button onclick="exportStatementExcel()" class="bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-emerald-800 flex items-center gap-1">
-                        <i class="fa-solid fa-file-excel"></i> এক্সেল
-                    </button>
-                </div>
-            </div>
-
-            <div class="overflow-x-auto mt-4">
-                <table class="w-full text-left border-collapse text-sm">
-                    <thead>
-                        <tr class="bg-gray-100 text-xs">
-                            <th class="p-2.5 border">তারিখ</th>
-                            <th class="p-2.5 border">বিবরণ</th>
-                            <th class="p-2.5 border">জমা</th>
-                            <th class="p-2.5 border">বিক্রয়</th>
-                            <th class="p-2.5 border text-center">Dr/Cr</th>
-                            <th class="p-2.5 border">অবশিষ্ট</th>
-                            <th class="p-2.5 border text-center">একশন</th>
-                        </tr>
-                    </thead>
-                    <tbody id="statement-tbody" class="divide-y divide-gray-200 text-xs"></tbody>
-                </table>
-            </div>
-
-            <div class="mt-4">
-                <button onclick="closeStatementPanel()" class="bg-gray-500 text-white px-5 py-2 rounded-lg text-xs font-medium hover:bg-gray-600">
-                    বন্ধ করুন
-                </button>
-            </div>
-        </section>
 
         <footer class="mt-12 bg-white border-t py-4 text-center text-xs text-gray-500">
             © ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত
@@ -330,7 +330,6 @@
         }
         // রিয়েল-টাইম সিঙ্ক ও ডাটা ক্যালকুলেশন
         function loadRealtimeMarketingData(loggedInUserId) {
-            // ১. নোটিশ বোর্ড লাইভ সিঙ্ক
             database.ref('fastlab_marketing_data/notices').on('value', (snapshot) => {
                 const data = snapshot.val();
                 const noticeUl = document.getElementById('notice-list');
@@ -352,11 +351,15 @@
                 }
             });
 
-            // ২. ডিলার/পার্টি লিস্ট এবং হিসাব (বকেয়া ও অগ্রিম ক্যালকুলেশন সহ)
             database.ref('marketing_parties').on('value', (snapshot) => {
                 const tbody = document.getElementById('party-list-body');
                 tbody.innerHTML = '';
                 let count = 0;
+
+                let grandTotalDeposit = 0;
+                let grandTotalPurchase = 0;
+                let grandTotalDue = 0;
+                let grandTotalAdvance = 0;
 
                 if (snapshot.exists()) {
                     snapshot.forEach(childSnap => {
@@ -366,7 +369,6 @@
                         if (!data.assignedOfficer || data.assignedOfficer === loggedInUserId) {
                             count++;
 
-                            // হিসাব ক্যালকুলেশন
                             let totalDeposit = parseFloat(data.openingDeposit || 0);
                             let totalPurchase = parseFloat(data.openingPurchase || 0);
                             let balance = parseFloat(data.openingBalance || 0);
@@ -398,6 +400,11 @@
                             let dueAmount = (balanceType === 'Dr') ? balance : 0;
                             let advanceAmount = (balanceType === 'Cr') ? balance : 0;
 
+                            grandTotalDeposit += totalDeposit;
+                            grandTotalPurchase += totalPurchase;
+                            grandTotalDue += dueAmount;
+                            grandTotalAdvance += advanceAmount;
+
                             tbody.innerHTML += `
                                 <tr class="hover:bg-gray-50">
                                     <td class="p-3 border">${data.serial || count}</td>
@@ -415,6 +422,19 @@
                                 </tr>`;
                         }
                     });
+
+                    // সর্বমোট (Total) রো যোগ করা
+                    if (count > 0) {
+                        tbody.innerHTML += `
+                            <tr class="bg-green-50 font-bold text-xs">
+                                <td colspan="3" class="p-3 border text-right">সর্বমোট:</td>
+                                <td class="p-3 border text-emerald-700">৳ ${grandTotalDeposit.toLocaleString('en-IN')}</td>
+                                <td class="p-3 border text-blue-700">৳ ${grandTotalPurchase.toLocaleString('en-IN')}</td>
+                                <td class="p-3 border text-red-700">৳ ${grandTotalDue.toLocaleString('en-IN')}</td>
+                                <td class="p-3 border text-green-700">৳ ${grandTotalAdvance.toLocaleString('en-IN')}</td>
+                                <td class="p-3 border text-center">-</td>
+                            </tr>`;
+                    }
                 }
 
                 if (count === 0) {
@@ -423,7 +443,6 @@
             });
         }
 
-        // ৩. পার্টি স্টেটমেন্ট দেখার ফাংশন
         function viewPartyStatement(partyKey, partyName, partyPhone) {
             const panel = document.getElementById('statement-panel');
             const titleEl = document.getElementById('statement-party-title');
@@ -442,7 +461,6 @@
                 let runningBalance = parseFloat(data.openingBalance || 0);
                 let balanceType = data.openingBalanceType || 'Dr';
 
-                // প্রারম্ভিক ব্যালেন্স রো
                 tbody.innerHTML += `
                     <tr>
                         <td class="p-2.5 border">-</td>
@@ -495,7 +513,7 @@
         function closeStatementPanel() {
             document.getElementById('statement-panel').classList.add('hidden');
         }
-         // ৪. মূল পার্টি লিস্ট প্রিন্ট করার ফাংশন (কোম্পানির নাম ও ঠিকানা সহ)
+
         function printPartyList() {
             const table = document.getElementById('marketing-party-list').closest('table');
             if(!table) return;
@@ -513,15 +531,13 @@
             win.document.write('<style>body{font-family:sans-serif;padding:20px;text-align:center;} table{width:100%;border-collapse:collapse;margin-top:15px;text-align:left;} th, td{border:1px solid #ddd;padding:8px;font-size:12px;} th{background-color:#f3f4f6;}</style>');
             win.document.write('</head><body>');
             win.document.write('<h1 style="margin:0;font-size:22px;color:#064e3b;">ফাস্টল্যাব ইউনানী</h1>');
-            win.document.write('<p style="margin:4px 0 12px 0;font-size:13px;color:#555;">ঠিকানা: আফুরিয়া,হিমাইতপুর, পাবনা।</p>');
+            win.document.write('<p style="margin:4px 0 12px 0;font-size:13px;color:#555;">ঠিকানা: আফুরিয়া,হিমাইতপুর, পাবনা。</p>');
             win.document.write('<h2 style="font-size:16px;color:#333;border-bottom:2px solid #333;padding-bottom:5px;display:inline-block;margin-bottom:15px;">ডিপো/ডিলার পার্টি লিস্ট ও হিসাব</h2>');
             win.document.write(printContent.outerHTML);
             win.document.write('</body></html>');
             win.document.close();
             win.print();
         }
-
-        // ৫. মূল পার্টি লিস্ট এক্সেল (CSV) ডাউনলোড করার ফাংশন
         function exportPartyExcel() {
             let csv = [];
             const table = document.getElementById('marketing-party-list').closest('table');
@@ -546,7 +562,6 @@
             document.body.removeChild(downloadLink);
         }
 
-        // ৬. পার্টি স্টেটমেন্ট প্রিন্ট করার ফাংশন
         function printStatement() {
             const table = document.getElementById('statement-tbody').closest('table');
             if(!table) return;
@@ -566,7 +581,7 @@
             win.document.write('<style>body{font-family:sans-serif;padding:20px;text-align:center;} table{width:100%;border-collapse:collapse;margin-top:15px;text-align:left;} th, td{border:1px solid #ddd;padding:8px;font-size:12px;} th{background-color:#f3f4f6;}</style>');
             win.document.write('</head><body>');
             win.document.write('<h1 style="margin:0;font-size:22px;color:#064e3b;">ফাস্টল্যাব ইউনানী</h1>');
-            win.document.write('<p style="margin:4px 0 12px 0;font-size:13px;color:#555;">ঠিকানা: আফুরিয়া,হিমাইতপুর, পাবনা।</p>');
+            win.document.write('<p style="margin:4px 0 12px 0;font-size:13px;color:#555;">ঠিকানা: আফুরিয়া,হিমাইতপুর, পাবনা。</p>');
             win.document.write(`<h2 style="font-size:16px;color:#1e3a8a;margin-bottom:5px;">পার্টি স্টেটমেন্ট রিপোর্ট</h2>`);
             win.document.write(`<p style="font-size:13px;margin-bottom:15px;"><strong>${partyTitle}</strong></p>`);
             win.document.write(printContent.outerHTML);
@@ -575,7 +590,6 @@
             win.print();
         }
 
-        // ৭. পার্টি স্টেটমেন্ট এক্সেল (CSV) ডাউনলোড করার ফাংশন
         function exportStatementExcel() {
             let csv = [];
             const table = document.getElementById('statement-tbody').closest('table');
