@@ -25,7 +25,7 @@
         <h1 class="text-xl font-bold flex items-center gap-2">
             <i class="fa-solid fa-user-gear"></i> মার্কেটিং কন্ট্রোল ও ম্যানেজমেন্ট এডিট প্যানেল
         </h1>
-        <a href="admin-dashboard.html" class="bg-amber-400 text-black px-4 py-2 rounded-lg font-bold hover:bg-amber-500 transition text-sm">ড্যাশবোর্ড দেখুন</a>
+        <a href="marketing-dashboard.html" class="bg-amber-400 text-black px-4 py-2 rounded-lg font-bold hover:bg-amber-500 transition text-sm">ড্যাশবোর্ড দেখুন</a>
     </header>
 
     <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-6 flex-grow w-full">
@@ -66,9 +66,7 @@
                             <th class="p-2.5 border text-center">একশন</th>
                         </tr>
                     </thead>
-                    <tbody id="marketing-officer-list">
-                        <!-- ফায়ারবেজ থেকে ডাইনামিক ডাটা আসবে -->
-                    </tbody>
+                    <tbody id="marketing-officer-list"></tbody>
                 </table>
             </div>
         </section>
@@ -78,8 +76,8 @@
             <h2 class="text-base font-bold forest-green-text mb-4 flex items-center gap-2">
                 <i class="fa-solid fa-handshake"></i> নতুন ডিপো/ডিলার পার্টি সংরক্ষণ করুন
             </h2>
+            <input type="hidden" id="edit-party-key" value="">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <!-- কোন অফিসারের আন্ডারে পার্টি থাকবে তা সিলেক্ট করার ড্রপডাউন -->
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">দায়িত্বপ্রাপ্ত অফিসার সিলেক্ট করুন:</label>
                     <select id="party-officer" class="w-full border p-2.5 rounded-lg text-sm bg-white">
@@ -99,29 +97,34 @@
                     <input type="text" id="party-phone" placeholder="মোবাইল নাম্বার" class="w-full border p-2.5 rounded-lg text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">মোট জমা:</label>
-                    <input type="text" id="party-deposit" placeholder="মোট জমা" class="w-full border p-2.5 rounded-lg text-sm">
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">পূর্বের জমা / প্রারম্ভিক জমা:</label>
+                    <input type="number" id="party-deposit" placeholder="মোট জমা" class="w-full border p-2.5 rounded-lg text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">মোট মাল ক্রয়:</label>
-                    <input type="text" id="party-purchase" placeholder="মোট মাল ক্রয়" class="w-full border p-2.5 rounded-lg text-sm">
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">পূর্বের মাল ক্রয়:</label>
+                    <input type="number" id="party-purchase" placeholder="মোট মাল ক্রয়" class="w-full border p-2.5 rounded-lg text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">বর্তমান বকেয়া:</label>
-                    <input type="text" id="party-due" placeholder="বর্তমান বকেয়া" class="w-full border p-2.5 rounded-lg text-sm">
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">পূর্বের বকেয়া ব্যালেন্স:</label>
+                    <input type="number" id="party-due" placeholder="বর্তমান বকেয়া" class="w-full border p-2.5 rounded-lg text-sm">
                 </div>
             </div>
-            <button onclick="saveMarketingParty()" class="forest-green text-white px-5 py-2 rounded font-bold hover:bg-green-900 text-sm shadow">
-                পার্টি সংরক্ষণ করুন
-            </button>
+            <div class="flex gap-2">
+                <button onclick="saveMarketingParty()" id="save-party-btn" class="forest-green text-white px-5 py-2 rounded font-bold hover:bg-green-900 text-sm shadow">
+                    পার্টি সংরক্ষণ করুন
+                </button>
+                <button onclick="resetPartyForm()" id="cancel-party-edit-btn" class="hidden bg-gray-500 text-white px-4 py-2 rounded font-bold hover:bg-gray-600 text-sm">
+                    বাতিল
+                </button>
+            </div>
         </section>
+
         <!-- ৪. ডিপো/ডিলার পার্টি লিস্ট ও হিসাব সামারি -->
         <section class="bg-white p-6 rounded-xl shadow-md space-y-4">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b pb-4">
                 <h2 class="text-base font-bold forest-green-text flex items-center gap-2">
                     <i class="fa-solid fa-list"></i> ডিপো/ডিলার পার্টি লিস্ট ও হিসাব সামারি
                 </h2>
-                <!-- অফিসার ফিল্টার করার ড্রপডাউন -->
                 <div class="flex items-center gap-2">
                     <label class="text-xs font-semibold">অফিসার ফিল্টার:</label>
                     <select id="filter-officer" onchange="loadMarketingParties()" class="border p-2 rounded-lg text-sm bg-white">
@@ -161,13 +164,76 @@
                             <th class="p-2.5 border text-center">একশন</th>
                         </tr>
                     </thead>
-                    <tbody id="marketing-party-list">
-                        <!-- ফায়ারবেজ থেকে ডাটা আসবে -->
-                    </tbody>
-                    <tfoot id="party-list-footer" class="bg-gray-100 font-bold">
-                        <!-- সর্বমোট হিসাব নিচে শো করবে -->
-                    </tfoot>
+                    <tbody id="marketing-party-list"></tbody>
                 </table>
+            </div>
+        </section>
+         <!-- ড্রপডাউন ১: জমা এন্ট্রি ফর্ম প্যানেল -->
+        <section id="deposit-entry-panel" class="hidden bg-white p-6 rounded-xl shadow-lg border-t-4 border-emerald-600 transition-all">
+            <h2 class="text-base font-bold text-emerald-800 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-money-bill-transfer"></i> লেনদেন / জমা এন্ট্রি ফর্ম 
+                <span id="deposit-party-title" class="text-xs bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded"></span>
+            </h2>
+            <input type="hidden" id="txn-party-key" value="">
+            <input type="hidden" id="txn-edit-key" value="">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">তারিখ:</label>
+                    <input type="date" id="txn-date" class="w-full border p-2.5 rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">বিবরণ:</label>
+                    <input type="text" id="txn-desc" placeholder="যেমন: নগদ জমা / মেমো নং" class="w-full border p-2.5 rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">জমা (টাকা):</label>
+                    <input type="number" id="txn-deposit" placeholder="0" class="w-full border p-2.5 rounded-lg text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">পণ্য বিক্রয় (টাকা):</label>
+                    <input type="number" id="txn-sale" placeholder="0" class="w-full border p-2.5 rounded-lg text-sm">
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="saveTransaction()" id="txn-save-btn" class="forest-green text-white px-5 py-2 rounded font-bold hover:bg-green-900 text-sm shadow">
+                    জমা দিন
+                </button>
+                <button onclick="closeDepositPanel()" class="bg-gray-500 text-white px-5 py-2 rounded font-bold hover:bg-gray-600 text-sm">
+                    বাতিল
+                </button>
+            </div>
+        </section>
+
+        <!-- ড্রপডাউন ২: পার্টি স্টেটমেন্ট প্যানেল -->
+        <section id="statement-panel" class="hidden bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-700 transition-all space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h2 class="text-base font-bold text-blue-900 flex items-center gap-2">
+                    <i class="fa-solid fa-file-invoice-dollar"></i> পার্টি স্টেটমেন্ট 
+                    <span id="statement-party-title" class="text-xs bg-blue-100 text-blue-900 px-2.5 py-0.5 rounded"></span>
+                </h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="p-2.5 border">তারিখ</th>
+                            <th class="p-2.5 border">বিবরণ</th>
+                            <th class="p-2.5 border">জমা</th>
+                            <th class="p-2.5 border">বিক্রয়</th>
+                            <th class="p-2.5 border text-center">Dr/Cr</th>
+                            <th class="p-2.5 border">অবশিষ্ট</th>
+                            <th class="p-2.5 border text-center">একশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statement-tbody"></tbody>
+                </table>
+            </div>
+
+            <div class="pt-2">
+                <button onclick="closeStatementPanel()" class="bg-gray-700 text-white px-5 py-2 rounded font-bold hover:bg-gray-800 text-sm">
+                    বন্ধ করুন
+                </button>
             </div>
         </section>
         
@@ -189,7 +255,6 @@
     <footer class="mt-12 bg-white border-t py-4 text-center text-xs text-gray-500">
         © ২০২৬ - ফাস্টল্যাব ইউনানী | সকল স্বত্ব সংরক্ষিত
     </footer>
-
     <!-- Firebase Script & Logic -->
     <script>
         const firebaseConfig = {
@@ -208,6 +273,9 @@
         }
         const db = firebase.database();
 
+        let allPartiesData = {};
+        let currentStatementPartyKey = null;
+
         window.onload = function() {
             loadMarketingOfficers();
             loadMarketingParties();
@@ -215,7 +283,7 @@
             loadOfficerDropdown();
         };
 
-        // ১. মার্কেটিং অফিসার সংরক্ষণ
+        // ১. মার্কেটিং অফিসার সংরক্ষণ ও এডিট
         function saveMarketingOfficer() {
             const name = document.getElementById('officer-name').value;
             const title = document.getElementById('title').value;
@@ -241,7 +309,8 @@
                     loadOfficerDropdown();
                 });
         }
-                function loadMarketingOfficers() {
+
+        function loadMarketingOfficers() {
             const tbody = document.getElementById('marketing-officer-list');
             db.ref('marketing_officers').on('value', snapshot => {
                 if(!tbody) return;
@@ -271,7 +340,6 @@
             });
         }
 
-        // অফিসার এডিট করার ফাংশন
         function editOfficer(key) {
             db.ref('marketing_officers/' + key).once('value', snapshot => {
                 const data = snapshot.val();
@@ -284,12 +352,11 @@
                     document.getElementById('officer-pass').value = data.pass || '';
 
                     db.ref('marketing_officers/' + key).remove();
-                    alert("অফিসারের তথ্য ফর্ম লোড করা হয়েছে। পরিবর্তন করে আবার 'অফিসার সংরক্ষণ করুন' এ ক্লিক করুন।");
+                    alert("অফিসারের তথ্য ফর্মে লোড করা হয়েছে। পরিবর্তন করে আবার 'অফিসার সংরক্ষণ করুন' এ ক্লিক করুন।");
                 }
             });
         }
-        
-         // অফিসার ড্রপডাউন লোড করা
+
         function loadOfficerDropdown() {
             const selectParty = document.getElementById('party-officer');
             const selectFilter = document.getElementById('filter-officer');
@@ -316,39 +383,81 @@
             }
         }
 
-        // ২. পার্টি বা ডিলার সংরক্ষণ
+        // ২. পার্টি সংরক্ষণ ও এডিট
         function saveMarketingParty() {
+            const editKey = document.getElementById('edit-party-key').value;
             const assignedOfficer = document.getElementById('party-officer').value;
             const serial = document.getElementById('party-serial').value;
             const name = document.getElementById('party-name').value;
             const phone = document.getElementById('party-phone').value;
-            const deposit = document.getElementById('party-deposit').value;
-            const purchase = document.getElementById('party-purchase').value;
-            const due = document.getElementById('party-due').value;
+            const deposit = parseFloat(document.getElementById('party-deposit').value) || 0;
+            const purchase = parseFloat(document.getElementById('party-purchase').value) || 0;
+            const due = parseFloat(document.getElementById('party-due').value) || 0;
 
             if(!assignedOfficer) {
                 alert("দয়া করে এই পার্টির জন্য একজন দায়িত্বপ্রাপ্ত অফিসার সিলেক্ট করুন!");
                 return;
             }
-
             if(!name) {
                 alert("পার্টির নাম ও ঠিকানা লিখুন!");
                 return;
             }
 
-            db.ref('marketing_parties').push({ assignedOfficer, serial, name, phone, deposit, purchase, due })
-                .then(() => {
-                    alert("পার্টি সফলভাবে সংরক্ষিত হয়েছে!");
-                    document.getElementById('party-serial').value = '';
-                    document.getElementById('party-name').value = '';
-                    document.getElementById('party-phone').value = '';
-                    document.getElementById('party-deposit').value = '';
-                    document.getElementById('party-purchase').value = '';
-                    document.getElementById('party-due').value = '';
+            if (editKey) {
+                // এডিট আপডেট (পূর্বের লেনদেন অক্ষুণ্ণ রেখে পার্টির প্রারম্ভিক তথ্য আপডেট)
+                db.ref('marketing_parties/' + editKey).update({
+                    assignedOfficer, serial, name, phone,
+                    initDeposit: deposit,
+                    initPurchase: purchase,
+                    initDue: due
+                }).then(() => {
+                    alert("পার্টির তথ্য সফলভাবে আপডেট হয়েছে!");
+                    resetPartyForm();
                 });
+            } else {
+                // নতুন পার্টি সংরক্ষণ
+                db.ref('marketing_parties').push({
+                    assignedOfficer, serial, name, phone,
+                    initDeposit: deposit,
+                    initPurchase: purchase,
+                    initDue: due
+                }).then(() => {
+                    alert("পার্টি সফলভাবে সংরক্ষিত হয়েছে!");
+                    resetPartyForm();
+                });
+            }
         }
 
-        // পার্টি লিস্ট, ফিল্টার ও সর্বমোট হিসাব দেখানোর ফাংশন
+        function editParty(key) {
+            const data = allPartiesData[key];
+            if(!data) return;
+            document.getElementById('edit-party-key').value = key;
+            document.getElementById('party-officer').value = data.assignedOfficer || '';
+            document.getElementById('party-serial').value = data.serial || '';
+            document.getElementById('party-name').value = data.name || '';
+            document.getElementById('party-phone').value = data.phone || '';
+            document.getElementById('party-deposit').value = data.initDeposit !== undefined ? data.initDeposit : (data.deposit || 0);
+            document.getElementById('party-purchase').value = data.initPurchase !== undefined ? data.initPurchase : (data.purchase || 0);
+            document.getElementById('party-due').value = data.initDue !== undefined ? data.initDue : (data.due || 0);
+
+            document.getElementById('save-party-btn').innerText = 'তথ্য আপডেট করুন';
+            document.getElementById('cancel-party-edit-btn').classList.remove('hidden');
+            window.scrollTo({ top: document.getElementById('party-officer').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        function resetPartyForm() {
+            document.getElementById('edit-party-key').value = '';
+            document.getElementById('party-serial').value = '';
+            document.getElementById('party-name').value = '';
+            document.getElementById('party-phone').value = '';
+            document.getElementById('party-deposit').value = '';
+            document.getElementById('party-purchase').value = '';
+            document.getElementById('party-due').value = '';
+            document.getElementById('save-party-btn').innerText = 'পার্টি সংরক্ষণ করুন';
+            document.getElementById('cancel-party-edit-btn').classList.add('hidden');
+        }
+
+        // ৩. পার্টি লিস্ট ও হিসাব সামারি লোড (লেনদেনসহ স্বয়ংক্রিয় হিসাব)
         function loadMarketingParties() {
             const filterEl = document.getElementById('filter-officer');
             const selectedOfficer = filterEl ? filterEl.value : 'ALL';
@@ -360,6 +469,7 @@
             db.ref('marketing_parties').on('value', snapshot => {
                 if(!tbody) return;
                 tbody.innerHTML = '';
+                allPartiesData = {};
                 let totalDeposit = 0;
                 let totalPurchase = 0;
                 let totalDue = 0;
@@ -369,16 +479,32 @@
                     snapshot.forEach(childSnap => {
                         const key = childSnap.key;
                         const data = childSnap.val();
+                        allPartiesData[key] = data;
+
+                        // প্রারম্ভিক ব্যালেন্স
+                        let initDep = parseFloat(data.initDeposit !== undefined ? data.initDeposit : data.deposit) || 0;
+                        let initPur = parseFloat(data.initPurchase !== undefined ? data.initPurchase : data.purchase) || 0;
+                        let initDue = parseFloat(data.initDue !== undefined ? data.initDue : data.due) || 0;
+
+                        // লেনদেন (transactions) যোগ করা
+                        let txnDep = 0;
+                        let txnSale = 0;
+                        if (data.transactions) {
+                            Object.values(data.transactions).forEach(t => {
+                                txnDep += parseFloat(t.deposit) || 0;
+                                txnSale += parseFloat(t.sale) || 0;
+                            });
+                        }
+
+                        const finalDep = initDep + txnDep;
+                        const finalPur = initPur + txnSale;
+                        const finalDue = initDue + txnSale - txnDep;
 
                         if(selectedOfficer === 'ALL' || data.assignedOfficer === selectedOfficer) {
                             count++;
-                            const dep = parseFloat(data.deposit) || 0;
-                            const pur = parseFloat(data.purchase) || 0;
-                            const due = parseFloat(data.due) || 0;
-
-                            totalDeposit += dep;
-                            totalPurchase += pur;
-                            totalDue += due;
+                            totalDeposit += finalDep;
+                            totalPurchase += finalPur;
+                            totalDue += (finalDue > 0 ? finalDue : 0);
 
                             tbody.innerHTML += `
                                 <tr class="border-b hover:bg-gray-50">
@@ -386,11 +512,14 @@
                                     <td class="p-2.5 border font-semibold text-emerald-800">${data.assignedOfficer || 'সাধারণ'}</td>
                                     <td class="p-2.5 border font-medium">${data.name || ''}</td>
                                     <td class="p-2.5 border">${data.phone || ''}</td>
-                                    <td class="p-2.5 border text-emerald-600 font-semibold">৳ ${dep}</td>
-                                    <td class="p-2.5 border text-blue-600 font-semibold">৳ ${pur}</td>
-                                    <td class="p-2.5 border text-red-600 font-semibold">৳ ${due}</td>
-                                    <td class="p-2.5 border text-center">
-                                        <button onclick="deleteParty('${key}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">ডিলিট</button>
+                                    <td class="p-2.5 border text-emerald-600 font-semibold">৳ ${finalDep}</td>
+                                    <td class="p-2.5 border text-blue-600 font-semibold">৳ ${finalPur}</td>
+                                    <td class="p-2.5 border text-red-600 font-semibold">৳ ${finalDue}</td>
+                                    <td class="p-2.5 border text-center space-x-1 whitespace-nowrap">
+                                        <button onclick="openDepositPanel('${key}')" class="bg-emerald-600 text-white px-2.5 py-1 rounded text-xs hover:bg-emerald-700 font-semibold">জমা এন্ট্রি</button>
+                                        <button onclick="openStatementPanel('${key}')" class="bg-blue-600 text-white px-2.5 py-1 rounded text-xs hover:bg-blue-700 font-semibold">স্টেটমেন্ট</button>
+                                        <button onclick="editParty('${key}')" class="bg-amber-500 text-white px-2.5 py-1 rounded text-xs hover:bg-amber-600 font-semibold">এডিট</button>
+                                        <button onclick="deleteParty('${key}')" class="bg-red-600 text-white px-2.5 py-1 rounded text-xs hover:bg-red-700 font-semibold">ডিলিট</button>
                                     </td>
                                 </tr>
                             `;
@@ -401,12 +530,179 @@
                 if(sumDepEl) sumDepEl.innerText = `৳ ${totalDeposit}`;
                 if(sumPurEl) sumPurEl.innerText = `৳ ${totalPurchase}`;
                 if(sumDueEl) sumDueEl.innerText = `৳ ${totalDue}`;
+
+                // যদি স্টেটমেন্ট খোলা থাকে তবে লাইভ রিফ্রেশ করা
+                if (currentStatementPartyKey && allPartiesData[currentStatementPartyKey]) {
+                    renderStatementTable(currentStatementPartyKey);
+                }
             });
         }
-
         function deleteParty(key) {
-            if(confirm("আপনি কি এই পার্টি ডিলিট করতে চান?")) {
+            if(confirm("আপনি কি এই পার্টি ও এর সকল লেনদেন ডিলিট করতে চান?")) {
                 db.ref('marketing_parties/' + key).remove();
+                if (currentStatementPartyKey === key) closeStatementPanel();
+            }
+        }
+
+        // ৪. জমা এন্ট্রি ড্রপডাউন ফর্ম ফাংশন
+        function openDepositPanel(partyKey) {
+            const party = allPartiesData[partyKey];
+            if (!party) return;
+
+            document.getElementById('txn-party-key').value = partyKey;
+            document.getElementById('txn-edit-key').value = '';
+            document.getElementById('deposit-party-title').innerText = `পার্টি: ${party.name}`;
+            
+            // আজকের তারিখ ডিফল্ট সেট করা
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('txn-date').value = today;
+            document.getElementById('txn-desc').value = '';
+            document.getElementById('txn-deposit').value = '';
+            document.getElementById('txn-sale').value = '';
+            document.getElementById('txn-save-btn').innerText = 'জমা দিন';
+
+            const panel = document.getElementById('deposit-entry-panel');
+            panel.classList.remove('hidden');
+            panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function closeDepositPanel() {
+            document.getElementById('deposit-entry-panel').classList.add('hidden');
+            document.getElementById('txn-edit-key').value = '';
+        }
+
+        function saveTransaction() {
+            const partyKey = document.getElementById('txn-party-key').value;
+            const txnEditKey = document.getElementById('txn-edit-key').value;
+            const date = document.getElementById('txn-date').value;
+            const desc = document.getElementById('txn-desc').value;
+            const deposit = parseFloat(document.getElementById('txn-deposit').value) || 0;
+            const sale = parseFloat(document.getElementById('txn-sale').value) || 0;
+
+            if (!date) {
+                alert("দয়া করে তারিখ নির্বাচন করুন!");
+                return;
+            }
+            if (deposit === 0 && sale === 0) {
+                alert("জমা অথবা পণ্য বিক্রয়ের পরিমাণ লিখুন!");
+                return;
+            }
+
+            const txnData = { date, desc, deposit, sale };
+
+            if (txnEditKey) {
+                // বিদ্যমান লেনদেন আপডেট
+                db.ref(`marketing_parties/${partyKey}/transactions/${txnEditKey}`).update(txnData)
+                    .then(() => {
+                        alert("লেনদেন সফলভাবে আপডেট হয়েছে!");
+                        closeDepositPanel();
+                    });
+            } else {
+                // নতুন লেনদেন সংরক্ষণ
+                db.ref(`marketing_parties/${partyKey}/transactions`).push(txnData)
+                    .then(() => {
+                        alert("লেনদেন সফলভাবে যুক্ত হয়েছে!");
+                        closeDepositPanel();
+                    });
+            }
+        }
+
+        // ৫. স্টেটমেন্ট ড্রপডাউন প্যানেল ফাংশন (তারিখ + বিবরণ + জমা + বিক্রয় + Dr/Cr + অবশিষ্ট + একশন)
+        function openStatementPanel(partyKey) {
+            currentStatementPartyKey = partyKey;
+            const party = allPartiesData[partyKey];
+            if (!party) return;
+
+            document.getElementById('statement-party-title').innerText = `পার্টি: ${party.name} (${party.phone || ''})`;
+            renderStatementTable(partyKey);
+
+            const panel = document.getElementById('statement-panel');
+            panel.classList.remove('hidden');
+            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function closeStatementPanel() {
+            currentStatementPartyKey = null;
+            document.getElementById('statement-panel').classList.add('hidden');
+        }
+
+        function renderStatementTable(partyKey) {
+            const party = allPartiesData[partyKey];
+            const tbody = document.getElementById('statement-tbody');
+            if (!party || !tbody) return;
+
+            tbody.innerHTML = '';
+
+            // প্রারম্ভিক ব্যালেন্স রো
+            let initDep = parseFloat(party.initDeposit !== undefined ? party.initDeposit : party.deposit) || 0;
+            let initPur = parseFloat(party.initPurchase !== undefined ? party.initPurchase : party.purchase) || 0;
+            let initDue = parseFloat(party.initDue !== undefined ? party.initDue : party.due) || 0;
+
+            let runningBalance = initDue; // ধনাত্মক মানে বকেয়া (Dr), ঋণাত্মক মানে অগ্রিম/পাওনা (Cr)
+            let initialDrCr = runningBalance >= 0 ? 'Dr' : 'Cr';
+
+            tbody.innerHTML += `
+                <tr class="bg-gray-50 border-b font-medium">
+                    <td class="p-2.5 border">-</td>
+                    <td class="p-2.5 border">পূর্বের বকেয়া / প্রারম্ভিক ব্যালেন্স</td>
+                    <td class="p-2.5 border text-emerald-600">৳ ${initDep}</td>
+                    <td class="p-2.5 border text-blue-600">৳ ${initPur}</td>
+                    <td class="p-2.5 border text-center font-bold ${runningBalance >= 0 ? 'text-red-600' : 'text-emerald-600'}">${initialDrCr}</td>
+                    <td class="p-2.5 border font-bold">৳ ${Math.abs(runningBalance)}</td>
+                    <td class="p-2.5 border text-center text-gray-400 text-xs">প্রারম্ভিক</td>
+                </tr>
+            `;
+
+            if (party.transactions) {
+                const entries = Object.entries(party.transactions);
+                // তারিখ অনুযায়ী সাজানো
+                entries.sort((a, b) => (a[1].date || '').localeCompare(b[1].date || ''));
+
+                entries.forEach(([txnKey, txn]) => {
+                    const dep = parseFloat(txn.deposit) || 0;
+                    const sale = parseFloat(txn.sale) || 0;
+                    runningBalance = runningBalance + sale - dep;
+                    const drCr = runningBalance >= 0 ? 'Dr' : 'Cr';
+
+                    tbody.innerHTML += `
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-2.5 border whitespace-nowrap">${txn.date || ''}</td>
+                            <td class="p-2.5 border">${txn.desc || '-'}</td>
+                            <td class="p-2.5 border text-emerald-600 font-semibold">${dep > 0 ? '৳ ' + dep : '0'}</td>
+                            <td class="p-2.5 border text-blue-600 font-semibold">${sale > 0 ? '৳ ' + sale : '0'}</td>
+                            <td class="p-2.5 border text-center font-bold ${runningBalance >= 0 ? 'text-red-600' : 'text-emerald-600'}">${drCr}</td>
+                            <td class="p-2.5 border font-bold">৳ ${Math.abs(runningBalance)}</td>
+                            <td class="p-2.5 border text-center space-x-1 whitespace-nowrap">
+                                <button onclick="editTransaction('${partyKey}', '${txnKey}')" class="bg-amber-500 text-white px-2 py-1 rounded text-xs hover:bg-amber-600">এডিট</button>
+                                <button onclick="deleteTransaction('${partyKey}', '${txnKey}')" class="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700">ডিলিট</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+        function editTransaction(partyKey, txnKey) {
+            const party = allPartiesData[partyKey];
+            if (!party || !party.transactions || !party.transactions[txnKey]) return;
+            const txn = party.transactions[txnKey];
+
+            document.getElementById('txn-party-key').value = partyKey;
+            document.getElementById('txn-edit-key').value = txnKey;
+            document.getElementById('deposit-party-title').innerText = `পার্টি: ${party.name} (এডিট মোড)`;
+            document.getElementById('txn-date').value = txn.date || '';
+            document.getElementById('txn-desc').value = txn.desc || '';
+            document.getElementById('txn-deposit').value = txn.deposit || 0;
+            document.getElementById('txn-sale').value = txn.sale || 0;
+            document.getElementById('txn-save-btn').innerText = 'আপডেট করুন';
+
+            const panel = document.getElementById('deposit-entry-panel');
+            panel.classList.remove('hidden');
+            panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function deleteTransaction(partyKey, txnKey) {
+            if (confirm("আপনি কি এই লেনদেনটি ডিলিট করতে চান?")) {
+                db.ref(`marketing_parties/${partyKey}/transactions/${txnKey}`).remove();
             }
         }
 
