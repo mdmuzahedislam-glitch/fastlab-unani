@@ -136,35 +136,41 @@
             <!-- সর্বমোট জমা, মোট ক্রয় ও মোট বকেয়া দেখানোর বক্স -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                 <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
-                    <p class="text-xs text-emerald-800 font-semibold">মোট জমা কালেকশন</p>
+                    <p class="text-xs text-emerald-800 font-semibold">মোট জমা/কালেকশন</p>
                     <p class="text-lg font-bold text-emerald-600" id="sum-total-deposit">৳ 0</p>
                 </div>
                 <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
-                    <p class="text-xs text-blue-800 font-semibold">মোট মাল বিক্রয়/ ক্রয়</p>
+                    <p class="text-xs text-blue-800 font-semibold">মোট মাল বিক্রয়/ক্রয়</p>
                     <p class="text-lg font-bold text-blue-600" id="sum-total-purchase">৳ 0</p>
                 </div>
                 <div class="bg-red-50 p-3 rounded-lg border border-red-200">
-                    <p class="text-xs text-red-800 font-semibold">মোট সর্বমোট বকেয়া</p>
+                    <p class="text-xs text-red-800 font-semibold">সর্বমোট বকেয়া</p>
                     <p class="text-lg font-bold text-red-600" id="sum-total-due">৳ 0</p>
+                </div>
+                <div class="bg-purple-50 p-3 rounded-lg border border-purple-200">
+                    <p class="text-xs text-purple-800 font-semibold">সর্বমোট অগ্রিম জমা</p>
+                    <p class="text-lg font-bold text-purple-600" id="sum-total-advance">৳ 0</p>
                 </div>
             </div>
 
             <!-- ডিলার টেবিল -->
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-sm">
-                    <thead>
-                        <tr class="bg-gray-100">
+                  <thead>
+                            <tr class="bg-gray-100">
                             <th class="p-2.5 border">ক্রমিক</th>
                             <th class="p-2.5 border">অফিসার আইডি</th>
                             <th class="p-2.5 border">নাম ও ঠিকানা</th>
                             <th class="p-2.5 border">মোবাইল</th>
                             <th class="p-2.5 border">মোট জমা</th>
-                            <th class="p-2.5 border">মাল ক্রয়</th>
-                            <th class="p-2.5 border">বকেয়া</th>
+                            <th class="p-2.5 border">পণ্য বিক্রয়</th>
+                            <th class="p-2.5 border">বকেয়া(Dr)</th>
+                            <th class="p-2.5 border">অগ্রিম(Cr)</th>
                             <th class="p-2.5 border text-center">একশন</th>
                         </tr>
                     </thead>
                     <tbody id="marketing-party-list"></tbody>
+                    <tfoot id="party-list-footer" class="bg-gray-100 font-bold"></tfoot>
                 </table>
             </div>
         </section>
@@ -456,15 +462,16 @@
             document.getElementById('save-party-btn').innerText = 'পার্টি সংরক্ষণ করুন';
             document.getElementById('cancel-party-edit-btn').classList.add('hidden');
         }
-
-        // ৩. পার্টি লিস্ট ও হিসাব সামারি লোড (লেনদেনসহ স্বয়ংক্রিয় হিসাব)
+                // ৩. পার্টি লিস্ট ও হিসাব সামারি লোড (লেনদেনসহ স্বয়ংক্রিয় হিসাব)
         function loadMarketingParties() {
             const filterEl = document.getElementById('filter-officer');
             const selectedOfficer = filterEl ? filterEl.value : 'ALL';
             const tbody = document.getElementById('marketing-party-list');
+            const tfoot = document.getElementById('party-list-footer');
             const sumDepEl = document.getElementById('sum-total-deposit');
             const sumPurEl = document.getElementById('sum-total-purchase');
             const sumDueEl = document.getElementById('sum-total-due');
+            const sumAdvEl = document.getElementById('sum-total-advance');
 
             db.ref('marketing_parties').on('value', snapshot => {
                 if(!tbody) return;
@@ -473,6 +480,7 @@
                 let totalDeposit = 0;
                 let totalPurchase = 0;
                 let totalDue = 0;
+                let totalAdvance = 0;
                 let count = 0;
 
                 if(snapshot.exists()) {
@@ -498,13 +506,18 @@
 
                         const finalDep = initDep + txnDep;
                         const finalPur = initPur + txnSale;
-                        const finalDue = initDue + txnSale - txnDep;
+                        
+                        // নিট ব্যালেন্স থেকে বকেয়া (Dr) ও অগ্রিম (Cr) আলাদা করা
+                        const netBalance = initDue + txnSale - txnDep;
+                        const partyDue = netBalance > 0 ? netBalance : 0;
+                        const partyAdvance = netBalance < 0 ? Math.abs(netBalance) : 0;
 
                         if(selectedOfficer === 'ALL' || data.assignedOfficer === selectedOfficer) {
                             count++;
                             totalDeposit += finalDep;
                             totalPurchase += finalPur;
-                            totalDue += (finalDue > 0 ? finalDue : 0);
+                            totalDue += partyDue;
+                            totalAdvance += partyAdvance;
 
                             tbody.innerHTML += `
                                 <tr class="border-b hover:bg-gray-50">
@@ -514,7 +527,8 @@
                                     <td class="p-2.5 border">${data.phone || ''}</td>
                                     <td class="p-2.5 border text-emerald-600 font-semibold">৳ ${finalDep}</td>
                                     <td class="p-2.5 border text-blue-600 font-semibold">৳ ${finalPur}</td>
-                                    <td class="p-2.5 border text-red-600 font-semibold">৳ ${finalDue}</td>
+                                    <td class="p-2.5 border text-red-600 font-semibold">৳ ${partyDue}</td>
+                                    <td class="p-2.5 border text-purple-600 font-semibold">৳ ${partyAdvance}</td>
                                     <td class="p-2.5 border text-center space-x-1 whitespace-nowrap">
                                         <button onclick="openDepositPanel('${key}')" class="bg-emerald-600 text-white px-2.5 py-1 rounded text-xs hover:bg-emerald-700 font-semibold">জমা এন্ট্রি</button>
                                         <button onclick="openStatementPanel('${key}')" class="bg-blue-600 text-white px-2.5 py-1 rounded text-xs hover:bg-blue-700 font-semibold">স্টেটমেন্ট</button>
@@ -527,9 +541,24 @@
                     });
                 }
 
+                // টেবিলের নিচে সর্বমোট সারি (Footer) যুক্ত করা
+                if(tfoot) {
+                    tfoot.innerHTML = `
+                        <tr class="bg-gray-100 border-t-2 border-gray-300">
+                            <td colspan="4" class="p-2.5 border text-right font-bold text-gray-800">সর্বমোট:</td>
+                            <td class="p-2.5 border text-emerald-700 font-bold">৳ ${totalDeposit}</td>
+                            <td class="p-2.5 border text-blue-700 font-bold">৳ ${totalPurchase}</td>
+                            <td class="p-2.5 border text-red-700 font-bold">৳ ${totalDue}</td>
+                            <td class="p-2.5 border text-purple-700 font-bold">৳ ${totalAdvance}</td>
+                            <td class="p-2.5 border"></td>
+                        </tr>
+                    `;
+                }
+
                 if(sumDepEl) sumDepEl.innerText = `৳ ${totalDeposit}`;
                 if(sumPurEl) sumPurEl.innerText = `৳ ${totalPurchase}`;
                 if(sumDueEl) sumDueEl.innerText = `৳ ${totalDue}`;
+                if(sumAdvEl) sumAdvEl.innerText = `৳ ${totalAdvance}`;
 
                 // যদি স্টেটমেন্ট খোলা থাকে তবে লাইভ রিফ্রেশ করা
                 if (currentStatementPartyKey && allPartiesData[currentStatementPartyKey]) {
@@ -537,13 +566,13 @@
                 }
             });
         }
+
         function deleteParty(key) {
             if(confirm("আপনি কি এই পার্টি ও এর সকল লেনদেন ডিলিট করতে চান?")) {
                 db.ref('marketing_parties/' + key).remove();
                 if (currentStatementPartyKey === key) closeStatementPanel();
             }
         }
-
         // ৪. জমা এন্ট্রি ড্রপডাউন ফর্ম ফাংশন
         function openDepositPanel(partyKey) {
             const party = allPartiesData[partyKey];
