@@ -25,7 +25,7 @@
         <h1 class="text-xl font-bold flex items-center gap-2">
             <i class="fa-solid fa-user-gear"></i> মার্কেটিং কন্ট্রোল ও ম্যানেজমেন্ট এডিট প্যানেল
         </h1>
-        <a href="marketing-dashboard (1).html" target="_blank" class="bg-amber-400 text-black px-4 py-2 rounded-lg font-bold hover:bg-amber-500 transition text-sm">ড্যাশবোর্ড দেখুন</a>
+        <a href="marketing-dashboard.html" class="bg-amber-400 text-black px-4 py-2 rounded-lg font-bold hover:bg-amber-500 transition text-sm">ড্যাশবোর্ড দেখুন</a>
     </header>
 
     <main class="max-w-6xl mx-auto p-4 md:p-6 space-y-6 flex-grow w-full">
@@ -115,7 +115,7 @@
                 পার্টি সংরক্ষণ করুন
             </button>
         </section>
-                <!-- ৪. ডিপো/ডিলার পার্টি লিস্ট ও হিসাব সামারি -->
+        <!-- ৪. ডিপো/ডিলার পার্টি লিস্ট ও হিসাব সামারি -->
         <section class="bg-white p-6 rounded-xl shadow-md space-y-4">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b pb-4">
                 <h2 class="text-base font-bold forest-green-text flex items-center gap-2">
@@ -172,19 +172,17 @@
         </section>
         
         <!-- ৫. নোটিশ বোর্ড এডিট প্যানেল -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- নোটিশ বোর্ড -->
-            <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-emerald-800">
-                <h2 class="text-base font-bold forest-green-text mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-bullhorn"></i> নোটিশ বোর্ড এডিট করুন
-                </h2>
-                <div class="space-y-3 mb-4">
-                    <input type="text" id="notice-1" placeholder="নোটিশ ১..." class="w-full border p-2.5 rounded-lg text-sm">
-                    <input type="text" id="notice-2" placeholder="নোটিশ ২..." class="w-full border p-2.5 rounded-lg text-sm">
-                    <input type="text" id="notice-3" placeholder="নোটিশ ৩..." class="w-full border p-2.5 rounded-lg text-sm">
-                </div>
-                <button onclick="saveNotices()" class="forest-green text-white px-5 py-2 rounded font-bold hover:bg-green-900 text-sm shadow">নোটিশ সংরক্ষণ</button>
-            </section>
+        <section class="bg-white p-6 rounded-xl shadow-md border-t-4 border-emerald-800">
+            <h2 class="text-base font-bold forest-green-text mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-bullhorn"></i> নোটিশ বোর্ড এডিট করুন
+            </h2>
+            <div class="space-y-3 mb-4">
+                <input type="text" id="notice-1" placeholder="নোটিশ ১..." class="w-full border p-2.5 rounded-lg text-sm">
+                <input type="text" id="notice-2" placeholder="নোটিশ ২..." class="w-full border p-2.5 rounded-lg text-sm">
+                <input type="text" id="notice-3" placeholder="নোটিশ ৩..." class="w-full border p-2.5 rounded-lg text-sm">
+            </div>
+            <button onclick="saveNotices()" class="forest-green text-white px-5 py-2 rounded font-bold hover:bg-green-900 text-sm shadow">নোটিশ সংরক্ষণ</button>
+        </section>
     </main>
 
     <!-- Footer -->
@@ -194,7 +192,7 @@
 
     <!-- Firebase Script & Logic -->
     <script>
-         const firebaseConfig = {
+        const firebaseConfig = {
             apiKey: "AIzaSyDmiZ7Pa0nB9HF29bv6qoT2qSzko4RVEHI",
             authDomain: "fastlab-unani.firebaseapp.com",
             databaseURL: "https://fastlab-unani-default-rtdb.firebaseio.com",
@@ -220,6 +218,7 @@
         // ১. মার্কেটিং অফিসার সংরক্ষণ
         function saveMarketingOfficer() {
             const name = document.getElementById('officer-name').value;
+            const title = document.getElementById('title').value;
             const phone = document.getElementById('officer-phone').value;
             const area = document.getElementById('officer-area').value;
             const userId = document.getElementById('officer-id').value;
@@ -230,10 +229,11 @@
                 return;
             }
 
-            db.ref('marketing_officers').push({ name, phone, area, userId, pass })
+            db.ref('marketing_officers').push({ name, title, phone, area, userId, pass })
                 .then(() => {
                     alert("মার্কেটিং অফিসার সফলভাবে সংরক্ষিত হয়েছে!");
                     document.getElementById('officer-name').value = '';
+                    document.getElementById('title').value = '';
                     document.getElementById('officer-phone').value = '';
                     document.getElementById('officer-area').value = '';
                     document.getElementById('officer-id').value = '';
@@ -254,6 +254,7 @@
                         tbody.innerHTML += `
                             <tr class="border-b hover:bg-gray-50">
                                 <td class="p-2.5 border font-medium">${data.name || ''}</td>
+                                <td class="p-2.5 border">${data.title || ''}</td>
                                 <td class="p-2.5 border">${data.phone || ''}</td>
                                 <td class="p-2.5 border">${data.area || ''}</td>
                                 <td class="p-2.5 border">${data.userId || ''}</td>
@@ -265,12 +266,11 @@
                         `;
                     });
                 } else {
-                    tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-500">কোনো অফিসার পাওয়া যায়নি</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">কোনো অফিসার পাওয়া যায়নি</td></tr>`;
                 }
             });
         }
-
-        // অফিসার ড্রপডাউন লোড করা (ফর্ম ও ফিল্টার ড্রপডাউনে নাম যাবে)
+         // অফিসার ড্রপডাউন লোড করা
         function loadOfficerDropdown() {
             const selectParty = document.getElementById('party-officer');
             const selectFilter = document.getElementById('filter-officer');
@@ -297,7 +297,7 @@
             }
         }
 
-        // ২. পার্টি বা ডিলার সংরক্ষণ (অফিসার আইডি সহ)
+        // ২. পার্টি বা ডিলার সংরক্ষণ
         function saveMarketingParty() {
             const assignedOfficer = document.getElementById('party-officer').value;
             const serial = document.getElementById('party-serial').value;
@@ -329,12 +329,14 @@
                 });
         }
 
-        // পার্টি লিস্ট, ফিল্টার ও স্বয়ংক্রিয় সর্বমোট হিসাব দেখানোর ফাংশন
+        // পার্টি লিস্ট, ফিল্টার ও সর্বমোট হিসাব দেখানোর ফাংশন
         function loadMarketingParties() {
             const filterEl = document.getElementById('filter-officer');
             const selectedOfficer = filterEl ? filterEl.value : 'ALL';
             const tbody = document.getElementById('marketing-party-list');
-            const tfoot = document.getElementById('party-list-footer');
+            const sumDepEl = document.getElementById('sum-total-deposit');
+            const sumPurEl = document.getElementById('sum-total-purchase');
+            const sumDueEl = document.getElementById('sum-total-due');
 
             db.ref('marketing_parties').on('value', snapshot => {
                 if(!tbody) return;
@@ -349,7 +351,6 @@
                         const key = childSnap.key;
                         const data = childSnap.val();
 
-                        // ফিল্টার চেক করা
                         if(selectedOfficer === 'ALL' || data.assignedOfficer === selectedOfficer) {
                             count++;
                             const dep = parseFloat(data.deposit) || 0;
@@ -377,7 +378,32 @@
                         }
                     });
                 }
-                        function loadNoticesAndAdvices() {
+
+                if(sumDepEl) sumDepEl.innerText = `৳ ${totalDeposit}`;
+                if(sumPurEl) sumPurEl.innerText = `৳ ${totalPurchase}`;
+                if(sumDueEl) sumDueEl.innerText = `৳ ${totalDue}`;
+            });
+        }
+
+        function deleteParty(key) {
+            if(confirm("আপনি কি এই পার্টি ডিলিট করতে চান?")) {
+                db.ref('marketing_parties/' + key).remove();
+            }
+        }
+
+        // নোটিশ সংরক্ষণ ও লোড করা
+        function saveNotices() {
+            const n1 = document.getElementById('notice-1').value;
+            const n2 = document.getElementById('notice-2').value;
+            const n3 = document.getElementById('notice-3').value;
+
+            db.ref('fastlab_marketing_data/notices').set({ n1, n2, n3 })
+                .then(() => {
+                    alert("নোটিশ সফলভাবে সংরক্ষিত হয়েছে!");
+                });
+        }
+
+        function loadNoticesAndAdvices() {
             db.ref('fastlab_marketing_data/notices').on('value', snap => {
                 const d = snap.val();
                 if(d) {
