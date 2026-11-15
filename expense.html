@@ -1,1 +1,117 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ফাস্টল্যাব ইউনানী - আয় ও ব্যয় হিসাব</title>
+    <!-- Tailwind CSS & FontAwesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans pb-10">
 
+    <!-- টপ হেডার -->
+    <header class="bg-[#064e3b] text-white p-4 shadow-md flex justify-between items-center">
+        <h1 class="text-lg font-bold">ফাস্টল্যাব ইউনানী - দৈনিক আয় ও ব্যয় হিসাব</h1>
+        <a href="admin-dashboard.html" class="bg-white text-[#064e3b] px-3 py-1 rounded text-xs font-semibold shadow">ড্যাশবোর্ড</a>
+    </header>
+
+    <div class="max-w-6xl mx-auto p-4 mt-4">
+        
+        <!-- ২. জমা এন্ট্রি ফরম (Transaction Entry Form) -->
+        <div class="bg-white p-5 rounded-xl shadow-md mb-6 border-t-4 border-[#064e3b]">
+            <h2 class="text-md font-bold text-gray-800 mb-4"><i class="fa-solid fa-plus-circle text-[#064e3b]"></i> নতুন আয় বা ব্যয় এন্ট্রি করুন</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">তারিখ</label>
+                    <input type="date" id="entry-date" class="w-full border p-2 rounded text-sm focus:ring-2 focus:ring-[#064e3b]">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">লেনদেনের ধরণ</label>
+                    <select id="entry-type" onchange="toggleCategories()" class="w-full border p-2 rounded text-sm focus:ring-2 focus:ring-[#064e3b]">
+                        <option value="income">আয় (Income)</option>
+                        <option value="expense">ব্যয় (Expense)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">খাত নির্বাচন (Category)</label>
+                    <select id="entry-category" class="w-full border p-2 rounded text-sm focus:ring-2 focus:ring-[#064e3b]">
+                        <!-- জাভাস্ক্রিপ্ট দিয়ে ক্যাটাগরি ডায়নামিক হবে -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">পরিমাণ (টাকা)</label>
+                    <input type="number" id="entry-amount" placeholder="টাকার পরিমাণ" class="w-full border p-2 rounded text-sm">
+                </div>
+            </div>
+            <div class="mt-4">
+                <label class="block text-xs font-semibold text-gray-600 mb-1">বিস্তারিত বিবরণ (Details)</label>
+                <textarea id="entry-desc" rows="2" placeholder="বিস্তারিত লিখুন..." class="w-full border p-2 rounded text-sm"></textarea>
+            </div>
+            <button onclick="saveExpenseIncome()" class="mt-4 bg-[#064e3b] text-white px-5 py-2 rounded text-sm font-semibold shadow hover:bg-green-900 transition">
+                <i class="fa-solid fa-save"></i> সেভ করুন
+            </button>
+        </div>
+
+        <!-- ৩. ফিল্টার ও অ্যাকশন বার (মাস নির্বাচন এবং রিপোর্ট অপশন) -->
+        <div class="bg-white p-4 rounded-xl shadow-md mb-6 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <label class="text-xs font-semibold text-gray-600">মাস নির্বাচন:</label>
+                <input type="month" id="filter-month" class="border p-2 rounded text-sm">
+                <button onclick="filterByMonth()" class="bg-gray-800 text-white px-3 py-2 rounded text-xs">খুঁজুন</button>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="printReport()" class="bg-blue-600 text-white px-4 py-2 rounded text-xs font-semibold shadow hover:bg-blue-700">
+                    <i class="fa-solid fa-print"></i> প্রিন্ট করুন
+                </button>
+                <button onclick="downloadExcel()" class="bg-green-600 text-white px-4 py-2 rounded text-xs font-semibold shadow hover:bg-green-700">
+                    <i class="fa-solid fa-file-excel"></i> এক্সেল ডাউনলোড
+                </button>
+            </div>
+        </div>
+
+        <!-- ৪. আলাদা টেবিল: আয় এবং ব্যয়ের সংক্ষিপ্তসার বা তালিকা -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- আয়ের খাতওয়ারি হিসাব -->
+            <div class="bg-white p-4 rounded-xl shadow-md">
+                <h3 class="font-bold text-green-700 mb-3 border-b pb-2"><i class="fa-solid fa-arrow-trend-up"></i> আয়ের খাতসমূহ ও হিসাব</h3>
+                <div id="income-categories-summary" class="space-y-2 text-sm">
+                    <!-- খাত অনুযায়ী মোট হিসাব এবং ডিটেইলস দেখার বাটন থাকবে -->
+                </div>
+            </div>
+            <!-- ব্যয়ের খাতওয়ারি হিসাব -->
+            <div class="bg-white p-4 rounded-xl shadow-md">
+                <h3 class="font-bold text-red-600 mb-3 border-b pb-2"><i class="fa-solid fa-arrow-trend-down"></i> ব্যয়ের খাতসমূহ ও হিসাব</h3>
+                <div id="expense-categories-summary" class="space-y-2 text-sm">
+                    <!-- খাত অনুযায়ী মোট হিসাব এবং ডিটেইলস দেখার বাটন থাকবে -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- স্ক্রিপ্ট লজিক -->
+    <script>
+        // আয়ের খাতসমূহ
+        const incomeCategories = ["ওষুধ বিক্রি", "বকেয়া আদায়", "অন্যান্য আয়"];
+        // ব্যয়ের খাতসমূহ
+        const expenseCategories = ["অফিস ভাড়া", "যাতায়াত খরচ", "কাঁচামাল ক্রয়", "বেতন প্রদান", "অন্যান্য খরচ"];
+
+        function toggleCategories() {
+            const type = document.getElementById('entry-type').value;
+            const categorySelect = document.getElementById('entry-category');
+            categorySelect.innerHTML = "";
+            
+            const categories = type === 'income' ? incomeCategories : expenseCategories;
+            categories.forEach(cat => {
+                let opt = document.createElement('option');
+                opt.value = cat;
+                opt.innerHTML = cat;
+                categorySelect.appendChild(opt);
+            });
+        }
+        // পেজ লোড হলে ডিফল্ট ক্যাটাগরি লোড হবে
+        toggleCategories();
+    </script>
+</body>
+</html>
