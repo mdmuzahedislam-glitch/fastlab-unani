@@ -930,6 +930,68 @@
     document.getElementById('fastlab-alert-message').innerText = message;
     modal.style.display = 'flex';
 };
+
+        // ব্রাউজারের ডিফল্ট confirm() কে ফাস্টল্যাব ইউনানী কাস্টম কনফার্ম বক্সে রূপান্তর
+window.confirm = function(message) {
+    return new Promise((resolve) => {
+        let modal = document.getElementById('fastlab-custom-confirm');
+        if (!modal) {
+            const confirmHTML = `
+            <div id="fastlab-custom-confirm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4">
+                <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full overflow-hidden border-t-4 border-[#064e3b] transform transition-all">
+                    <div class="bg-[#064e3b] text-white px-4 py-3 flex items-center gap-2.5">
+                        <div class="bg-white text-[#064e3b] p-1.5 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-triangle-exclamation text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm leading-tight">ফাস্টল্যাব ইউনানী</h4>
+                            <p class="text-[10px] text-green-200">নিশ্চিতকরণ বার্তা</p>
+                        </div>
+                    </div>
+                    <div class="p-5 text-center">
+                        <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-3 text-xl">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </div>
+                        <p id="fastlab-confirm-message" class="text-gray-800 text-sm font-medium leading-relaxed"></p>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 flex justify-end gap-2 border-t">
+                        <button id="fastlab-confirm-no" class="bg-gray-300 hover:bg-gray-400 text-gray-800 text-xs font-semibold px-4 py-2 rounded-lg shadow transition">
+                            বাতিল (Cancel)
+                        </button>
+                        <button id="fastlab-confirm-yes" class="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-5 py-2 rounded-lg shadow transition">
+                            নিশ্চিত (OK)
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+            document.body.insertAdjacentHTML('beforeend', confirmHTML);
+            modal = document.getElementById('fastlab-custom-confirm');
+        }
+        
+        document.getElementById('fastlab-confirm-message').innerText = message;
+        modal.style.display = 'flex';
+
+        const yesBtn = document.getElementById('fastlab-confirm-yes');
+        const noBtn = document.getElementById('fastlab-confirm-no');
+
+        // ইভেন্ট হ্যান্ডলার পরিষ্কার করা
+        const newYesBtn = yesBtn.cloneNode(true);
+        const newNoBtn = noBtn.cloneNode(true);
+        yesBtn.parentNode.replaceChild(newYesBtn, yesBtn);
+        noBtn.parentNode.replaceChild(newNoBtn, noBtn);
+
+        document.getElementById('fastlab-confirm-yes').onclick = function() {
+            modal.style.display = 'none';
+            resolve(true);
+        };
+
+        document.getElementById('fastlab-confirm-no').onclick = function() {
+            modal.style.display = 'none';
+            resolve(false);
+        };
+    });
+};
+
     </script>
 </body>
 </html>
