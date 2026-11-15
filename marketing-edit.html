@@ -750,11 +750,11 @@
             panel.classList.remove('hidden');
             panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-
-        function deleteTransaction(partyKey, txnKey) {
-            if (confirm("আপনি কি এই লেনদেনটি ডিলিট করতে চান?")) {
-                db.ref(`marketing_parties/${partyKey}/transactions/${txnKey}`).remove();
-            }
+        async function deleteTransaction(partyKey, transKey) {
+           const isConfirmed = await confirm("আপনি কি এই লেনদেনটি ডিলিট করতে চান?");
+           if (isConfirmed) {
+           db.ref(`marketing_parties/${partyKey}/transactions/${txnKey}`).remove();
+           }
         }
 
         // নোটিশ সংরক্ষণ ও লোড করা
