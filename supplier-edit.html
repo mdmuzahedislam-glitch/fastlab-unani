@@ -725,13 +725,13 @@
         function hideStatement() {
             document.getElementById('statement-section').classList.add('hidden');
         }
-
-        function deleteTransaction(partyKey, transKey) {
-            if(confirm("আপনি কি এই লেনদেনটি ডিলিট করতে চান?")) {
-                db.ref(`supply_transactions/${partyKey}/${transKey}`).remove();
-            }
+        async function deleteTransaction(partyKey, transKey) {
+    const isConfirmed = await confirm("আপনি কি এই লেনদেনটি ডিলিট করতে চান?");
+    if (isConfirmed) {
+        db.ref(`supply_transactions/${partyKey}/${transKey}`).remove();
+    }
         }
-
+        
         function editStatementTrans(partyKey, transKey, date, desc, amount, purchase) {
             document.getElementById('dep-date').value = date;
             document.getElementById('dep-desc').value = desc;
