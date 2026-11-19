@@ -60,8 +60,7 @@
     </style>
 </head>
 <body class="text-gray-800">
-
-    <!-- Top Header -->
+        <!-- Top Header -->
     <header class="bg-[#064e3b] text-white shadow-md sticky top-0 z-40 no-print">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-3">
@@ -137,7 +136,132 @@
             <p class="text-xs" id="print-date-label"></p>
         </div>
 
-        <!-- ==================== 1. FINISHED GOODS SECTION ==================== -->
+        <!-- ==================== STOCK POSTING ENTRY FORM ==================== -->
+        <section class="bg-white p-4 sm:p-5 rounded-xl shadow-sm border-t-4 border-emerald-700 no-print">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <h2 class="font-bold text-sm sm:text-base text-[#064e3b] flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square"></i> দৈনিক স্টক পোস্টিং ফর্ম
+                </h2>
+                <span class="text-xs text-gray-500">ক্যাটাগরি সিলেক্ট করে পোস্টিং দিলে নিচের শীটে আপডেট হবে</span>
+            </div>
+
+            <form id="stock-posting-form" onsubmit="handleStockPosting(event)" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <!-- ক্যাটাগরি সিলেক্ট -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">স্টক ক্যাটাগরি</label>
+                        <select id="post-category" onchange="onPostingCategoryChange()" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs sm:text-sm font-semibold focus:border-[#064e3b] outline-none">
+                            <option value="finished">ফিনিশ গুডস (Ready Stock)</option>
+                            <option value="packaging">প্যাকেজিং (Packaging)</option>
+                            <option value="raw">র / কেমিক্যাল (Raw / Chemical)</option>
+                        </select>
+                    </div>
+
+                    <!-- পণ্য / আইটেম সিলেক্ট -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">পণ্য / আইটেমের নাম</label>
+                        <select id="post-item" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs sm:text-sm focus:border-[#064e3b] outline-none">
+                            <!-- JS থেকে অপশন লোড হবে -->
+                        </select>
+                    </div>
+
+                    <!-- ফিনিশ গুডস এন্ট্রি ফিল্ডসমূহ -->
+                    <div id="post-fields-finished" class="sm:col-span-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <div>
+                            <label class="block text-[11px] font-bold text-gray-600 mb-1">উৎপাদন (Ctn)</label>
+                            <input type="number" id="post-fg-pr-ctn" value="0" min="0" class="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs text-center">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-gray-600 mb-1">উৎপাদন (Pcs)</label>
+                            <input type="number" id="post-fg-pr-pcs" value="0" min="0" class="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs text-center">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-gray-600 mb-1">রিটার্ন (Ctn / Pcs)</label>
+                            <div class="flex gap-1">
+                                <input type="number" id="post-fg-rt-ctn" value="0" min="0" placeholder="Ctn" class="w-1/2 border border-gray-300 rounded-lg px-1.5 py-1.5 text-xs text-center">
+                                <input type="number" id="post-fg-rt-pcs" value="0" min="0" placeholder="Pcs" class="w-1/2 border border-gray-300 rounded-lg px-1.5 py-1.5 text-xs text-center">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-gray-600 mb-1">ডেলিভারি (Ctn / Pcs)</label>
+                            <div class="flex gap-1">
+                                <input type="number" id="post-fg-dl-ctn" value="0" min="0" placeholder="Ctn" class="w-1/2 border border-gray-300 rounded-lg px-1.5 py-1.5 text-xs text-center">
+                                <input type="number" id="post-fg-dl-pcs" value="0" min="0" placeholder="Pcs" class="w-1/2 border border-gray-300 rounded-lg px-1.5 py-1.5 text-xs text-center">
+                            </div>
+                        </div>
+                        <div class="col-span-2 sm:col-span-2">
+                            <label class="block text-[11px] font-bold text-gray-600 mb-1">স্যাম্পল / ফ্রি (Pcs)</label>
+                            <input type="number" id="post-fg-sm-pcs" value="0" min="0" class="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs text-center">
+                        </div>
+                    </div>
+
+                    <!-- প্যাকেজিং ও র/কেমিক্যাল এন্ট্রি ফিল্ডসমূহ -->
+                    <div id="post-fields-other" class="hidden sm:col-span-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <div>
+                            <label class="block text-[11px] font-bold text-gray-600 mb-1">Purchase / জমা</label>
+                            <input type="number" step="0.01" id="post-other-pu" value="0" min="0" class="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs text-center">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-gray-600 mb-1">Used / খরচ</label>
+                            <input type="number" step="0.01" id="post-other-us" value="0" min="0" class="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs text-center">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-gray-600 mb-1">Damage</label>
+                            <input type="number" step="0.01" id="post-other-dm" value="0" min="0" class="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs text-center">
+                        </div>
+                        <div id="post-other-demand-wrap">
+                            <label class="block text-[11px] font-bold text-gray-600 mb-1">Demand</label>
+                            <input type="number" step="0.01" id="post-other-de" value="0" min="0" class="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs text-center">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end pt-2">
+                    <button type="submit" class="bg-[#064e3b] hover:bg-emerald-800 text-white px-6 py-2 rounded-lg text-xs sm:text-sm font-bold shadow flex items-center gap-2 transition">
+                        <i class="fa-solid fa-paper-plane"></i> স্টক পোস্টিং দিন
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- ==================== TODAY'S SUMMARY CARDS ==================== -->
+        <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 no-print">
+            <!-- আজকের পার্সেস -->
+            <div class="bg-white p-3.5 rounded-xl shadow-sm border-l-4 border-emerald-700">
+                <p class="text-[11px] font-bold text-gray-500">আজকের পার্সেস (Purchase)</p>
+                <p id="sum-today-purchase" class="text-base sm:text-lg font-bold text-[#064e3b] mt-1">0</p>
+                <p class="text-[10px] text-gray-400">প্যাকেজিং + র/কেমিক্যাল</p>
+            </div>
+
+            <!-- আজকের উৎপাদন -->
+            <div class="bg-white p-3.5 rounded-xl shadow-sm border-l-4 border-teal-600">
+                <p class="text-[11px] font-bold text-gray-500">আজকের উৎপাদন (Produced)</p>
+                <p id="sum-today-produced" class="text-base sm:text-lg font-bold text-teal-800 mt-1">0 Ctn, 0 Pcs</p>
+                <p class="text-[10px] text-gray-400">ফিনিশ গুডস</p>
+            </div>
+
+            <!-- আজকের ডেলিভারি -->
+            <div class="bg-white p-3.5 rounded-xl shadow-sm border-l-4 border-blue-600">
+                <p class="text-[11px] font-bold text-gray-500">আজকের ডেলিভারি (Delivery)</p>
+                <p id="sum-today-delivery" class="text-base sm:text-lg font-bold text-blue-800 mt-1">0 Ctn, 0 Pcs</p>
+                <p class="text-[10px] text-gray-400">ফিনিশ গুডস</p>
+            </div>
+
+            <!-- আজকের রিটার্ন -->
+            <div class="bg-white p-3.5 rounded-xl shadow-sm border-l-4 border-amber-500">
+                <p class="text-[11px] font-bold text-gray-500">আজকের রিটার্ন (Return)</p>
+                <p id="sum-today-return" class="text-base sm:text-lg font-bold text-amber-700 mt-1">0 Ctn, 0 Pcs</p>
+                <p class="text-[10px] text-gray-400">মার্কেট রিটার্ন</p>
+            </div>
+
+            <!-- আজকের ড্যামেজ -->
+            <div class="bg-white p-3.5 rounded-xl shadow-sm border-l-4 border-red-600 col-span-2 sm:col-span-1">
+                <p class="text-[11px] font-bold text-gray-500">আজকের ড্যামেজ (Damage)</p>
+                <p id="sum-today-damage" class="text-base sm:text-lg font-bold text-red-700 mt-1">0</p>
+                <p class="text-[10px] text-gray-400">প্যাকেজিং + র/কেমিক্যাল</p>
+            </div>
+        </section>
+                <!-- ==================== 1. FINISHED GOODS SECTION ==================== -->
         <section id="section-finished" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="bg-emerald-50 px-4 py-3 border-b border-emerald-100 flex flex-wrap items-center justify-between gap-2 no-print">
                 <h2 class="font-bold text-sm text-[#064e3b] flex items-center gap-2">
@@ -209,8 +333,7 @@
                 </button>
             </div>
         </section>
-
-        <!-- ==================== 2. PACKAGING STOCK SECTION ==================== -->
+                <!-- ==================== 2. PACKAGING STOCK SECTION ==================== -->
         <section id="section-packaging" class="hidden bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="bg-emerald-50 px-4 py-3 border-b border-emerald-100 flex flex-wrap items-center justify-between gap-2 no-print">
                 <h2 class="font-bold text-sm text-[#064e3b] flex items-center gap-2">
@@ -271,6 +394,7 @@
                 </button>
             </div>
         </section>
+
         <!-- ==================== 3. RAW / CHEMICAL STOCK SECTION ==================== -->
         <section id="section-raw" class="hidden bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="bg-emerald-50 px-4 py-3 border-b border-emerald-100 flex flex-wrap items-center justify-between gap-2 no-print">
@@ -371,8 +495,7 @@
             </div>
         </div>
     </div>
-
-    <script>
+        <script>
         // ১. আপনার Firebase Config এখানে বসান
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
@@ -388,7 +511,7 @@
         }
         const db = firebase.database();
 
-        // ডিফল্ট প্রোডাক্ট ও আইটেম তালিকা (আপনার শীট অনুযায়ী)[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)
+        // ডিফল্ট প্রোডাক্ট ও আইটেম তালিকা (আপনার শীট অনুযায়ী)[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)
         const defaultFinishedGoods = [
             "FLJ-250ml Orange", "LJ-200ml Orange", "100ml(48Pcs) Oran.", "100ml LJ(KP)(48Pcs)",
             "Fast LJ-200ml Green", "FastLJ-100ml Green", "250ml Red", "200ml Red",
@@ -419,37 +542,37 @@
 
         // পেজ লোড হলে আজকের তারিখ সেট ও ৩ মাসের পুরোনো ডেটা অটো-ক্লিন
         window.onload = () => {
-    try {
-        const today = new Date().toISOString().split('T')[0];
-        const entryDate = document.getElementById('entry-date');
-        const startDate = document.getElementById('start-date');
-        const endDate = document.getElementById('end-date');
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                const entryDate = document.getElementById('entry-date');
+                const startDate = document.getElementById('start-date');
+                const endDate = document.getElementById('end-date');
 
-        if (entryDate) entryDate.value = today;
-        if (startDate) startDate.value = today;
-        if (endDate) endDate.value = today;
-    } catch (err) {
-        console.error("Date setup error:", err);
-    }
+                if (entryDate) entryDate.value = today;
+                if (startDate) startDate.value = today;
+                if (endDate) endDate.value = today;
+            } catch (err) {
+                console.error("Date setup error:", err);
+            }
 
-    try {
-        if (typeof loadCustomItemsAndSheet === "function") {
-            loadCustomItemsAndSheet();
-        }
-    } catch (err) {
-        console.error("Sheet load error:", err);
-    }
+            try {
+                if (typeof loadCustomItemsAndSheet === "function") {
+                    loadCustomItemsAndSheet();
+                }
+            } catch (err) {
+                console.error("Sheet load error:", err);
+            }
 
-    try {
-        if (typeof autoCleanOldStockData === "function") {
-            autoCleanOldStockData();
-        }
-    } catch (err) {
-        console.error("Auto-clean error:", err);
-    }
-};
-        
-        // ২. অফিসিয়াল নোটিফিকেশন মডাল ফাংশন[span_9](start_span)[span_9](end_span)
+            try {
+                if (typeof autoCleanOldStockData === "function") {
+                    autoCleanOldStockData();
+                }
+            } catch (err) {
+                console.error("Auto-clean error:", err);
+            }
+        };
+
+        // ২. অফিসিয়াল নোটিফিকেশন মডাল ফাংশন[span_2](start_span)[span_2](end_span)
         function showOfficialModal(msg) {
             document.getElementById('official-modal-msg').innerText = msg;
             const modal = document.getElementById('official-modal');
@@ -496,7 +619,133 @@
             document.getElementById('range-report-box').classList.add('hidden');
         }
 
-        // কাস্টম আইটেম ও দৈনিক শীট লোড
+        // ক্যাটাগরি পরিবর্তন হলে এন্ট্রি ফর্ম ও আইটেম লিস্ট আপডেট
+        function onPostingCategoryChange() {
+            const cat = document.getElementById('post-category').value;
+            const itemSelect = document.getElementById('post-item');
+            const fgFields = document.getElementById('post-fields-finished');
+            const otherFields = document.getElementById('post-fields-other');
+            const demandWrap = document.getElementById('post-other-demand-wrap');
+
+            itemSelect.innerHTML = '';
+
+            if (cat === 'finished') {
+                fgFields.classList.remove('hidden');
+                otherFields.classList.add('hidden');
+                customProducts.finished.forEach(prod => {
+                    const key = prod.replace(/[.#$\[\]\/]/g, '_');
+                    const opt = document.createElement('option');
+                    opt.value = key;
+                    opt.textContent = prod;
+                    itemSelect.appendChild(opt);
+                });
+            } else if (cat === 'packaging') {
+                fgFields.classList.add('hidden');
+                otherFields.classList.remove('hidden');
+                demandWrap.classList.remove('hidden');
+                for (let pCat in customProducts.packaging) {
+                    customProducts.packaging[pCat].forEach(item => {
+                        const key = `${pCat}_${item}`.replace(/[.#$\[\]\/]/g, '_');
+                        const opt = document.createElement('option');
+                        opt.value = key;
+                        opt.textContent = `[${pCat}] ${item}`;
+                        itemSelect.appendChild(opt);
+                    });
+                }
+            } else if (cat === 'raw') {
+                fgFields.classList.add('hidden');
+                otherFields.classList.remove('hidden');
+                demandWrap.classList.add('hidden');
+                customProducts.raw.forEach(item => {
+                    const key = item.name.replace(/[.#$\[\]\/]/g, '_');
+                    const opt = document.createElement('option');
+                    opt.value = key;
+                    opt.textContent = `${item.name} (${item.unit})`;
+                    itemSelect.appendChild(opt);
+                });
+            }
+        }
+
+        // স্টক পোস্টিং সাবমিট হলে নিচের টেবিলে আপডেট ও সেভ করা
+        function handleStockPosting(event) {
+            event.preventDefault();
+            const cat = document.getElementById('post-category').value;
+            const key = document.getElementById('post-item').value;
+            if (!key) return;
+
+            switchTab(cat);
+
+            if (cat === 'finished') {
+                const targetCell = Array.from(document.querySelectorAll('#tbody-finished tr td[data-name]'))
+                    .find(td => td.dataset.name.replace(/[.#$\[\]\/]/g, '_') === key);
+                const tr = targetCell ? targetCell.parentElement : null;
+                if (!tr) return;
+
+                const addVal = (cls, addNum) => {
+                    const inp = tr.querySelector('.' + cls);
+                    const curr = parseFloat(inp.value) || 0;
+                    inp.value = curr + (parseFloat(addNum) || 0);
+                };
+
+                addVal('fg-pr-ctn', document.getElementById('post-fg-pr-ctn').value);
+                addVal('fg-pr-pcs', document.getElementById('post-fg-pr-pcs').value);
+                addVal('fg-rt-ctn', document.getElementById('post-fg-rt-ctn').value);
+                addVal('fg-rt-pcs', document.getElementById('post-fg-rt-pcs').value);
+                addVal('fg-dl-ctn', document.getElementById('post-fg-dl-ctn').value);
+                addVal('fg-dl-pcs', document.getElementById('post-fg-dl-pcs').value);
+                addVal('fg-sm-pcs', document.getElementById('post-fg-sm-pcs').value);
+
+                calcFG();
+                saveDailyStock('finished');
+                document.getElementById('post-fg-pr-ctn').value = 0;
+                document.getElementById('post-fg-pr-pcs').value = 0;
+                document.getElementById('post-fg-rt-ctn').value = 0;
+                document.getElementById('post-fg-rt-pcs').value = 0;
+                document.getElementById('post-fg-dl-ctn').value = 0;
+                document.getElementById('post-fg-dl-pcs').value = 0;
+                document.getElementById('post-fg-sm-pcs').value = 0;
+            } else if (cat === 'packaging') {
+                const tr = document.querySelector(`.pkg-data-row[data-key="${key}"]`);
+                if (!tr) return;
+
+                const addVal = (cls, addNum) => {
+                    const inp = tr.querySelector('.' + cls);
+                    const curr = parseFloat(inp.value) || 0;
+                    inp.value = +(curr + (parseFloat(addNum) || 0)).toFixed(2);
+                };
+
+                addVal('pkg-pu', document.getElementById('post-other-pu').value);
+                addVal('pkg-us', document.getElementById('post-other-us').value);
+                addVal('pkg-dm', document.getElementById('post-other-dm').value);
+                addVal('pkg-de', document.getElementById('post-other-de').value);
+
+                calcPkg();
+                saveDailyStock('packaging');
+                ['post-other-pu', 'post-other-us', 'post-other-dm', 'post-other-de'].forEach(id => {
+                    document.getElementById(id).value = 0;
+                });
+            } else if (cat === 'raw') {
+                const tr = document.querySelector(`.raw-data-row[data-key="${key}"]`);
+                if (!tr) return;
+
+                const addVal = (cls, addNum) => {
+                    const inp = tr.querySelector('.' + cls);
+                    const curr = parseFloat(inp.value) || 0;
+                    inp.value = +(curr + (parseFloat(addNum) || 0)).toFixed(2);
+                };
+
+                addVal('raw-pu', document.getElementById('post-other-pu').value);
+                addVal('raw-us', document.getElementById('post-other-us').value);
+                addVal('raw-dm', document.getElementById('post-other-dm').value);
+
+                calcRaw();
+                saveDailyStock('raw');
+                ['post-other-pu', 'post-other-us', 'post-other-dm', 'post-other-de'].forEach(id => {
+                    document.getElementById(id).value = 0;
+                });
+            }
+        }
+                    // কাস্টম আইটেম ও দৈনিক শীট লোড
         function loadCustomItemsAndSheet() {
             db.ref('fastlab_stock_meta').once('value', snap => {
                 const meta = snap.val() || {};
@@ -546,17 +795,15 @@
             }
         }
 
-        // নির্বাচিত তারিখের ডেটা লোড (আগের দিনের Closing স্টক অটো Opening হবে)[span_10](start_span)[span_10](end_span)
+        // নির্বাচিত তারিখের ডেটা লোড (আগের দিনের Closing স্টক অটো Opening হবে)[span_3](start_span)[span_3](end_span)
         function loadDailySheet() {
             const date = document.getElementById('entry-date').value;
             document.getElementById('print-date-label').innerText = `তারিখ: ${date}`;
 
-            // আগের দিনের তারিখ বের করা
             const prevDateObj = new Date(date);
             prevDateObj.setDate(prevDateObj.getDate() - 1);
             const prevDate = prevDateObj.toISOString().split('T')[0];
 
-            // Finished Goods Render
             db.ref(`fastlab_stock/finished/${date}`).once('value', snap => {
                 const todayData = snap.val() || {};
                 db.ref(`fastlab_stock/finished/${prevDate}`).once('value', prevSnap => {
@@ -565,7 +812,6 @@
                 });
             });
 
-            // Packaging Render
             db.ref(`fastlab_stock/packaging/${date}`).once('value', snap => {
                 const todayData = snap.val() || {};
                 db.ref(`fastlab_stock/packaging/${prevDate}`).once('value', prevSnap => {
@@ -574,22 +820,75 @@
                 });
             });
 
-            // Raw Render
             db.ref(`fastlab_stock/raw/${date}`).once('value', snap => {
                 const todayData = snap.val() || {};
                 db.ref(`fastlab_stock/raw/${prevDate}`).once('value', prevSnap => {
                     const prevData = prevSnap.val() || {};
                     renderRawTable(todayData, prevData);
+                    onPostingCategoryChange();
                 });
             });
         }
 
-        // ১. ফিনিশ গুডস টেবিল রেন্ডার ও ক্যালকুলেশন[span_11](start_span)[span_11](end_span)
+        // আজকের পার্সেস, উৎপাদন, ডেলিভারি, রিটার্ন ও ড্যামেজ কার্ড আপডেট
+        function updateTodaySummaryCards() {
+            let prCtn = 0, prPcs = 0;
+            let dlCtn = 0, dlPcs = 0;
+            let rtCtn = 0, rtPcs = 0;
+
+            document.querySelectorAll('#tbody-finished tr').forEach(tr => {
+                const v = cls => {
+                    const el = tr.querySelector('.' + cls);
+                    return el ? (parseFloat(el.value) || 0) : 0;
+                };
+                prCtn += v('fg-pr-ctn');
+                prPcs += v('fg-pr-pcs');
+                dlCtn += v('fg-dl-ctn');
+                dlPcs += v('fg-dl-pcs');
+                rtCtn += v('fg-rt-ctn');
+                rtPcs += v('fg-rt-pcs');
+            });
+
+            let totalPurchase = 0;
+            let totalDamage = 0;
+
+            document.querySelectorAll('.pkg-data-row').forEach(tr => {
+                const v = cls => {
+                    const el = tr.querySelector('.' + cls);
+                    return el ? (parseFloat(el.value) || 0) : 0;
+                };
+                totalPurchase += v('pkg-pu');
+                totalDamage += v('pkg-dm');
+            });
+
+            document.querySelectorAll('.raw-data-row').forEach(tr => {
+                const v = cls => {
+                    const el = tr.querySelector('.' + cls);
+                    return el ? (parseFloat(el.value) || 0) : 0;
+                };
+                totalPurchase += v('raw-pu');
+                totalDamage += v('raw-dm');
+            });
+
+            const elPurchase = document.getElementById('sum-today-purchase');
+            const elProduced = document.getElementById('sum-today-produced');
+            const elDelivery = document.getElementById('sum-today-delivery');
+            const elReturn = document.getElementById('sum-today-return');
+            const elDamage = document.getElementById('sum-today-damage');
+
+            if (elPurchase) elPurchase.innerText = +totalPurchase.toFixed(2);
+            if (elProduced) elProduced.innerText = `${prCtn} Ctn, ${prPcs} Pcs`;
+            if (elDelivery) elDelivery.innerText = `${dlCtn} Ctn, ${dlPcs} Pcs`;
+            if (elReturn) elReturn.innerText = `${rtCtn} Ctn, ${rtPcs} Pcs`;
+            if (elDamage) elDamage.innerText = +totalDamage.toFixed(2);
+        }
+
+        // ১. ফিনিশ গুডস টেবিল রেন্ডার ও ক্যালকুলেশন[span_4](start_span)[span_4](end_span)
         function renderFinishedTable(todayData, prevData) {
             const tbody = document.getElementById('tbody-finished');
             tbody.innerHTML = '';
 
-            customProducts.finished.forEach((prod, idx) => {
+            customProducts.finished.forEach((prod) => {
                 const key = prod.replace(/[.#$\[\]\/]/g, '_');
                 const row = todayData[key] || {};
                 const prev = prevData[key] || {};
@@ -660,16 +959,16 @@
             document.getElementById('fg-tot-sm-pcs').innerText = totals.smPcs;
             document.getElementById('fg-tot-cl-ctn').innerText = totals.clCtn;
             document.getElementById('fg-tot-cl-pcs').innerText = totals.clPcs;
+            updateTodaySummaryCards();
         }
 
-        // ২. প্যাকেজিং টেবিল রেন্ডার[span_12](start_span)[span_12](end_span)
+        // ২. প্যাকেজিং টেবিল রেন্ডার[span_5](start_span)[span_5](end_span)
         function renderPackagingTable(todayData, prevData) {
             const tbody = document.getElementById('tbody-packaging');
             tbody.innerHTML = '';
             let sl = 1;
 
             for (let cat in customProducts.packaging) {
-                // Category Header Row
                 const catTr = document.createElement('tr');
                 catTr.className = "bg-gray-200 font-bold text-gray-800";
                 catTr.innerHTML = `<td colspan="9" class="border py-1 text-center uppercase tracking-wider">${cat}</td>`;
@@ -702,6 +1001,7 @@
             }
             calcPkg();
         }
+
         function calcPkg() {
             let t = { op:0, pu:0, tt:0, us:0, dm:0, cl:0, de:0 };
             document.querySelectorAll('.pkg-data-row').forEach(tr => {
@@ -721,6 +1021,7 @@
             document.getElementById('pkg-tot-dm').innerText = t.dm;
             document.getElementById('pkg-tot-cl').innerText = t.cl;
             document.getElementById('pkg-tot-de').innerText = t.de;
+            updateTodaySummaryCards();
         }
 
         // ৩. র / কেমিক্যাল টেবিল রেন্ডার
@@ -772,9 +1073,9 @@
             document.getElementById('raw-tot-us').innerText = t.us.toFixed(2);
             document.getElementById('raw-tot-dm').innerText = t.dm.toFixed(2);
             document.getElementById('raw-tot-cl').innerText = t.cl.toFixed(2);
+            updateTodaySummaryCards();
         }
-
-        // দৈনিক স্টক ডাটাবেজে সেভ করা
+             // দৈনিক স্টক ডাটাবেজে সেভ করা
         function saveDailyStock(type) {
             const date = document.getElementById('entry-date').value;
             if (!date) return;
@@ -922,7 +1223,6 @@
             const tableId = reportVisible ? 'table-range-report' : `table-${currentTab}`;
             const table = document.getElementById(tableId);
 
-            // ইনপুট ফিল্ডগুলোর মান টেক্সটে রূপান্তর করে এক্সেল তৈরি
             const clone = table.cloneNode(true);
             clone.querySelectorAll('input').forEach(inp => {
                 const span = document.createTextNode(inp.value);
@@ -936,4 +1236,3 @@
     </script>
 </body>
 </html>
-
