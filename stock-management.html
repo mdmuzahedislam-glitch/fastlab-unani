@@ -419,15 +419,36 @@
 
         // পেজ লোড হলে আজকের তারিখ সেট ও ৩ মাসের পুরোনো ডেটা অটো-ক্লিন
         window.onload = () => {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('entry-date').value = today;
-            document.getElementById('start-date').value = today;
-            document.getElementById('end-date').value = today;
+    try {
+        const today = new Date().toISOString().split('T')[0];
+        const entryDate = document.getElementById('entry-date');
+        const startDate = document.getElementById('start-date');
+        const endDate = document.getElementById('end-date');
 
-            autoCleanOldStockData();
+        if (entryDate) entryDate.value = today;
+        if (startDate) startDate.value = today;
+        if (endDate) endDate.value = today;
+    } catch (err) {
+        console.error("Date setup error:", err);
+    }
+
+    try {
+        if (typeof loadCustomItemsAndSheet === "function") {
             loadCustomItemsAndSheet();
-        };
+        }
+    } catch (err) {
+        console.error("Sheet load error:", err);
+    }
 
+    try {
+        if (typeof autoCleanOldStockData === "function") {
+            autoCleanOldStockData();
+        }
+    } catch (err) {
+        console.error("Auto-clean error:", err);
+    }
+};
+        
         // ২. অফিসিয়াল নোটিফিকেশন মডাল ফাংশন[span_9](start_span)[span_9](end_span)
         function showOfficialModal(msg) {
             document.getElementById('official-modal-msg').innerText = msg;
