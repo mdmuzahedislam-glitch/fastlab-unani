@@ -1,1 +1,918 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>স্টক ম্যানেজমেন্ট প্যানেল - ফাস্টল্যাব ইউনানী</title>
+    
+    <!-- Google Fonts: Inter & SolaimanLipi -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS & Font Awesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', 'SolaimanLipi', sans-serif;
+            background-color: #f3f4f6;
+        }
+        /* টেবিল ইনপুট স্টাইল */
+        .sheet-input {
+            width: 100%;
+            min-width: 55px;
+            text-align: center;
+            padding: 4px 2px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 13px;
+            background-color: #ffffff;
+        }
+        .sheet-input:focus {
+            outline: none;
+            border-color: #064e3b;
+            background-color: #ecfdf5;
+        }
+        .sheet-readonly {
+            background-color: #f9fafb;
+            font-weight: 700;
+            color: #064e3b;
+            border-color: #e5e7eb;
+        }
+        /* প্রিন্ট স্টাইল */
+        @media print {
+            .no-print { display: none !important; }
+            body { background-color: #ffffff; font-size: 11px; }
+            .sheet-input { border: none; background: transparent; padding: 0; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #000 !important; padding: 3px !important; }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Top Header -->
+    <header class="bg-[#064e3b] text-white shadow-md sticky top-0 z-40 no-print">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-white text-[#064e3b] w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg shadow">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold leading-tight">স্টক ম্যানেজমেন্ট প্যানেল</h1>
+                    <p class="text-xs text-emerald-200">ফাস্টল্যাব ইউনানী • দৈনিক উৎপাদন ও স্টক হিসাব</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <a href="admindashboard.html" class="bg-emerald-800 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-arrow-left"></i> ড্যাশবোর্ড
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-3 sm:px-4 py-5 space-y-5">
+
+        <!-- Control & Date Filter Bar -->
+        <section class="bg-white p-4 rounded-xl shadow-sm border-t-4 border-[#064e3b] no-print">
+            <div class="flex flex-wrap items-end justify-between gap-4">
+                
+                <!-- Entry Date & Category Tabs -->
+                <div class="flex flex-wrap items-end gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 mb-1">এন্ট্রি তারিখ (Entry Date)</label>
+                        <input type="date" id="entry-date" onchange="loadDailySheet()" class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm font-semibold focus:border-[#064e3b] outline-none">
+                    </div>
+                    <div class="flex bg-gray-100 p-1 rounded-lg">
+                        <button onclick="switchTab('finished')" id="tab-finished" class="px-3 py-1.5 rounded-md text-xs font-bold bg-[#064e3b] text-white transition">
+                            ফিনিশ গুডস (Ready)
+                        </button>
+                        <button onclick="switchTab('packaging')" id="tab-packaging" class="px-3 py-1.5 rounded-md text-xs font-bold text-gray-600 hover:text-gray-900 transition">
+                            প্যাকেজিং স্টক
+                        </button>
+                        <button onclick="switchTab('raw')" id="tab-raw" class="px-3 py-1.5 rounded-md text-xs font-bold text-gray-600 hover:text-gray-900 transition">
+                            র / কেমিক্যাল
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Date Range Filter, Print & Excel -->
+                <div class="flex flex-wrap items-end gap-2">
+                    <div>
+                        <label class="block text-[11px] font-semibold text-gray-500">শুরুর তারিখ</label>
+                        <input type="date" id="start-date" class="border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-gray-500">শেষ তারিখ</label>
+                        <input type="date" id="end-date" class="border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs">
+                    </div>
+                    <button onclick="filterByDateRange()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-filter"></i> রিপোর্ট দেখুন
+                    </button>
+                    <button onclick="window.print()" class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-print"></i> প্রিন্ট
+                    </button>
+                    <button onclick="exportToExcel()" class="bg-teal-700 hover:bg-teal-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-file-excel"></i> এক্সেল
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Print Header (Visible only in Print) -->
+        <div class="hidden print:block text-center mb-3">
+            <h2 class="text-lg font-bold">ফাস্টল্যাব ইউনানী - দৈনিক স্টক রিপোর্ট</h2>
+            <p class="text-xs" id="print-date-label"></p>
+        </div>
+
+        <!-- ==================== 1. FINISHED GOODS SECTION ==================== -->
+        <section id="section-finished" class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="bg-emerald-50 px-4 py-3 border-b border-emerald-100 flex flex-wrap items-center justify-between gap-2 no-print">
+                <h2 class="font-bold text-sm text-[#064e3b] flex items-center gap-2">
+                    <i class="fa-solid fa-boxes-stacked"></i> ফিনিশ গুডস / রেডি স্টক শীট
+                </h2>
+                <div class="flex items-center gap-2">
+                    <input type="text" id="new-fg-name" placeholder="নতুন পণ্যের নাম..." class="border border-gray-300 rounded px-2.5 py-1 text-xs">
+                    <button onclick="addNewProduct('finished')" class="bg-emerald-700 text-white px-2.5 py-1 rounded text-xs font-semibold hover:bg-emerald-800">
+                        + পণ্য যোগ
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table id="table-finished" class="w-full text-xs text-center border-collapse">
+                    <thead class="bg-[#064e3b] text-white">
+                        <tr>
+                            <th rowspan="2" class="border border-emerald-700 px-3 py-2 text-left min-w-[160px]">Products</th>
+                            <th colspan="2" class="border border-emerald-700 px-2 py-1">Opening</th>
+                            <th colspan="2" class="border border-emerald-700 px-2 py-1">Produced</th>
+                            <th colspan="2" class="border border-emerald-700 px-2 py-1">Market Return</th>
+                            <th colspan="2" class="border border-emerald-700 px-2 py-1 bg-emerald-900">Total Stock</th>
+                            <th colspan="3" class="border border-emerald-700 px-2 py-1">Delivery / Sales</th>
+                            <th colspan="2" class="border border-emerald-700 px-2 py-1 bg-emerald-900">Closing Stock</th>
+                        </tr>
+                        <tr class="bg-emerald-800 text-[11px]">
+                            <th class="border border-emerald-700 px-1 py-1">Ctn</th>
+                            <th class="border border-emerald-700 px-1 py-1">Pcs</th>
+                            <th class="border border-emerald-700 px-1 py-1">Ctn</th>
+                            <th class="border border-emerald-700 px-1 py-1">Pcs</th>
+                            <th class="border border-emerald-700 px-1 py-1">Ctn</th>
+                            <th class="border border-emerald-700 px-1 py-1">Pcs</th>
+                            <th class="border border-emerald-700 px-1 py-1">Ctn</th>
+                            <th class="border border-emerald-700 px-1 py-1">Pcs</th>
+                            <th class="border border-emerald-700 px-1 py-1">Ctn</th>
+                            <th class="border border-emerald-700 px-1 py-1">Pcs</th>
+                            <th class="border border-emerald-700 px-1 py-1">Sample(Pcs)</th>
+                            <th class="border border-emerald-700 px-1 py-1">Ctn</th>
+                            <th class="border border-emerald-700 px-1 py-1">Pcs</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-finished" class="divide-y divide-gray-200">
+                        <!-- Dynamic Rows -->
+                    </tbody>
+                    <tfoot class="bg-emerald-50 font-bold text-[#064e3b]">
+                        <tr>
+                            <td class="border px-3 py-2 text-left">মোট (Total)</td>
+                            <td id="fg-tot-op-ctn" class="border px-1 py-2">0</td>
+                            <td id="fg-tot-op-pcs" class="border px-1 py-2">0</td>
+                            <td id="fg-tot-pr-ctn" class="border px-1 py-2">0</td>
+                            <td id="fg-tot-pr-pcs" class="border px-1 py-2">0</td>
+                            <td id="fg-tot-rt-ctn" class="border px-1 py-2">0</td>
+                            <td id="fg-tot-rt-pcs" class="border px-1 py-2">0</td>
+                            <td id="fg-tot-st-ctn" class="border px-1 py-2">0</td>
+                            <td id="fg-tot-st-pcs" class="border px-1 py-2">0</td>
+                            <td id="fg-tot-dl-ctn" class="border px-1 py-2">0</td>
+                            <td id="fg-tot-dl-pcs" class="border px-1 py-2">0</td>
+                            <td id="fg-tot-sm-pcs" class="border px-1 py-2">0</td>
+                            <td id="fg-tot-cl-ctn" class="border px-1 py-2">0</td>
+                            <td id="fg-tot-cl-pcs" class="border px-1 py-2">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="p-4 bg-gray-50 border-t flex justify-end no-print">
+                <button onclick="saveDailyStock('finished')" class="bg-[#064e3b] hover:bg-emerald-800 text-white px-6 py-2 rounded-lg text-sm font-bold shadow flex items-center gap-2 transition">
+                    <i class="fa-solid fa-floppy-disk"></i> ফিনিশ গুডস সেভ করুন
+                </button>
+            </div>
+        </section>
+
+        <!-- ==================== 2. PACKAGING STOCK SECTION ==================== -->
+        <section id="section-packaging" class="hidden bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="bg-emerald-50 px-4 py-3 border-b border-emerald-100 flex flex-wrap items-center justify-between gap-2 no-print">
+                <h2 class="font-bold text-sm text-[#064e3b] flex items-center gap-2">
+                    <i class="fa-solid fa-box-open"></i> প্যাকেজিং ও ম্যাটেরিয়াল স্টক শীট (Bottle, Cap, Label, LDPE, Shipers, Master)
+                </h2>
+                <div class="flex flex-wrap items-center gap-2">
+                    <select id="new-pkg-cat" class="border border-gray-300 rounded px-2 py-1 text-xs">
+                        <option value="Bottle">Bottle</option>
+                        <option value="Cap">Cap</option>
+                        <option value="Label">Label</option>
+                        <option value="LDPE">LDPE</option>
+                        <option value="Shipers">Shipers (সিপাস)</option>
+                        <option value="Master">Master (মাস্টার কার্টুন)</option>
+                    </select>
+                    <input type="text" id="new-pkg-name" placeholder="নতুন আইটেমের নাম..." class="border border-gray-300 rounded px-2.5 py-1 text-xs">
+                    <button onclick="addNewProduct('packaging')" class="bg-emerald-700 text-white px-2.5 py-1 rounded text-xs font-semibold hover:bg-emerald-800">
+                        + আইটেম যোগ
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table id="table-packaging" class="w-full text-xs text-center border-collapse">
+                    <thead class="bg-[#064e3b] text-white">
+                        <tr>
+                            <th class="border border-emerald-700 px-2 py-2 w-10">Sl</th>
+                            <th class="border border-emerald-700 px-3 py-2 text-left min-w-[180px]">Item Name</th>
+                            <th class="border border-emerald-700 px-2 py-2">Opening</th>
+                            <th class="border border-emerald-700 px-2 py-2">Purchase</th>
+                            <th class="border border-emerald-700 px-2 py-2 bg-emerald-900">Total</th>
+                            <th class="border border-emerald-700 px-2 py-2">Used</th>
+                            <th class="border border-emerald-700 px-2 py-2">Damage</th>
+                            <th class="border border-emerald-700 px-2 py-2 bg-emerald-900">Closing Stock</th>
+                            <th class="border border-emerald-700 px-2 py-2">Demand</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-packaging" class="divide-y divide-gray-200">
+                        <!-- Dynamic Category Rows -->
+                    </tbody>
+                    <tfoot class="bg-emerald-50 font-bold text-[#064e3b]">
+                        <tr>
+                            <td colspan="2" class="border px-3 py-2 text-left">সর্বমোট (Grand Total)</td>
+                            <td id="pkg-tot-op" class="border px-2 py-2">0</td>
+                            <td id="pkg-tot-pu" class="border px-2 py-2">0</td>
+                            <td id="pkg-tot-tt" class="border px-2 py-2">0</td>
+                            <td id="pkg-tot-us" class="border px-2 py-2">0</td>
+                            <td id="pkg-tot-dm" class="border px-2 py-2">0</td>
+                            <td id="pkg-tot-cl" class="border px-2 py-2">0</td>
+                            <td id="pkg-tot-de" class="border px-2 py-2">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="p-4 bg-gray-50 border-t flex justify-end no-print">
+                <button onclick="saveDailyStock('packaging')" class="bg-[#064e3b] hover:bg-emerald-800 text-white px-6 py-2 rounded-lg text-sm font-bold shadow flex items-center gap-2 transition">
+                    <i class="fa-solid fa-floppy-disk"></i> প্যাকেজিং স্টক সেভ করুন
+                </button>
+            </div>
+        </section>
+        <!-- ==================== 3. RAW / CHEMICAL STOCK SECTION ==================== -->
+        <section id="section-raw" class="hidden bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="bg-emerald-50 px-4 py-3 border-b border-emerald-100 flex flex-wrap items-center justify-between gap-2 no-print">
+                <h2 class="font-bold text-sm text-[#064e3b] flex items-center gap-2">
+                    <i class="fa-solid fa-flask"></i> র / কেমিক্যাল স্টক শীট
+                </h2>
+                <div class="flex items-center gap-2">
+                    <input type="text" id="new-raw-name" placeholder="নতুন কেমিক্যাল/কাঁচামালের নাম..." class="border border-gray-300 rounded px-2.5 py-1 text-xs">
+                    <input type="text" id="new-raw-unit" placeholder="একক (Kg/Ltr)" class="border border-gray-300 rounded px-2 py-1 text-xs w-24">
+                    <button onclick="addNewProduct('raw')" class="bg-emerald-700 text-white px-2.5 py-1 rounded text-xs font-semibold hover:bg-emerald-800">
+                        + আইটেম যোগ
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table id="table-raw" class="w-full text-xs text-center border-collapse">
+                    <thead class="bg-[#064e3b] text-white">
+                        <tr>
+                            <th class="border border-emerald-700 px-2 py-2 w-10">Sl</th>
+                            <th class="border border-emerald-700 px-3 py-2 text-left min-w-[180px]">Chemical / Raw Item</th>
+                            <th class="border border-emerald-700 px-2 py-2">Unit</th>
+                            <th class="border border-emerald-700 px-2 py-2">Opening</th>
+                            <th class="border border-emerald-700 px-2 py-2">Purchase</th>
+                            <th class="border border-emerald-700 px-2 py-2 bg-emerald-900">Total</th>
+                            <th class="border border-emerald-700 px-2 py-2">Used</th>
+                            <th class="border border-emerald-700 px-2 py-2">Damage</th>
+                            <th class="border border-emerald-700 px-2 py-2 bg-emerald-900">Closing Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-raw" class="divide-y divide-gray-200">
+                        <!-- Dynamic Rows -->
+                    </tbody>
+                    <tfoot class="bg-emerald-50 font-bold text-[#064e3b]">
+                        <tr>
+                            <td colspan="3" class="border px-3 py-2 text-left">সর্বমোট (Total)</td>
+                            <td id="raw-tot-op" class="border px-2 py-2">0</td>
+                            <td id="raw-tot-pu" class="border px-2 py-2">0</td>
+                            <td id="raw-tot-tt" class="border px-2 py-2">0</td>
+                            <td id="raw-tot-us" class="border px-2 py-2">0</td>
+                            <td id="raw-tot-dm" class="border px-2 py-2">0</td>
+                            <td id="raw-tot-cl" class="border px-2 py-2">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="p-4 bg-gray-50 border-t flex justify-end no-print">
+                <button onclick="saveDailyStock('raw')" class="bg-[#064e3b] hover:bg-emerald-800 text-white px-6 py-2 rounded-lg text-sm font-bold shadow flex items-center gap-2 transition">
+                    <i class="fa-solid fa-floppy-disk"></i> কেমিক্যাল স্টক সেভ করুন
+                </button>
+            </div>
+        </section>
+
+        <!-- Date Range Aggregated Report View -->
+        <section id="range-report-box" class="hidden bg-white rounded-xl shadow-sm border-t-4 border-teal-700 p-4">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold text-sm text-teal-900" id="range-report-title">তারিখ অনুযায়ী সামারি রিপোর্ট</h3>
+                <button onclick="document.getElementById('range-report-box').classList.add('hidden')" class="text-xs text-red-600 font-bold no-print">বন্ধ করুন ✕</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table id="table-range-report" class="w-full text-xs text-center border-collapse">
+                    <thead class="bg-teal-800 text-white" id="thead-range"></thead>
+                    <tbody id="tbody-range" class="divide-y divide-gray-200"></tbody>
+                    <tfoot id="tfoot-range" class="bg-teal-50 font-bold text-teal-900"></tfoot>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== FASTLAB OFFICIAL NOTICE MODAL ==================== -->
+    <div id="official-modal" class="fixed inset-0 bg-black/50 backdrop-blur-xs hidden items-center justify-center z-50 p-4 no-print">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden transform transition-all scale-100">
+            <!-- Dark Green Header -->
+            <div class="bg-[#064e3b] px-5 py-4 flex items-center gap-3">
+                <div class="bg-white text-[#064e3b] w-10 h-10 rounded-full flex items-center justify-center text-lg shadow">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-base leading-tight">ফাস্টল্যাব ইউনানী</h3>
+                    <p class="text-emerald-200 text-xs">অফিসিয়াল নোটিশ</p>
+                </div>
+            </div>
+            <!-- Modal Body -->
+            <div class="p-6 text-center">
+                <div class="w-14 h-14 bg-emerald-100 text-[#064e3b] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <p id="official-modal-msg" class="text-gray-800 font-semibold text-base mb-6">
+                    তথ্য সফলভাবে সংরক্ষণ করা হয়েছে!
+                </p>
+                <div class="flex justify-end">
+                    <button onclick="closeOfficialModal()" class="bg-[#064e3b] hover:bg-emerald-800 text-white font-bold px-6 py-2.5 rounded-xl text-sm shadow transition">
+                        ঠিক আছে (OK)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ১. আপনার Firebase Config এখানে বসান
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        // ডিফল্ট প্রোডাক্ট ও আইটেম তালিকা (আপনার শীট অনুযায়ী)[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)
+        const defaultFinishedGoods = [
+            "FLJ-250ml Orange", "LJ-200ml Orange", "100ml(48Pcs) Oran.", "100ml LJ(KP)(48Pcs)",
+            "Fast LJ-200ml Green", "FastLJ-100ml Green", "250ml Red", "200ml Red",
+            "100ml Red", "250ml Coffee", "200ml Coffee", "100ml Coffee",
+            "50ml Coffee", "50ml Red", "50ml(48Pcs)", "Chana-Jhal-25g",
+            "Chana-BBQ-25g", "Chana-Bhuj-350g", "Chana-Bom-350g", "Motor Vaja-15g",
+            "Chan-Bhuj-800g", "Chan-Bom-900g", "Bana. Lassa-200g"
+        ];
+
+        const defaultPackaging = {
+            "Bottle": ["50ml-Bottle", "100ml-Bottle-Old", "100ml-Bottle-Long", "200ml-Bottle-Long", "200ml-Bottle-old", "250ml-Bottle-Old"],
+            "Cap": ["Orange Cap", "Red-Cap", "Green-Cap"],
+            "Label": ["50ml-Label-Red", "50ml-label-Black", "100m-label-Or", "100ml-label-Kp", "100ml-Label-Green", "200ml-Label-Or", "200ml-Label-Green", "250ml-Label-Or"],
+            "LDPE": ["50ml-LDPE", "100ml-LDPE", "250/200 LDPE"],
+            "Shipers": ["50ml-Shipers-red", "50ml-Shipers-Black", "50ml-Shipers-Green", "100ml-Shipers-Or", "100ml-Shipers-green", "200ml-Shipers-Or", "200ml-Shipers-Green", "250ml-Shipers-Or"],
+            "Master": ["50/100Master", "100ml-Master-Kp/Or", "200Ml-Master-Or/G", "250ml-Master-Or", "100ml- Sipus-KP"]
+        };
+
+        const defaultRawItems = [
+            { name: "Citric Acid", unit: "Kg" },
+            { name: "Sugar (চিনি)", unit: "Kg" },
+            { name: "Orange Flavour", unit: "Ltr" },
+            { name: "Sodium Benzoate", unit: "Kg" }
+        ];
+
+        let currentTab = 'finished';
+        let customProducts = { finished: [], packaging: {}, raw: [] };
+
+        // পেজ লোড হলে আজকের তারিখ সেট ও ৩ মাসের পুরোনো ডেটা অটো-ক্লিন
+        window.onload = () => {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('entry-date').value = today;
+            document.getElementById('start-date').value = today;
+            document.getElementById('end-date').value = today;
+
+            autoCleanOldStockData();
+            loadCustomItemsAndSheet();
+        };
+
+        // ২. অফিসিয়াল নোটিফিকেশন মডাল ফাংশন[span_9](start_span)[span_9](end_span)
+        function showOfficialModal(msg) {
+            document.getElementById('official-modal-msg').innerText = msg;
+            const modal = document.getElementById('official-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        function closeOfficialModal() {
+            const modal = document.getElementById('official-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // ৩. রোলিং ৩ মাসের (৯০ দিন) পুরোনো ডেটা অটো-ডিলিট লজিক
+        function autoCleanOldStockData() {
+            const threeMonthsAgo = new Date();
+            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+            const cutoffDate = threeMonthsAgo.toISOString().split('T')[0];
+
+            ['finished', 'packaging', 'raw'].forEach(type => {
+                db.ref(`fastlab_stock/${type}`).once('value', snap => {
+                    const data = snap.val();
+                    if (!data) return;
+                    Object.keys(data).forEach(dateKey => {
+                        if (dateKey < cutoffDate) {
+                            db.ref(`fastlab_stock/${type}/${dateKey}`).remove();
+                        }
+                    });
+                });
+            });
+        }
+
+        // ট্যাব পরিবর্তন
+        function switchTab(tab) {
+            currentTab = tab;
+            ['finished', 'packaging', 'raw'].forEach(t => {
+                document.getElementById(`section-${t}`).classList.toggle('hidden', t !== tab);
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tab) {
+                    btn.className = "px-3 py-1.5 rounded-md text-xs font-bold bg-[#064e3b] text-white transition";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-md text-xs font-bold text-gray-600 hover:text-gray-900 transition";
+                }
+            });
+            document.getElementById('range-report-box').classList.add('hidden');
+        }
+
+        // কাস্টম আইটেম ও দৈনিক শীট লোড
+        function loadCustomItemsAndSheet() {
+            db.ref('fastlab_stock_meta').once('value', snap => {
+                const meta = snap.val() || {};
+                customProducts.finished = [...defaultFinishedGoods, ...(meta.finished || [])];
+                
+                customProducts.packaging = JSON.parse(JSON.stringify(defaultPackaging));
+                if (meta.packaging) {
+                    for (let cat in meta.packaging) {
+                        if (!customProducts.packaging[cat]) customProducts.packaging[cat] = [];
+                        customProducts.packaging[cat].push(...meta.packaging[cat]);
+                    }
+                }
+                customProducts.raw = [...defaultRawItems, ...(meta.raw || [])];
+                loadDailySheet();
+            });
+        }
+
+        // নতুন পণ্য / আইটেম যোগ করা
+        function addNewProduct(type) {
+            if (type === 'finished') {
+                const name = document.getElementById('new-fg-name').value.trim();
+                if (!name) return;
+                db.ref('fastlab_stock_meta/finished').push(name).then(() => {
+                    document.getElementById('new-fg-name').value = '';
+                    showOfficialModal(`"${name}" তালিকাভুক্ত করা হয়েছে!`);
+                    loadCustomItemsAndSheet();
+                });
+            } else if (type === 'packaging') {
+                const cat = document.getElementById('new-pkg-cat').value;
+                const name = document.getElementById('new-pkg-name').value.trim();
+                if (!name) return;
+                db.ref(`fastlab_stock_meta/packaging/${cat}`).push(name).then(() => {
+                    document.getElementById('new-pkg-name').value = '';
+                    showOfficialModal(`${cat} ক্যাটাগরিতে "${name}" যোগ হয়েছে!`);
+                    loadCustomItemsAndSheet();
+                });
+            } else if (type === 'raw') {
+                const name = document.getElementById('new-raw-name').value.trim();
+                const unit = document.getElementById('new-raw-unit').value.trim() || 'Kg';
+                if (!name) return;
+                db.ref('fastlab_stock_meta/raw').push({ name, unit }).then(() => {
+                    document.getElementById('new-raw-name').value = '';
+                    document.getElementById('new-raw-unit').value = '';
+                    showOfficialModal(`"${name}" কেমিক্যাল তালিকায় যোগ হয়েছে!`);
+                    loadCustomItemsAndSheet();
+                });
+            }
+        }
+
+        // নির্বাচিত তারিখের ডেটা লোড (আগের দিনের Closing স্টক অটো Opening হবে)[span_10](start_span)[span_10](end_span)
+        function loadDailySheet() {
+            const date = document.getElementById('entry-date').value;
+            document.getElementById('print-date-label').innerText = `তারিখ: ${date}`;
+
+            // আগের দিনের তারিখ বের করা
+            const prevDateObj = new Date(date);
+            prevDateObj.setDate(prevDateObj.getDate() - 1);
+            const prevDate = prevDateObj.toISOString().split('T')[0];
+
+            // Finished Goods Render
+            db.ref(`fastlab_stock/finished/${date}`).once('value', snap => {
+                const todayData = snap.val() || {};
+                db.ref(`fastlab_stock/finished/${prevDate}`).once('value', prevSnap => {
+                    const prevData = prevSnap.val() || {};
+                    renderFinishedTable(todayData, prevData);
+                });
+            });
+
+            // Packaging Render
+            db.ref(`fastlab_stock/packaging/${date}`).once('value', snap => {
+                const todayData = snap.val() || {};
+                db.ref(`fastlab_stock/packaging/${prevDate}`).once('value', prevSnap => {
+                    const prevData = prevSnap.val() || {};
+                    renderPackagingTable(todayData, prevData);
+                });
+            });
+
+            // Raw Render
+            db.ref(`fastlab_stock/raw/${date}`).once('value', snap => {
+                const todayData = snap.val() || {};
+                db.ref(`fastlab_stock/raw/${prevDate}`).once('value', prevSnap => {
+                    const prevData = prevSnap.val() || {};
+                    renderRawTable(todayData, prevData);
+                });
+            });
+        }
+
+        // ১. ফিনিশ গুডস টেবিল রেন্ডার ও ক্যালকুলেশন[span_11](start_span)[span_11](end_span)
+        function renderFinishedTable(todayData, prevData) {
+            const tbody = document.getElementById('tbody-finished');
+            tbody.innerHTML = '';
+
+            customProducts.finished.forEach((prod, idx) => {
+                const key = prod.replace(/[.#$\[\]\/]/g, '_');
+                const row = todayData[key] || {};
+                const prev = prevData[key] || {};
+
+                const opCtn = row.opCtn !== undefined ? row.opCtn : (prev.clCtn || 0);
+                const opPcs = row.opPcs !== undefined ? row.opPcs : (prev.clPcs || 0);
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50";
+                tr.innerHTML = `
+                    <td class="border px-3 py-1.5 text-left font-semibold text-gray-800" data-name="${prod}">${prod}</td>
+                    <td class="border p-1"><input type="number" class="sheet-input fg-op-ctn" value="${opCtn}" oninput="calcFG()"></td>
+                    <td class="border p-1"><input type="number" class="sheet-input fg-op-pcs" value="${opPcs}" oninput="calcFG()"></td>
+                    <td class="border p-1"><input type="number" class="sheet-input fg-pr-ctn" value="${row.prCtn || 0}" oninput="calcFG()"></td>
+                    <td class="border p-1"><input type="number" class="sheet-input fg-pr-pcs" value="${row.prPcs || 0}" oninput="calcFG()"></td>
+                    <td class="border p-1"><input type="number" class="sheet-input fg-rt-ctn" value="${row.rtCtn || 0}" oninput="calcFG()"></td>
+                    <td class="border p-1"><input type="number" class="sheet-input fg-rt-pcs" value="${row.rtPcs || 0}" oninput="calcFG()"></td>
+                    <td class="border p-1"><input type="number" class="sheet-input sheet-readonly fg-st-ctn" readonly></td>
+                    <td class="border p-1"><input type="number" class="sheet-input sheet-readonly fg-st-pcs" readonly></td>
+                    <td class="border p-1"><input type="number" class="sheet-input fg-dl-ctn" value="${row.dlCtn || 0}" oninput="calcFG()"></td>
+                    <td class="border p-1"><input type="number" class="sheet-input fg-dl-pcs" value="${row.dlPcs || 0}" oninput="calcFG()"></td>
+                    <td class="border p-1"><input type="number" class="sheet-input fg-sm-pcs" value="${row.smPcs || 0}" oninput="calcFG()"></td>
+                    <td class="border p-1"><input type="number" class="sheet-input sheet-readonly fg-cl-ctn" readonly></td>
+                    <td class="border p-1"><input type="number" class="sheet-input sheet-readonly fg-cl-pcs" readonly></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            calcFG();
+        }
+
+        function calcFG() {
+            let totals = { opCtn:0, opPcs:0, prCtn:0, prPcs:0, rtCtn:0, rtPcs:0, stCtn:0, stPcs:0, dlCtn:0, dlPcs:0, smPcs:0, clCtn:0, clPcs:0 };
+            document.querySelectorAll('#tbody-finished tr').forEach(tr => {
+                const v = cls => parseFloat(tr.querySelector('.' + cls).value) || 0;
+                const opCtn = v('fg-op-ctn'), opPcs = v('fg-op-pcs');
+                const prCtn = v('fg-pr-ctn'), prPcs = v('fg-pr-pcs');
+                const rtCtn = v('fg-rt-ctn'), rtPcs = v('fg-rt-pcs');
+                const dlCtn = v('fg-dl-ctn'), dlPcs = v('fg-dl-pcs'), smPcs = v('fg-sm-pcs');
+
+                const stCtn = opCtn + prCtn + rtCtn;
+                const stPcs = opPcs + prPcs + rtPcs;
+                const clCtn = stCtn - dlCtn;
+                const clPcs = stPcs - dlPcs - smPcs;
+
+                tr.querySelector('.fg-st-ctn').value = stCtn;
+                tr.querySelector('.fg-st-pcs').value = stPcs;
+                tr.querySelector('.fg-cl-ctn').value = clCtn;
+                tr.querySelector('.fg-cl-pcs').value = clPcs;
+
+                totals.opCtn += opCtn; totals.opPcs += opPcs;
+                totals.prCtn += prCtn; totals.prPcs += prPcs;
+                totals.rtCtn += rtCtn; totals.rtPcs += rtPcs;
+                totals.stCtn += stCtn; totals.stPcs += stPcs;
+                totals.dlCtn += dlCtn; totals.dlPcs += dlPcs; totals.smPcs += smPcs;
+                totals.clCtn += clCtn; totals.clPcs += clPcs;
+            });
+
+            document.getElementById('fg-tot-op-ctn').innerText = totals.opCtn;
+            document.getElementById('fg-tot-op-pcs').innerText = totals.opPcs;
+            document.getElementById('fg-tot-pr-ctn').innerText = totals.prCtn;
+            document.getElementById('fg-tot-pr-pcs').innerText = totals.prPcs;
+            document.getElementById('fg-tot-rt-ctn').innerText = totals.rtCtn;
+            document.getElementById('fg-tot-rt-pcs').innerText = totals.rtPcs;
+            document.getElementById('fg-tot-st-ctn').innerText = totals.stCtn;
+            document.getElementById('fg-tot-st-pcs').innerText = totals.stPcs;
+            document.getElementById('fg-tot-dl-ctn').innerText = totals.dlCtn;
+            document.getElementById('fg-tot-dl-pcs').innerText = totals.dlPcs;
+            document.getElementById('fg-tot-sm-pcs').innerText = totals.smPcs;
+            document.getElementById('fg-tot-cl-ctn').innerText = totals.clCtn;
+            document.getElementById('fg-tot-cl-pcs').innerText = totals.clPcs;
+        }
+
+        // ২. প্যাকেজিং টেবিল রেন্ডার[span_12](start_span)[span_12](end_span)
+        function renderPackagingTable(todayData, prevData) {
+            const tbody = document.getElementById('tbody-packaging');
+            tbody.innerHTML = '';
+            let sl = 1;
+
+            for (let cat in customProducts.packaging) {
+                // Category Header Row
+                const catTr = document.createElement('tr');
+                catTr.className = "bg-gray-200 font-bold text-gray-800";
+                catTr.innerHTML = `<td colspan="9" class="border py-1 text-center uppercase tracking-wider">${cat}</td>`;
+                tbody.appendChild(catTr);
+
+                customProducts.packaging[cat].forEach(item => {
+                    const key = `${cat}_${item}`.replace(/[.#$\[\]\/]/g, '_');
+                    const row = todayData[key] || {};
+                    const prev = prevData[key] || {};
+                    const op = row.op !== undefined ? row.op : (prev.cl || 0);
+
+                    const tr = document.createElement('tr');
+                    tr.className = "pkg-data-row hover:bg-gray-50";
+                    tr.dataset.key = key;
+                    tr.dataset.name = item;
+                    tr.dataset.cat = cat;
+                    tr.innerHTML = `
+                        <td class="border px-2 py-1">${sl++}</td>
+                        <td class="border px-3 py-1 text-left font-medium">${item}</td>
+                        <td class="border p-1"><input type="number" class="sheet-input pkg-op" value="${op}" oninput="calcPkg()"></td>
+                        <td class="border p-1"><input type="number" class="sheet-input pkg-pu" value="${row.pu || 0}" oninput="calcPkg()"></td>
+                        <td class="border p-1"><input type="number" class="sheet-input sheet-readonly pkg-tt" readonly></td>
+                        <td class="border p-1"><input type="number" class="sheet-input pkg-us" value="${row.us || 0}" oninput="calcPkg()"></td>
+                        <td class="border p-1"><input type="number" class="sheet-input pkg-dm" value="${row.dm || 0}" oninput="calcPkg()"></td>
+                        <td class="border p-1"><input type="number" class="sheet-input sheet-readonly pkg-cl" readonly></td>
+                        <td class="border p-1"><input type="number" class="sheet-input pkg-de" value="${row.de || 0}" oninput="calcPkg()"></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+            calcPkg();
+        }
+        function calcPkg() {
+            let t = { op:0, pu:0, tt:0, us:0, dm:0, cl:0, de:0 };
+            document.querySelectorAll('.pkg-data-row').forEach(tr => {
+                const v = cls => parseFloat(tr.querySelector('.' + cls).value) || 0;
+                const op = v('pkg-op'), pu = v('pkg-pu'), us = v('pkg-us'), dm = v('pkg-dm'), de = v('pkg-de');
+                const tt = op + pu;
+                const cl = tt - us - dm;
+                tr.querySelector('.pkg-tt').value = tt;
+                tr.querySelector('.pkg-cl').value = cl;
+
+                t.op += op; t.pu += pu; t.tt += tt; t.us += us; t.dm += dm; t.cl += cl; t.de += de;
+            });
+            document.getElementById('pkg-tot-op').innerText = t.op;
+            document.getElementById('pkg-tot-pu').innerText = t.pu;
+            document.getElementById('pkg-tot-tt').innerText = t.tt;
+            document.getElementById('pkg-tot-us').innerText = t.us;
+            document.getElementById('pkg-tot-dm').innerText = t.dm;
+            document.getElementById('pkg-tot-cl').innerText = t.cl;
+            document.getElementById('pkg-tot-de').innerText = t.de;
+        }
+
+        // ৩. র / কেমিক্যাল টেবিল রেন্ডার
+        function renderRawTable(todayData, prevData) {
+            const tbody = document.getElementById('tbody-raw');
+            tbody.innerHTML = '';
+            customProducts.raw.forEach((item, idx) => {
+                const key = item.name.replace(/[.#$\[\]\/]/g, '_');
+                const row = todayData[key] || {};
+                const prev = prevData[key] || {};
+                const op = row.op !== undefined ? row.op : (prev.cl || 0);
+
+                const tr = document.createElement('tr');
+                tr.className = "raw-data-row hover:bg-gray-50";
+                tr.dataset.key = key;
+                tr.dataset.name = item.name;
+                tr.dataset.unit = item.unit;
+                tr.innerHTML = `
+                    <td class="border px-2 py-1">${idx + 1}</td>
+                    <td class="border px-3 py-1 text-left font-medium">${item.name}</td>
+                    <td class="border px-2 py-1 text-gray-500">${item.unit}</td>
+                    <td class="border p-1"><input type="number" step="0.01" class="sheet-input raw-op" value="${op}" oninput="calcRaw()"></td>
+                    <td class="border p-1"><input type="number" step="0.01" class="sheet-input raw-pu" value="${row.pu || 0}" oninput="calcRaw()"></td>
+                    <td class="border p-1"><input type="number" step="0.01" class="sheet-input sheet-readonly raw-tt" readonly></td>
+                    <td class="border p-1"><input type="number" step="0.01" class="sheet-input raw-us" value="${row.us || 0}" oninput="calcRaw()"></td>
+                    <td class="border p-1"><input type="number" step="0.01" class="sheet-input raw-dm" value="${row.dm || 0}" oninput="calcRaw()"></td>
+                    <td class="border p-1"><input type="number" step="0.01" class="sheet-input sheet-readonly raw-cl" readonly></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            calcRaw();
+        }
+
+        function calcRaw() {
+            let t = { op:0, pu:0, tt:0, us:0, dm:0, cl:0 };
+            document.querySelectorAll('.raw-data-row').forEach(tr => {
+                const v = cls => parseFloat(tr.querySelector('.' + cls).value) || 0;
+                const op = v('raw-op'), pu = v('raw-pu'), us = v('raw-us'), dm = v('raw-dm');
+                const tt = +(op + pu).toFixed(2);
+                const cl = +(tt - us - dm).toFixed(2);
+                tr.querySelector('.raw-tt').value = tt;
+                tr.querySelector('.raw-cl').value = cl;
+
+                t.op += op; t.pu += pu; t.tt += tt; t.us += us; t.dm += dm; t.cl += cl;
+            });
+            document.getElementById('raw-tot-op').innerText = t.op.toFixed(2);
+            document.getElementById('raw-tot-pu').innerText = t.pu.toFixed(2);
+            document.getElementById('raw-tot-tt').innerText = t.tt.toFixed(2);
+            document.getElementById('raw-tot-us').innerText = t.us.toFixed(2);
+            document.getElementById('raw-tot-dm').innerText = t.dm.toFixed(2);
+            document.getElementById('raw-tot-cl').innerText = t.cl.toFixed(2);
+        }
+
+        // দৈনিক স্টক ডাটাবেজে সেভ করা
+        function saveDailyStock(type) {
+            const date = document.getElementById('entry-date').value;
+            if (!date) return;
+
+            let payload = {};
+            if (type === 'finished') {
+                document.querySelectorAll('#tbody-finished tr').forEach(tr => {
+                    const name = tr.querySelector('td').dataset.name;
+                    const key = name.replace(/[.#$\[\]\/]/g, '_');
+                    const v = cls => parseFloat(tr.querySelector('.' + cls).value) || 0;
+                    payload[key] = {
+                        name,
+                        opCtn: v('fg-op-ctn'), opPcs: v('fg-op-pcs'),
+                        prCtn: v('fg-pr-ctn'), prPcs: v('fg-pr-pcs'),
+                        rtCtn: v('fg-rt-ctn'), rtPcs: v('fg-rt-pcs'),
+                        stCtn: v('fg-st-ctn'), stPcs: v('fg-st-pcs'),
+                        dlCtn: v('fg-dl-ctn'), dlPcs: v('fg-dl-pcs'), smPcs: v('fg-sm-pcs'),
+                        clCtn: v('fg-cl-ctn'), clPcs: v('fg-cl-pcs')
+                    };
+                });
+            } else if (type === 'packaging') {
+                document.querySelectorAll('.pkg-data-row').forEach(tr => {
+                    const v = cls => parseFloat(tr.querySelector('.' + cls).value) || 0;
+                    payload[tr.dataset.key] = {
+                        cat: tr.dataset.cat, name: tr.dataset.name,
+                        op: v('pkg-op'), pu: v('pkg-pu'), tt: v('pkg-tt'),
+                        us: v('pkg-us'), dm: v('pkg-dm'), cl: v('pkg-cl'), de: v('pkg-de')
+                    };
+                });
+            } else if (type === 'raw') {
+                document.querySelectorAll('.raw-data-row').forEach(tr => {
+                    const v = cls => parseFloat(tr.querySelector('.' + cls).value) || 0;
+                    payload[tr.dataset.key] = {
+                        name: tr.dataset.name, unit: tr.dataset.unit,
+                        op: v('raw-op'), pu: v('raw-pu'), tt: v('raw-tt'),
+                        us: v('raw-us'), dm: v('raw-dm'), cl: v('raw-cl')
+                    };
+                });
+            }
+
+            db.ref(`fastlab_stock/${type}/${date}`).set(payload).then(() => {
+                autoCleanOldStockData();
+                showOfficialModal("জমা ও স্টক সফলভাবে এন্ট্রি হয়েছে!");
+            });
+        }
+
+        // তারিখ থেকে তারিখ (Date Range) ফিল্টার রিপোর্ট
+        function filterByDateRange() {
+            const start = document.getElementById('start-date').value;
+            const end = document.getElementById('end-date').value;
+            if (!start || !end) {
+                showOfficialModal("অনুগ্রহ করে শুরুর এবং শেষের তারিখ নির্বাচন করুন!");
+                return;
+            }
+
+            db.ref(`fastlab_stock/${currentTab}`).orderByKey().startAt(start).endAt(end).once('value', snap => {
+                const data = snap.val();
+                const reportBox = document.getElementById('range-report-box');
+                const thead = document.getElementById('thead-range');
+                const tbody = document.getElementById('tbody-range');
+                const tfoot = document.getElementById('tfoot-range');
+
+                reportBox.classList.remove('hidden');
+                document.getElementById('range-report-title').innerText = `স্টক সামারি রিপোর্ট (${start} হতে ${end})`;
+                tbody.innerHTML = '';
+                tfoot.innerHTML = '';
+
+                if (!data) {
+                    thead.innerHTML = '';
+                    tbody.innerHTML = `<tr><td class="p-4 text-gray-500">এই তারিখের মধ্যে কোনো তথ্য পাওয়া যায়নি।</td></tr>`;
+                    return;
+                }
+
+                let agg = {};
+                Object.keys(data).sort().forEach(d => {
+                    const dayObj = data[d];
+                    for (let k in dayObj) {
+                        const r = dayObj[k];
+                        if (!agg[k]) agg[k] = { ...r, count: 0 };
+                        if (currentTab === 'finished') {
+                            if (agg[k].count > 0) {
+                                agg[k].prCtn += r.prCtn; agg[k].prPcs += r.prPcs;
+                                agg[k].rtCtn += r.rtCtn; agg[k].rtPcs += r.rtPcs;
+                                agg[k].dlCtn += r.dlCtn; agg[k].dlPcs += r.dlPcs; agg[k].smPcs += r.smPcs;
+                                agg[k].clCtn = r.clCtn; agg[k].clPcs = r.clPcs;
+                            }
+                        } else {
+                            if (agg[k].count > 0) {
+                                agg[k].pu += r.pu; agg[k].us += r.us; agg[k].dm += r.dm; agg[k].cl = r.cl;
+                            }
+                        }
+                        agg[k].count++;
+                    }
+                });
+
+                if (currentTab === 'finished') {
+                    thead.innerHTML = `<tr>
+                        <th class="border p-2 text-left">Product</th>
+                        <th class="border p-2">Opening (Ctn/Pcs)</th>
+                        <th class="border p-2">Produced (Ctn/Pcs)</th>
+                        <th class="border p-2">Return (Ctn/Pcs)</th>
+                        <th class="border p-2">Delivery (Ctn/Pcs)</th>
+                        <th class="border p-2">Sample</th>
+                        <th class="border p-2">Closing (Ctn/Pcs)</th>
+                    </tr>`;
+                    for (let k in agg) {
+                        const x = agg[k];
+                        tbody.innerHTML += `<tr>
+                            <td class="border p-1.5 text-left font-semibold">${x.name}</td>
+                            <td class="border p-1.5">${x.opCtn} Ctn, ${x.opPcs} Pcs</td>
+                            <td class="border p-1.5">${x.prCtn} Ctn, ${x.prPcs} Pcs</td>
+                            <td class="border p-1.5">${x.rtCtn} Ctn, ${x.rtPcs} Pcs</td>
+                            <td class="border p-1.5">${x.dlCtn} Ctn, ${x.dlPcs} Pcs</td>
+                            <td class="border p-1.5">${x.smPcs}</td>
+                            <td class="border p-1.5 font-bold text-emerald-800">${x.clCtn} Ctn, ${x.clPcs} Pcs</td>
+                        </tr>`;
+                    }
+                } else {
+                    thead.innerHTML = `<tr>
+                        <th class="border p-2 text-left">Item Name</th>
+                        <th class="border p-2">Opening</th>
+                        <th class="border p-2">Purchase</th>
+                        <th class="border p-2">Used</th>
+                        <th class="border p-2">Damage</th>
+                        <th class="border p-2">Closing</th>
+                    </tr>`;
+                    for (let k in agg) {
+                        const x = agg[k];
+                        tbody.innerHTML += `<tr>
+                            <td class="border p-1.5 text-left font-semibold">${x.name}</td>
+                            <td class="border p-1.5">${x.op}</td>
+                            <td class="border p-1.5">${x.pu}</td>
+                            <td class="border p-1.5">${x.us}</td>
+                            <td class="border p-1.5">${x.dm}</td>
+                            <td class="border p-1.5 font-bold text-emerald-800">${x.cl}</td>
+                        </tr>`;
+                    }
+                }
+            });
+        }
+
+        // এক্সেল ডাউনলোড ফাংশন
+        function exportToExcel() {
+            const reportVisible = !document.getElementById('range-report-box').classList.contains('hidden');
+            const tableId = reportVisible ? 'table-range-report' : `table-${currentTab}`;
+            const table = document.getElementById(tableId);
+
+            // ইনপুট ফিল্ডগুলোর মান টেক্সটে রূপান্তর করে এক্সেল তৈরি
+            const clone = table.cloneNode(true);
+            clone.querySelectorAll('input').forEach(inp => {
+                const span = document.createTextNode(inp.value);
+                inp.parentNode.replaceChild(span, inp);
+            });
+
+            const wb = XLSX.utils.table_to_book(clone, { sheet: "Stock Report" });
+            const dateStr = document.getElementById('entry-date').value;
+            XLSX.writeFile(wb, `Fastlab_Stock_${currentTab}_${dateStr}.xlsx`);
+        }
+    </script>
+</body>
+</html>
 
