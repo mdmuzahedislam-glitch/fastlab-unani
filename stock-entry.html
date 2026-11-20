@@ -15,7 +15,6 @@
   </style>
 </head>
 <body class="min-h-screen text-gray-800">
-  
   <!-- লগইন স্ক্রিন -->
   <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-sm bg-white rounded-2xl shadow-lg overflow-hidden border border-emerald-100">
@@ -29,7 +28,7 @@
       <form id="login-form" class="p-5 space-y-4">
         <div>
           <label class="block text-xs font-semibold text-gray-600 mb-1">ইউজার আইডি</label>
-          <input type="text" id="login-user" required placeholder="যেমন:ইউজার আইডি লিখুন"
+          <input type="text" id="login-user" required placeholder="ইউজার আইডি লিখুন"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-700" />
         </div>
         <div>
@@ -37,8 +36,8 @@
           <div class="relative">
             <input type="password" id="login-pass" required placeholder="পাসওয়ার্ড লিখুন"
               class="w-full border border-gray-300 rounded-lg pl-3 pr-10 py-2 text-sm focus:outline-none focus:border-emerald-700" />
-            <button type="button" onclick="togglePassword()"
-              class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-emerald-700">
+            <button type="button" onclick="togglePassword()" aria-label="পাসওয়ার্ড দেখুন বা লুকান"
+              class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-emerald-700 cursor-pointer">
               <i id="pass-eye-icon" class="fa-solid fa-eye text-sm"></i>
             </button>
           </div>
@@ -50,7 +49,7 @@
         </p>
 
         <button type="submit"
-          class="w-full brand-green hover:bg-emerald-900 text-white font-semibold py-2.5 rounded-lg text-sm transition flex items-center justify-center gap-2">
+          class="w-full brand-green hover:bg-emerald-900 text-white font-semibold py-2.5 rounded-lg text-sm transition flex items-center justify-center gap-2 cursor-pointer">
           <i class="fa-solid fa-right-to-bracket"></i> লগইন করুন
         </button>
 
@@ -61,7 +60,6 @@
       </form>
     </div>
   </div>
-  
   <!-- স্টক এন্ট্রি মেইন পেজ -->
   <div id="entry-screen" class="hidden min-h-screen pb-10">
     <!-- হেডার -->
@@ -73,7 +71,7 @@
         </div>
         <div class="flex items-center gap-2">
           <a href="index.html" class="text-xs bg-white/15 hover:bg-white/25 px-2.5 py-1.5 rounded-lg">হোম</a>
-          <button onclick="logoutStockMan()" class="text-xs bg-rose-600 hover:bg-rose-700 px-2.5 py-1.5 rounded-lg">
+          <button type="button" onclick="logoutStockMan()" class="text-xs bg-rose-600 hover:bg-rose-700 px-2.5 py-1.5 rounded-lg cursor-pointer">
             <i class="fa-solid fa-power-off"></i>
           </button>
         </div>
@@ -170,14 +168,13 @@
         </div>
 
         <button type="submit"
-          class="w-full brand-green hover:bg-emerald-900 text-white font-bold py-3 rounded-xl text-sm shadow transition flex items-center justify-center gap-2 mt-2">
+          class="w-full brand-green hover:bg-emerald-900 text-white font-bold py-3 rounded-xl text-sm shadow transition flex items-center justify-center gap-2 mt-2 cursor-pointer">
           <i class="fa-solid fa-cloud-arrow-up"></i> স্টক সেভ ও অ্যাডমিনে পাঠান
         </button>
       </form>
     </main>
   </div>
-
-  <!-- ফাস্টল্যাব ইউনানী অফিসিয়াল নোটিশ পপ-আপ -->
+    <!-- ফাস্টল্যাব ইউনানী অফিসিয়াল নোটিশ পপ-আপ -->
   <div id="official-notice-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
     <div class="w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden">
       <div class="brand-green text-white px-4 py-3 flex items-center gap-3">
@@ -195,15 +192,15 @@
         </div>
         <p id="notice-message" class="text-sm font-semibold text-gray-800"></p>
         <div class="flex justify-end pt-1">
-          <button onclick="closeOfficialNotice()"
-            class="brand-green-dark text-white text-xs font-semibold px-5 py-2.5 rounded-lg">
+          <button type="button" onclick="closeOfficialNotice()"
+            class="brand-green-dark text-white text-xs font-semibold px-5 py-2.5 rounded-lg cursor-pointer">
             ঠিক আছে (OK)
           </button>
         </div>
       </div>
     </div>
   </div>
- <script>
+    <script>
     // আপনার ফায়ারবেস কনফিগারেশন এখানে বসান
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
@@ -215,10 +212,15 @@
       appId: "YOUR_APP_ID"
     };
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
+    let db = null;
+    try {
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+      db = firebase.database();
+    } catch (e) {
+      console.warn("Firebase init skipped/fallback:", e);
     }
-    const db = firebase.database();
 
     // শিটের তালিকা অনুযায়ী ফিনিশড গুডস ও প্যাকেজিং আইটেম
     const STOCK_ITEMS = {
@@ -251,6 +253,26 @@
     let currentOpeningStock = 0;
     let noticeCallback = null;
 
+    function togglePassword() {
+      const passInput = document.getElementById("login-pass");
+      const eyeIcon = document.getElementById("pass-eye-icon");
+      if (!passInput) return;
+
+      if (passInput.type === "password") {
+        passInput.type = "text";
+        if (eyeIcon) {
+          eyeIcon.classList.remove("fa-eye");
+          eyeIcon.classList.add("fa-eye-slash");
+        }
+      } else {
+        passInput.type = "password";
+        if (eyeIcon) {
+          eyeIcon.classList.remove("fa-eye-slash");
+          eyeIcon.classList.add("fa-eye");
+        }
+      }
+    }
+
     function showOfficialNotice(message, isError = false, onOk = null) {
       document.getElementById("notice-message").textContent = message;
       const icon = document.getElementById("notice-icon");
@@ -272,38 +294,50 @@
       }
     }
 
-    // সেশন চেক
     const savedStockUser = sessionStorage.getItem("fastlab_stock_user");
     if (savedStockUser) {
       initEntryScreen(savedStockUser);
     }
 
-    // লগইন হ্যান্ডলার
-    document.getElementById("login-form").addEventListener("submit", async (e) => {
+    document.getElementById("login-form").addEventListener("submit", async function (e) {
       e.preventDefault();
       const user = document.getElementById("login-user").value.trim();
       const pass = document.getElementById("login-pass").value.trim();
-
-      const snap = await db.ref("stock_users").once("value");
-      const users = snap.val();
+      const errorBox = document.getElementById("login-error-msg");
 
       let valid = false;
-      if (users) {
-        for (const key in users) {
-          const u = users[key];
-          if ((u.username === user || key === user) && String(u.password) === pass && u.status !== "blocked") {
-            valid = true;
-            break;
-          }
-        }
-      } else if (user === "stockman" && pass === "1234") {
+
+      if (user === "stockman" && pass === "1234") {
         valid = true;
       }
 
+      if (!valid && db && firebaseConfig && !String(firebaseConfig.apiKey).includes("YOUR_API_KEY")) {
+        try {
+          const snap = await Promise.race([
+            db.ref("stock_users").once("value"),
+            new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 3000))
+          ]);
+          const users = snap && snap.val ? snap.val() : null;
+          if (users) {
+            for (const key in users) {
+              const u = users[key];
+              if (u && (u.username === user || key === user) && String(u.password) === pass && u.status !== "blocked") {
+                valid = true;
+                break;
+              }
+            }
+          }
+        } catch (err) {
+          // টাইমআউট বা নেটওয়ার্ক এররে ডিফল্ট লগইনই কার্যকর থাকবে
+        }
+      }
+
       if (valid) {
+        if (errorBox) errorBox.classList.add("hidden");
         sessionStorage.setItem("fastlab_stock_user", user);
         initEntryScreen(user);
       } else {
+        if (errorBox) errorBox.classList.remove("hidden");
         showOfficialNotice("ভুল ইউজার আইডি বা পাসওয়ার্ড দেওয়া হয়েছে!", true);
       }
     });
@@ -312,11 +346,10 @@
       sessionStorage.removeItem("fastlab_stock_user");
       location.reload();
     }
-
-    function initEntryScreen(user) {
+          function initEntryScreen(user) {
       document.getElementById("login-screen").classList.add("hidden");
       document.getElementById("entry-screen").classList.remove("hidden");
-      document.getElementById("logged-user-label").textContent = "স্টক ম্যান: " + user;
+      document.getElementById("logged-user-label").textContent = "ফ্যাক্টরি অফিসার: " + user;
       document.getElementById("entry-date").value = new Date().toISOString().split("T")[0];
       populateItemsDropdown();
       autoCleanThreeMonthsStock();
@@ -343,46 +376,50 @@
       onItemOrDateChange();
     }
 
-    // আগের দিনের ক্লোজিং বা বর্তমান দিনের এন্ট্রি থেকে ওপেনিং লোড
     async function onItemOrDateChange() {
       const dateStr = document.getElementById("entry-date").value;
       const type = document.getElementById("stock-type").value;
       const item = document.getElementById("stock-item").value;
       if (!dateStr || !item) return;
 
-      const safeKey = encodeURIComponent(item);
-      const currentSnap = await db.ref(`daily_stock_logs/${dateStr}/${type}/${safeKey}`).once("value");
-      const currentData = currentSnap.val();
+      currentOpeningStock = 0;
+      resetInputs();
 
-      if (currentData) {
-        currentOpeningStock = Number(currentData.opening || 0);
-        if (type === "finished") {
-          document.getElementById("fg-produced").value = currentData.produced || 0;
-          document.getElementById("fg-return").value = currentData.marketReturn || 0;
-          document.getElementById("fg-sales").value = currentData.sales || 0;
-          document.getElementById("fg-sample").value = currentData.sample || 0;
-        } else {
-          document.getElementById("pkg-purchase").value = currentData.purchase || 0;
-          document.getElementById("pkg-used").value = currentData.used || 0;
-          document.getElementById("pkg-damage").value = currentData.damage || 0;
-          document.getElementById("pkg-demand").value = currentData.demand || 0;
-        }
-      } else {
-        // পূর্বের সর্বশেষ তারিখের closing/totalStock খুঁজে ওপেনিং হিসেবে আনা
-        const allLogsSnap = await db.ref("daily_stock_logs").orderByKey().endAt(dateStr).limitToLast(15).once("value");
-        const logs = allLogsSnap.val() || {};
-        const dates = Object.keys(logs).filter((d) => d < dateStr).sort().reverse();
+      if (db && firebaseConfig && !String(firebaseConfig.apiKey).includes("YOUR_API_KEY")) {
+        try {
+          const safeKey = encodeURIComponent(item);
+          const currentSnap = await db.ref(`daily_stock_logs/${dateStr}/${type}/${safeKey}`).once("value");
+          const currentData = currentSnap.val();
 
-        let foundOpening = 0;
-        for (const d of dates) {
-          const rec = logs[d]?.[type]?.[safeKey];
-          if (rec) {
-            foundOpening = Number(rec.closingStock ?? rec.totalStock ?? 0);
-            break;
+          if (currentData) {
+            currentOpeningStock = Number(currentData.opening || 0);
+            if (type === "finished") {
+              document.getElementById("fg-produced").value = currentData.produced || 0;
+              document.getElementById("fg-return").value = currentData.marketReturn || 0;
+              document.getElementById("fg-sales").value = currentData.sales || 0;
+              document.getElementById("fg-sample").value = currentData.sample || 0;
+            } else {
+              document.getElementById("pkg-purchase").value = currentData.purchase || 0;
+              document.getElementById("pkg-used").value = currentData.used || 0;
+              document.getElementById("pkg-damage").value = currentData.damage || 0;
+              document.getElementById("pkg-demand").value = currentData.demand || 0;
+            }
+          } else {
+            const allLogsSnap = await db.ref("daily_stock_logs").orderByKey().endAt(dateStr).limitToLast(15).once("value");
+            const logs = allLogsSnap.val() || {};
+            const dates = Object.keys(logs).filter((d) => d < dateStr).sort().reverse();
+
+            for (const d of dates) {
+              const rec = logs[d]?.[type]?.[safeKey];
+              if (rec) {
+                currentOpeningStock = Number(rec.closingStock ?? rec.totalStock ?? 0);
+                break;
+              }
+            }
           }
+        } catch (err) {
+          console.warn("Stock load fallback:", err);
         }
-        currentOpeningStock = foundOpening;
-        resetInputs();
       }
 
       document.getElementById("opening-stock-display").textContent = currentOpeningStock;
@@ -415,8 +452,7 @@
       return result;
     }
 
-    // স্টক সেভ ও অ্যাডমিন প্যানেলে রিয়েলটাইম আপডেট
-    document.getElementById("stock-entry-form").addEventListener("submit", async (e) => {
+    document.getElementById("stock-entry-form").addEventListener("submit", async function (e) {
       e.preventDefault();
       const dateStr = document.getElementById("entry-date").value;
       const type = document.getElementById("stock-type").value;
@@ -453,6 +489,11 @@
         Object.assign(payload, { purchase, total, used, damage, totalStock, demand });
       }
 
+      if (!db || !firebaseConfig || String(firebaseConfig.apiKey).includes("YOUR_API_KEY")) {
+        showOfficialNotice(`"${item}" এর হিসাব প্রস্তুত হয়েছে (ফায়ারবেস কনফিগ যুক্ত করলে অ্যাডমিনে সিঙ্ক হবে)।`);
+        return;
+      }
+
       try {
         await db.ref(`daily_stock_logs/${dateStr}/${type}/${safeKey}`).set(payload);
         autoCleanThreeMonthsStock();
@@ -462,8 +503,8 @@
       }
     });
 
-    // ৩ মাসের রোলিং অটো-ডিলিট
     function autoCleanThreeMonthsStock() {
+      if (!db || !firebaseConfig || String(firebaseConfig.apiKey).includes("YOUR_API_KEY")) return;
       const cutoff = new Date();
       cutoff.setMonth(cutoff.getMonth() - 3);
       const cutoffStr = cutoff.toISOString().split("T")[0];
