@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>স্টক ম্যানেজমেন্ট - ফাস্টল্যাব ইউনানী</title>
+  <title>স্টক ম্যানেজমেন্ট ও মাসিক রিপোর্ট - ফাস্টল্যাব ইউনানী</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -17,21 +17,21 @@
 <body class="min-h-screen text-gray-800">
   <!-- হেডার -->
   <header class="brand-green text-white sticky top-0 z-30 shadow">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center">
-          <i class="fa-solid fa-boxes-stacked text-emerald-200"></i>
+          <i class="fa-solid fa-chart-column text-emerald-200"></i>
         </div>
         <div>
           <h1 class="text-sm sm:text-base font-bold leading-tight">ফাস্টল্যাব ইউনানী — স্টক ম্যানেজমেন্ট</h1>
-          <p class="text-[11px] text-emerald-200">ফ্যাক্টরি স্টোকস এন্ট্রি রিপোর্ট ও লাইভ মনিটরিং</p>
+          <p class="text-[11px] text-emerald-200">মাসিক উৎপাদন, ডেলিভারি, ফ্রি ও স্যাম্পল রিপোর্ট ও দৈনিক শিট</p>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <button type="button" onclick="exportToCSV()"
+        <button type="button" onclick="exportCurrentReportCSV()"
           class="text-xs bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
-          <i class="fa-solid fa-file-excel"></i> CSV ডাউনলোড
+          <i class="fa-solid fa-file-csv"></i> CSV ডাউনলোড
         </button>
         <a href="admin-dashboard.html"
           class="text-xs bg-white/15 hover:bg-white/25 text-white font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
@@ -41,97 +41,92 @@
     </div>
   </header>
 
-  <main class="max-w-6xl mx-auto px-4 pt-4 pb-12 space-y-4">
-    <!-- ফিল্টার কার্ড -->
-    <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-      <div>
-        <label for="filter-date" class="block text-xs font-bold text-gray-700 mb-1">তারিখ</label>
-        <input type="date" id="filter-date" onchange="renderStockTable()"
-          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs font-semibold text-gray-800 focus:outline-none focus:border-emerald-700" />
+  <main class="max-w-7xl mx-auto px-4 pt-4 pb-12 space-y-4">
+    <!-- রিপোর্ট মোড ও ফিল্টার কার্ড -->
+    <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-3">
+      <div class="flex items-center justify-between gap-2 flex-wrap border-b border-gray-100 pb-3">
+        <div class="flex items-center gap-2">
+          <button type="button" id="btn-mode-monthly" onclick="switchReportMode('monthly')"
+            class="px-3.5 py-1.5 rounded-lg text-xs font-bold brand-green text-white transition cursor-pointer">
+            <i class="fa-solid fa-calendar-days mr-1"></i> মাসিক রিপোর্ট (উৎপাদন/ডেলিভারি/ফ্রি/স্যাম্পল)
+          </button>
+          <button type="button" id="btn-mode-daily" onclick="switchReportMode('daily')"
+            class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 transition cursor-pointer">
+            <i class="fa-solid fa-file-lines mr-1"></i> দৈনিক শিট ভিউ
+          </button>
+        </div>
+
+        <span id="active-period-badge" class="text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded-full">
+          মাস: ২০২৬-১১
+        </span>
       </div>
 
-      <div>
-        <label for="filter-category" class="block text-xs font-bold text-gray-700 mb-1">প্রডাক্টের ক্যাটাগরি</label>
-        <select id="filter-category" onchange="renderStockTable()"
-          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs font-semibold bg-gray-50 focus:outline-none focus:border-emerald-700">
-          <option value="all">সব ক্যাটাগরি</option>
-          <option value="finished">ফিনিশগুডস</option>
-          <option value="packaging">প্যাকেজিং আইটেম</option>
-          <option value="raw_chemical">র / কেমিক্যাল</option>
-        </select>
-      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div id="month-picker-wrap">
+          <label for="filter-month" class="block text-xs font-bold text-gray-700 mb-1">রিপোর্টের মাস</label>
+          <input type="month" id="filter-month" onchange="refreshActiveView()"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs font-semibold text-gray-800 focus:outline-none focus:border-emerald-700" />
+        </div>
 
-      <div>
-        <label for="filter-type" class="block text-xs font-bold text-gray-700 mb-1">স্টোকস টাইপ</label>
-        <select id="filter-type" onchange="renderStockTable()"
-          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs font-semibold bg-gray-50 focus:outline-none focus:border-emerald-700">
-          <option value="all">সব টাইপ</option>
-          <option value="production">উৎপাদন</option>
-          <option value="purchase">ক্রয়</option>
-          <option value="delivery">ডেলিভারি</option>
-          <option value="damage">ড্যামেজ</option>
-          <option value="demand">ডিমান্ড</option>
-        </select>
-      </div>
+        <div id="date-picker-wrap" class="hidden">
+          <label for="filter-date" class="block text-xs font-bold text-gray-700 mb-1">দৈনিক শিট তারিখ</label>
+          <input type="date" id="filter-date" onchange="refreshActiveView()"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs font-semibold text-gray-800 focus:outline-none focus:border-emerald-700" />
+        </div>
 
-      <div>
-        <label for="filter-search" class="block text-xs font-bold text-gray-700 mb-1">প্রডাক্ট খুঁজুন</label>
-        <input type="text" id="filter-search" oninput="renderStockTable()" placeholder="যেমন: ২৫০মিলি, বোতল..."
-          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-700" />
+        <div>
+          <label for="filter-sheet-type" class="block text-xs font-bold text-gray-700 mb-1">শিট / ক্যাটাগরি</label>
+          <select id="filter-sheet-type" onchange="refreshActiveView()"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs font-semibold bg-gray-50 focus:outline-none focus:border-emerald-700">
+            <option value="finished">ফিনিশড গুডস (Products)</option>
+            <option value="packaging">প্যাকেজিং আইটেম (Packaging)</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="filter-search" class="block text-xs font-bold text-gray-700 mb-1">আইটেম / প্রোডাক্ট খুঁজুন</label>
+          <input type="text" id="filter-search" oninput="refreshActiveView()" placeholder="যেমন: 200ml, Bottle, Cap..."
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-emerald-700" />
+        </div>
+      </div>
+    </div>
+    <!-- মাসিক ফিনিশড গুডস সামারি কার্ডসমূহ -->
+    <div id="monthly-fg-summary" class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-emerald-100">
+        <span class="text-xs font-semibold text-emerald-800 block">মাসিক উৎপাদন (Produced)</span>
+        <span id="sum-monthly-produced" class="text-xl font-bold text-emerald-950 mt-1 block">0</span>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-blue-100">
+        <span class="text-xs font-semibold text-blue-800 block">মাসিক ডেলিভারি (Delivery/Sales)</span>
+        <span id="sum-monthly-delivery" class="text-xl font-bold text-blue-950 mt-1 block">0</span>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-purple-100">
+        <span class="text-xs font-semibold text-purple-800 block">মাসিক ফ্রি (Free)</span>
+        <span id="sum-monthly-free" class="text-xl font-bold text-purple-950 mt-1 block">0</span>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-amber-100">
+        <span class="text-xs font-semibold text-amber-800 block">মাসিক স্যাম্পল (Sample)</span>
+        <span id="sum-monthly-sample" class="text-xl font-bold text-amber-950 mt-1 block">0</span>
       </div>
     </div>
 
-    <!-- টাইপভিত্তিক সামারি কার্ড -->
-    <div id="summary-cards" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-      <div class="bg-white rounded-xl p-3.5 shadow-sm border border-emerald-100">
-        <span class="text-[11px] font-semibold text-emerald-800 block">উৎপাদন</span>
-        <span id="sum-production" class="text-lg font-bold text-emerald-950">0</span>
-      </div>
-      <div class="bg-white rounded-xl p-3.5 shadow-sm border border-blue-100">
-        <span class="text-[11px] font-semibold text-blue-800 block">ক্রয়</span>
-        <span id="sum-purchase" class="text-lg font-bold text-blue-950">0</span>
-      </div>
-      <div class="bg-white rounded-xl p-3.5 shadow-sm border border-indigo-100">
-        <span class="text-[11px] font-semibold text-indigo-800 block">ডেলিভারি</span>
-        <span id="sum-delivery" class="text-lg font-bold text-indigo-950">0</span>
-      </div>
-      <div class="bg-white rounded-xl p-3.5 shadow-sm border border-rose-100">
-        <span class="text-[11px] font-semibold text-rose-800 block">ড্যামেজ</span>
-        <span id="sum-damage" class="text-lg font-bold text-rose-950">0</span>
-      </div>
-      <div class="bg-white rounded-xl p-3.5 shadow-sm border border-amber-100 col-span-2 sm:col-span-1">
-        <span class="text-[11px] font-semibold text-amber-800 block">ডিমান্ড</span>
-        <span id="sum-demand" class="text-lg font-bold text-amber-950">0</span>
-      </div>
-    </div>
-    <!-- ডেটা টেবিল -->
+    <!-- রিপোর্ট টেবিল কন্টেইনার -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
       <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between gap-2 flex-wrap">
-        <h2 class="text-sm font-bold text-gray-800 flex items-center gap-2">
-          <i class="fa-solid fa-table-list text-emerald-700"></i> স্টোকস এন্ট্রি তালিকা
+        <h2 id="report-table-title" class="text-sm font-bold text-gray-800 flex items-center gap-2">
+          <i class="fa-solid fa-table text-emerald-700"></i> মাসিক উৎপাদন, ডেলিভারি, ফ্রি ও স্যাম্পল রিপোর্ট
         </h2>
-        <span id="entry-count-badge" class="text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-          মোট এন্ট্রি: ০
+        <span id="report-row-count" class="text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+          আইটেম: ০
         </span>
       </div>
 
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-xs">
-          <thead>
-            <tr class="bg-gray-50 text-gray-600 border-b border-gray-200">
-              <th class="py-2.5 px-3 font-bold">#</th>
-              <th class="py-2.5 px-3 font-bold">তারিখ</th>
-              <th class="py-2.5 px-3 font-bold">ক্যাটাগরি</th>
-              <th class="py-2.5 px-3 font-bold">প্রডাক্টের নাম</th>
-              <th class="py-2.5 px-3 font-bold">স্টোকস টাইপ</th>
-              <th class="py-2.5 px-3 font-bold">পরিমাপ</th>
-              <th class="py-2.5 px-3 font-bold">এন্ট্রি ইউজার</th>
-              <th class="py-2.5 px-3 font-bold text-center">অ্যাকশন</th>
-            </tr>
-          </thead>
-          <tbody id="stock-table-body" class="divide-y divide-gray-100">
+          <thead id="report-thead" class="bg-gray-50 text-gray-700 border-b border-gray-200"></thead>
+          <tbody id="report-tbody" class="divide-y divide-gray-100">
             <tr>
-              <td colspan="8" class="py-6 text-center text-gray-400">ডেটা লোড হচ্ছে...</td>
+              <td class="py-6 text-center text-gray-400">ডেটা লোড হচ্ছে...</td>
             </tr>
           </tbody>
         </table>
@@ -166,7 +161,7 @@
     </div>
   </div>
   <script>
-    // আপনার ফায়ারবেস কনফিগারেশন এখানে বসান (stock-entry.html এর সাথে মিলিয়ে)
+    // আপনার ফায়ারবেস কনফিগারেশন এখানে বসান
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -187,22 +182,38 @@
       console.warn("Firebase init error:", e);
     }
 
-    const CATEGORY_LABELS = {
-      finished: "ফিনিশগুডস",
-      packaging: "প্যাকেজিং আইটেম",
-      raw_chemical: "র / কেমিক্যাল"
+    // ফাইনাল শিট অনুযায়ী ফিনিশড গুডস ও প্যাকেজিং আইটেমের তালিকা
+    const FINAL_SHEET_ITEMS = {
+      finished: [
+        "FLJ-250ml Orange", "LJ-200ml Orange", "100ml(48Pcs) Oran.",
+        "100ml LJ(KP)(48Pcs)", "Fast LJ-200ml Green", "FastLJ-100ml Green",
+        "250ml Red", "200ml Red", "100ml Red",
+        "250ml Coffee", "200ml Coffee", "100ml Coffee",
+        "50ml Coffee", "50ml Red", "50ml(48Pcs)",
+        "Chana-Jhal-25g", "Chana-BBQ-25g", "Chan-Bhuj-350g",
+        "Chana-Bom-350g", "Motor Vaja-15g", "Chan-Bhuj-800g",
+        "Chan-Bom-900g", "Bana Lassa-200g"
+      ],
+      packaging: [
+        "Bottle: 50ml-Bottle", "Bottle: 100ml-Bottle-Old", "Bottle: 100ml-Bottle-Long",
+        "Bottle: 200ml-Bottle-Long", "Bottle: 200ml-Bottle-old", "Bottle: 250ml-Bottle-Old",
+        "Cap: Orange Cap", "Cap: Red-Cap", "Cap: Green-Cap",
+        "Label: 50ml-Label-Red", "Label: 50ml-Label-Black", "Label: 100m-label-Or",
+        "Label: 100ml-label-Kp", "Label: 100ml-Label-Green", "Label: 200ml-Label-Or",
+        "Label: 200ml-Label-Green", "Label: 250ml-Label-Or",
+        "LDPE: 50ml-LDPE", "LDPE: 100ml-LDPE", "LDPE: 250/200 LDPE",
+        "Shipers: 50ml-Shipers-red", "Shipers: 50ml-Shipers-Black", "Shipers: 50ml-Shipers-Green",
+        "Shipers: 100ml-Shipers-Or", "Shipers: 100ml-Shipers-green", "Shipers: 200ml-Shipers-Or",
+        "Shipers: 200ml-Shipers-Green", "Shipers: 250ml-Shipers-Or",
+        "Master: 50/100Master", "Master: 100ml-Master-Kp/Or", "Master: 200Ml-Master-Or/G",
+        "Master: 250ml-Master-Or", "Master: 100ml- Sipus-KP"
+      ]
     };
 
-    const STOCK_TYPE_SHORT = {
-      production: "উৎপাদন",
-      purchase: "ক্রয়",
-      delivery: "ডেলিভারি",
-      damage: "ড্যামেজ",
-      demand: "ডিমান্ড"
-    };
-
-    let allEntriesForDate = [];
-    let currentRef = null;
+    let reportMode = "monthly"; // "monthly" | "daily"
+    let allLogsCache = {};
+    let currentExportHeaders = [];
+    let currentExportRows = [];
     let noticeCallback = null;
 
     function showOfficialNotice(message, isError = false, onOk = null) {
@@ -234,183 +245,366 @@
       return `${y}-${m}-${d}`;
     }
 
-    function toBanglaDigits(num) {
-      const bnDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
-      return String(num).replace(/\d/g, (d) => bnDigits[Number(d)]);
+    function getCurrentMonthStr() {
+      return getTodayDateStr().slice(0, 7);
     }
 
-    function subscribeDateLogs(dateStr) {
-      const tbody = document.getElementById("stock-table-body");
-      if (!dateStr) return;
+    function toBanglaDigits(num) {
+      const bn = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+      return String(num).replace(/\d/g, (d) => bn[Number(d)]);
+    }
 
-      if (currentRef) {
-        currentRef.off();
-        currentRef = null;
+    function switchReportMode(mode) {
+      reportMode = mode;
+      const isMonthly = mode === "monthly";
+
+      document.getElementById("btn-mode-monthly").className = isMonthly
+        ? "px-3.5 py-1.5 rounded-lg text-xs font-bold brand-green text-white transition cursor-pointer"
+        : "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 transition cursor-pointer";
+
+      document.getElementById("btn-mode-daily").className = !isMonthly
+        ? "px-3.5 py-1.5 rounded-lg text-xs font-bold brand-green text-white transition cursor-pointer"
+        : "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 transition cursor-pointer";
+
+      document.getElementById("month-picker-wrap").classList.toggle("hidden", !isMonthly);
+      document.getElementById("date-picker-wrap").classList.toggle("hidden", isMonthly);
+      document.getElementById("monthly-fg-summary").classList.toggle("hidden", !isMonthly);
+
+      refreshActiveView();
+    }
+
+    function extractRecordFromDateBucket(dateBucket, sheetType, itemName) {
+      if (!dateBucket || typeof dateBucket !== "object") return null;
+
+      // ফরম্যাট ১: daily_stock_logs/{date}/{type}/{safeKey}
+      if (dateBucket[sheetType] && typeof dateBucket[sheetType] === "object") {
+        const encoded = encodeURIComponent(itemName);
+        if (dateBucket[sheetType][encoded]) return dateBucket[sheetType][encoded];
+        if (dateBucket[sheetType][itemName]) return dateBucket[sheetType][itemName];
       }
 
-      if (!db || !firebaseConfig || String(firebaseConfig.apiKey).includes("YOUR_API_KEY")) {
-        allEntriesForDate = [];
-        renderStockTable();
-        tbody.innerHTML = `<tr><td colspan="8" class="py-6 text-center text-gray-400">ফায়ারবেস কনফিগারেশন যুক্ত করলে রিয়েলটাইম এন্ট্রি এখানে দেখাবে।</td></tr>`;
-        return;
-      }
+      // ফরম্যাট ২: daily_stock_logs/{date}/{entryKey}
+      const matchedKey = Object.keys(dateBucket).find((k) => {
+        const rec = dateBucket[k];
+        return rec && typeof rec === "object" && (rec.productName === itemName || rec.itemName === itemName);
+      });
+      return matchedKey ? dateBucket[matchedKey] : null;
+    }
 
-      currentRef = db.ref(`daily_stock_logs/${dateStr}`);
-      currentRef.on("value", (snap) => {
-        const val = snap.val() || {};
-        const rows = [];
-        Object.keys(val).forEach((key) => {
-          const item = val[key];
-          if (item && typeof item === "object" && item.productName) {
-            rows.push({
-              ...item,
-              date: item.date || dateStr,
-              storageKey: key
-            });
+    function buildMonthlyRows(monthStr, sheetType, searchText) {
+      const baseList = FINAL_SHEET_ITEMS[sheetType] || [];
+      const datesInMonth = Object.keys(allLogsCache).filter((d) => d.startsWith(monthStr)).sort();
+
+      const rows = baseList.map((itemName) => {
+        let producedTotal = 0;
+        let deliveryTotal = 0;
+        let freeTotal = 0;
+        let sampleTotal = 0;
+        let purchaseTotal = 0;
+        let usedTotal = 0;
+        let damageTotal = 0;
+        let demandTotal = 0;
+
+        datesInMonth.forEach((d) => {
+          const dayObj = allLogsCache[d];
+          const rec = extractRecordFromDateBucket(dayObj, sheetType, itemName);
+          if (!rec) return;
+
+          if (sheetType === "finished") {
+            const pCtn = Number(rec.producedCtn ?? rec.produced ?? 0);
+            const pPcs = Number(rec.producedPcs ?? 0);
+            producedTotal += pCtn + pPcs;
+
+            const dCtn = Number(rec.deliveryCtn ?? rec.sales ?? 0);
+            const dPcs = Number(rec.deliveryPcs ?? 0);
+            deliveryTotal += dCtn + dPcs;
+
+            freeTotal += Number(rec.freePcs ?? rec.free ?? 0);
+            sampleTotal += Number(rec.samplePcs ?? rec.sample ?? 0);
+          } else {
+            purchaseTotal += Number(rec.purchase ?? 0);
+            usedTotal += Number(rec.used ?? 0);
+            damageTotal += Number(rec.damage ?? 0);
+            demandTotal += Number(rec.demand ?? 0);
           }
         });
-        rows.sort((a, b) => Number(b.updatedAt || 0) - Number(a.updatedAt || 0));
-        allEntriesForDate = rows;
-        renderStockTable();
+
+        return {
+          itemName,
+          producedTotal,
+          deliveryTotal,
+          freeTotal,
+          sampleTotal,
+          purchaseTotal,
+          usedTotal,
+          damageTotal,
+          demandTotal
+        };
       });
+
+      if (!searchText) return rows;
+      return rows.filter((r) => r.itemName.toLowerCase().includes(searchText));
     }
 
-    function getFilteredEntries() {
-      const catFilter = document.getElementById("filter-category").value;
-      const typeFilter = document.getElementById("filter-type").value;
+    function buildDailyRows(dateStr, sheetType, searchText) {
+      const baseList = FINAL_SHEET_ITEMS[sheetType] || [];
+      const dayObj = allLogsCache[dateStr] || {};
+
+      const rows = baseList.map((itemName, index) => {
+        const rec = extractRecordFromDateBucket(dayObj, sheetType, itemName) || {};
+
+        if (sheetType === "finished") {
+          const opening = Number(rec.openingCtn ?? rec.opening ?? 0);
+          const produced = Number(rec.producedCtn ?? rec.produced ?? 0);
+          const marketReturn = Number(rec.returnCtn ?? rec.marketReturn ?? 0);
+          const totalStock = Number(rec.totalStock ?? (opening + produced + marketReturn));
+          const delivery = Number(rec.deliveryCtn ?? rec.sales ?? 0);
+          const free = Number(rec.freePcs ?? rec.free ?? 0);
+          const sample = Number(rec.samplePcs ?? rec.sample ?? 0);
+          const closingStock = Number(rec.closingStock ?? (totalStock - delivery - free - sample));
+
+          return {
+            sl: index + 1,
+            itemName,
+            opening,
+            produced,
+            marketReturn,
+            totalStock,
+            delivery,
+            free,
+            sample,
+            closingStock
+          };
+        } else {
+          const opening = Number(rec.opening ?? 0);
+          const purchase = Number(rec.purchase ?? 0);
+          const total = Number(rec.total ?? (opening + purchase));
+          const used = Number(rec.used ?? 0);
+          const damage = Number(rec.damage ?? 0);
+          const totalStock = Number(rec.totalStock ?? (total - used - damage));
+          const demand = Number(rec.demand ?? 0);
+
+          return {
+            sl: index + 1,
+            itemName,
+            opening,
+            purchase,
+            total,
+            used,
+            damage,
+            totalStock,
+            demand
+          };
+        }
+      });
+
+      if (!searchText) return rows;
+      return rows.filter((r) => r.itemName.toLowerCase().includes(searchText));
+    }
+
+    function refreshActiveView() {
+      const sheetType = document.getElementById("filter-sheet-type").value;
       const searchText = (document.getElementById("filter-search").value || "").trim().toLowerCase();
+      const thead = document.getElementById("report-thead");
+      const tbody = document.getElementById("report-tbody");
+      const titleEl = document.getElementById("report-table-title");
+      const countBadge = document.getElementById("report-row-count");
+      const periodBadge = document.getElementById("active-period-badge");
+      const fgSummaryEl = document.getElementById("monthly-fg-summary");
 
-      return allEntriesForDate.filter((item) => {
-        if (catFilter !== "all" && item.category !== catFilter) return false;
-        if (typeFilter !== "all" && item.stockType !== typeFilter) return false;
-        if (searchText) {
-          const nameMatch = String(item.productName || "").toLowerCase().includes(searchText);
-          const catMatch = String(item.categoryLabel || CATEGORY_LABELS[item.category] || "").toLowerCase().includes(searchText);
-          const typeMatch = String(item.stockTypeLabel || STOCK_TYPE_SHORT[item.stockType] || "").toLowerCase().includes(searchText);
-          if (!nameMatch && !catMatch && !typeMatch) return false;
+      if (reportMode === "monthly") {
+        const monthStr = document.getElementById("filter-month").value || getCurrentMonthStr();
+        periodBadge.textContent = `মাস: ${monthStr}`;
+        fgSummaryEl.classList.toggle("hidden", sheetType !== "finished");
+
+        const rows = buildMonthlyRows(monthStr, sheetType, searchText);
+        countBadge.textContent = `আইটেম: ${toBanglaDigits(rows.length)}`;
+
+        if (sheetType === "finished") {
+          titleEl.innerHTML = `<i class="fa-solid fa-table text-emerald-700"></i> মাসিক উৎপাদন, ডেলিভারি, ফ্রি ও স্যাম্পল রিপোর্ট (${monthStr})`;
+
+          let sumProd = 0, sumDel = 0, sumFree = 0, sumSamp = 0;
+          rows.forEach((r) => {
+            sumProd += r.producedTotal;
+            sumDel += r.deliveryTotal;
+            sumFree += r.freeTotal;
+            sumSamp += r.sampleTotal;
+          });
+
+          document.getElementById("sum-monthly-produced").textContent = sumProd;
+          document.getElementById("sum-monthly-delivery").textContent = sumDel;
+          document.getElementById("sum-monthly-free").textContent = sumFree;
+          document.getElementById("sum-monthly-sample").textContent = sumSamp;
+
+          thead.innerHTML = `
+            <tr>
+              <th class="py-2.5 px-3 font-bold">#</th>
+              <th class="py-2.5 px-3 font-bold">Products</th>
+              <th class="py-2.5 px-3 font-bold text-right">মাসিক উৎপাদন (Produced)</th>
+              <th class="py-2.5 px-3 font-bold text-right">মাসিক ডেলিভারি (Delivery)</th>
+              <th class="py-2.5 px-3 font-bold text-right">মাসিক ফ্রি (Free)</th>
+              <th class="py-2.5 px-3 font-bold text-right">মাসিক স্যাম্পল (Sample)</th>
+            </tr>
+          `;
+
+          currentExportHeaders = ["#", "Products", "Monthly Produced", "Monthly Delivery", "Monthly Free", "Monthly Sample"];
+          currentExportRows = rows.map((r, i) => [i + 1, r.itemName, r.producedTotal, r.deliveryTotal, r.freeTotal, r.sampleTotal]);
+
+          tbody.innerHTML = rows.map((r, i) => `
+            <tr class="hover:bg-emerald-50/30">
+              <td class="py-2.5 px-3 text-gray-500 font-semibold">${i + 1}</td>
+              <td class="py-2.5 px-3 font-bold text-gray-800">${r.itemName}</td>
+              <td class="py-2.5 px-3 text-right font-bold text-emerald-800">${r.producedTotal}</td>
+              <td class="py-2.5 px-3 text-right font-bold text-blue-800">${r.deliveryTotal}</td>
+              <td class="py-2.5 px-3 text-right font-bold text-purple-800">${r.freeTotal}</td>
+              <td class="py-2.5 px-3 text-right font-bold text-amber-800">${r.sampleTotal}</td>
+            </tr>
+          `).join("");
+        } else {
+          titleEl.innerHTML = `<i class="fa-solid fa-table text-emerald-700"></i> মাসিক প্যাকেজিং সারসংক্ষেপ (${monthStr})`;
+
+          thead.innerHTML = `
+            <tr>
+              <th class="py-2.5 px-3 font-bold">#</th>
+              <th class="py-2.5 px-3 font-bold">Item Name</th>
+              <th class="py-2.5 px-3 font-bold text-right">Purchase</th>
+              <th class="py-2.5 px-3 font-bold text-right">Used</th>
+              <th class="py-2.5 px-3 font-bold text-right">Damage</th>
+              <th class="py-2.5 px-3 font-bold text-right">Demand</th>
+            </tr>
+          `;
+
+          currentExportHeaders = ["#", "Item Name", "Purchase", "Used", "Damage", "Demand"];
+          currentExportRows = rows.map((r, i) => [i + 1, r.itemName, r.purchaseTotal, r.usedTotal, r.damageTotal, r.demandTotal]);
+
+          tbody.innerHTML = rows.map((r, i) => `
+            <tr class="hover:bg-emerald-50/30">
+              <td class="py-2.5 px-3 text-gray-500 font-semibold">${i + 1}</td>
+              <td class="py-2.5 px-3 font-bold text-gray-800">${r.itemName}</td>
+              <td class="py-2.5 px-3 text-right font-semibold text-emerald-800">${r.purchaseTotal}</td>
+              <td class="py-2.5 px-3 text-right font-semibold text-gray-700">${r.usedTotal}</td>
+              <td class="py-2.5 px-3 text-right font-semibold text-rose-700">${r.damageTotal}</td>
+              <td class="py-2.5 px-3 text-right font-bold text-amber-800">${r.demandTotal}</td>
+            </tr>
+          `).join("");
         }
-        return true;
-      });
-    }
+      } else {
+        const dateStr = document.getElementById("filter-date").value || getTodayDateStr();
+        periodBadge.textContent = `তারিখ: ${dateStr}`;
+        fgSummaryEl.classList.add("hidden");
 
-    function updateSummary(rows) {
-      const totals = {
-        production: 0,
-        purchase: 0,
-        delivery: 0,
-        damage: 0,
-        demand: 0
-      };
+        const rows = buildDailyRows(dateStr, sheetType, searchText);
+        countBadge.textContent = `আইটেম: ${toBanglaDigits(rows.length)}`;
 
-      rows.forEach((r) => {
-        const t = r.stockType;
-        if (t in totals) {
-          totals[t] += Number(r.quantity || 0);
+        if (sheetType === "finished") {
+          titleEl.innerHTML = `<i class="fa-solid fa-file-lines text-emerald-700"></i> দৈনিক ফিনিশড গুডস শিট (${dateStr})`;
+          thead.innerHTML = `
+            <tr>
+              <th class="py-2.5 px-3 font-bold">#</th>
+              <th class="py-2.5 px-3 font-bold">Products</th>
+              <th class="py-2.5 px-3 font-bold text-right">Opening</th>
+              <th class="py-2.5 px-3 font-bold text-right">Produced</th>
+              <th class="py-2.5 px-3 font-bold text-right">Return</th>
+              <th class="py-2.5 px-3 font-bold text-right">Total Stock</th>
+              <th class="py-2.5 px-3 font-bold text-right">Delivery</th>
+              <th class="py-2.5 px-3 font-bold text-right">Free</th>
+              <th class="py-2.5 px-3 font-bold text-right">Sample</th>
+              <th class="py-2.5 px-3 font-bold text-right">Closing Stock</th>
+            </tr>
+          `;
+          currentExportHeaders = ["#", "Products", "Opening", "Produced", "Return", "Total Stock", "Delivery", "Free", "Sample", "Closing Stock"];
+          currentExportRows = rows.map((r) => [r.sl, r.itemName, r.opening, r.produced, r.marketReturn, r.totalStock, r.delivery, r.free, r.sample, r.closingStock]);
+
+          tbody.innerHTML = rows.map((r) => `
+            <tr class="hover:bg-emerald-50/30">
+              <td class="py-2.5 px-3 text-gray-500">${r.sl}</td>
+              <td class="py-2.5 px-3 font-bold text-gray-800">${r.itemName}</td>
+              <td class="py-2.5 px-3 text-right">${r.opening}</td>
+              <td class="py-2.5 px-3 text-right font-semibold text-emerald-800">${r.produced}</td>
+              <td class="py-2.5 px-3 text-right">${r.marketReturn}</td>
+              <td class="py-2.5 px-3 text-right font-bold">${r.totalStock}</td>
+              <td class="py-2.5 px-3 text-right font-semibold text-blue-800">${r.delivery}</td>
+              <td class="py-2.5 px-3 text-right font-semibold text-purple-800">${r.free}</td>
+              <td class="py-2.5 px-3 text-right font-semibold text-amber-800">${r.sample}</td>
+              <td class="py-2.5 px-3 text-right font-bold text-emerald-950">${r.closingStock}</td>
+            </tr>
+          `).join("");
+        } else {
+          titleEl.innerHTML = `<i class="fa-solid fa-file-lines text-emerald-700"></i> দৈনিক প্যাকেজিং আইটেম শিট (${dateStr})`;
+          thead.innerHTML = `
+            <tr>
+              <th class="py-2.5 px-3 font-bold">Sl</th>
+              <th class="py-2.5 px-3 font-bold">Item Name</th>
+              <th class="py-2.5 px-3 font-bold text-right">Opening</th>
+              <th class="py-2.5 px-3 font-bold text-right">Purchase</th>
+              <th class="py-2.5 px-3 font-bold text-right">Total</th>
+              <th class="py-2.5 px-3 font-bold text-right">Used</th>
+              <th class="py-2.5 px-3 font-bold text-right">Damage</th>
+              <th class="py-2.5 px-3 font-bold text-right">Total Stock</th>
+              <th class="py-2.5 px-3 font-bold text-right">Demand</th>
+            </tr>
+          `;
+          currentExportHeaders = ["Sl", "Item Name", "Opening", "Purchase", "Total", "Used", "Damage", "Total Stock", "Demand"];
+          currentExportRows = rows.map((r) => [r.sl, r.itemName, r.opening, r.purchase, r.total, r.used, r.damage, r.totalStock, r.demand]);
+
+          tbody.innerHTML = rows.map((r) => `
+            <tr class="hover:bg-emerald-50/30">
+              <td class="py-2.5 px-3 text-gray-500">${r.sl}</td>
+              <td class="py-2.5 px-3 font-bold text-gray-800">${r.itemName}</td>
+              <td class="py-2.5 px-3 text-right">${r.opening}</td>
+              <td class="py-2.5 px-3 text-right font-semibold text-emerald-800">${r.purchase}</td>
+              <td class="py-2.5 px-3 text-right font-bold">${r.total}</td>
+              <td class="py-2.5 px-3 text-right">${r.used}</td>
+              <td class="py-2.5 px-3 text-right font-semibold text-rose-700">${r.damage}</td>
+              <td class="py-2.5 px-3 text-right font-bold text-emerald-950">${r.totalStock}</td>
+              <td class="py-2.5 px-3 text-right font-bold text-amber-800">${r.demand}</td>
+            </tr>
+          `).join("");
         }
-      });
-
-      document.getElementById("sum-production").textContent = totals.production;
-      document.getElementById("sum-purchase").textContent = totals.purchase;
-      document.getElementById("sum-delivery").textContent = totals.delivery;
-      document.getElementById("sum-damage").textContent = totals.damage;
-      document.getElementById("sum-demand").textContent = totals.demand;
-    }
-
-    function renderStockTable() {
-      const tbody = document.getElementById("stock-table-body");
-      const badge = document.getElementById("entry-count-badge");
-      const filtered = getFilteredEntries();
-
-      updateSummary(filtered);
-      badge.textContent = `মোট এন্ট্রি: ${toBanglaDigits(filtered.length)}`;
-
-      if (!filtered.length) {
-        tbody.innerHTML = `<tr><td colspan="8" class="py-6 text-center text-gray-400">নির্বাচিত ফিল্টারে কোনো এন্ট্রি পাওয়া যায়নি।</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = filtered.map((item, idx) => {
-        const catLabel = item.categoryLabel || CATEGORY_LABELS[item.category] || item.category || "-";
-        const typeLabel = item.stockTypeLabel || STOCK_TYPE_SHORT[item.stockType] || item.stockType || "-";
-        const qtyText = `${Number(item.quantity || 0)} ${item.unit || ""}`.trim();
-        const encodedKey = encodeURIComponent(item.storageKey);
-
-        return `
-          <tr class="hover:bg-emerald-50/30 transition">
-            <td class="py-2.5 px-3 font-semibold text-gray-500">${idx + 1}</td>
-            <td class="py-2.5 px-3 font-medium text-gray-700 whitespace-nowrap">${item.date || "-"}</td>
-            <td class="py-2.5 px-3 whitespace-nowrap">
-              <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-semibold text-[11px]">${catLabel}</span>
-            </td>
-            <td class="py-2.5 px-3 font-bold text-gray-800">${item.productName || "-"}</td>
-            <td class="py-2.5 px-3 whitespace-nowrap">
-              <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-semibold text-[11px]">${typeLabel}</span>
-            </td>
-            <td class="py-2.5 px-3 font-bold text-emerald-900 whitespace-nowrap">${qtyText}</td>
-            <td class="py-2.5 px-3 text-gray-600 whitespace-nowrap">${item.updatedBy || "stockman"}</td>
-            <td class="py-2.5 px-3 text-center whitespace-nowrap">
-              <button type="button" onclick="deleteStockEntry('${item.date}', '${encodedKey}', '${escapeSingleQuote(item.productName || "")}')"
-                class="px-2 py-1 rounded bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200 text-[11px] font-semibold transition cursor-pointer"
-                title="এন্ট্রি মুছুন">
-                <i class="fa-solid fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-        `;
-      }).join("");
-    }
-
-    function escapeSingleQuote(str) {
-      return String(str).replace(/'/g, "\\'");
-    }
-
-    async function deleteStockEntry(dateStr, encodedKey, productName) {
-      if (!db || !dateStr || !encodedKey) return;
-      try {
-        await db.ref(`daily_stock_logs/${dateStr}/${encodedKey}`).remove();
-        showOfficialNotice(`"${productName}" এর এন্ট্রিটি মুছে ফেলা হয়েছে।`);
-      } catch (err) {
-        showOfficialNotice("এন্ট্রি মুছতে সমস্যা হয়েছে: " + err.message, true);
       }
     }
 
-    function exportToCSV() {
-      const rows = getFilteredEntries();
-      if (!rows.length) {
+    function exportCurrentReportCSV() {
+      if (!currentExportRows.length) {
         showOfficialNotice("ডাউনলোড করার মতো কোনো ডেটা নেই!", true);
         return;
       }
 
-      const headers = ["তারিখ", "ক্যাটাগরি", "প্রডাক্টের নাম", "স্টোকস টাইপ", "পরিমান", "একক", "ইউজার"];
-      const csvLines = [
-        headers.join(","),
-        ...rows.map((r) => [
-          r.date || "",
-          r.categoryLabel || CATEGORY_LABELS[r.category] || r.category || "",
-          r.productName || "",
-          r.stockTypeLabel || STOCK_TYPE_SHORT[r.stockType] || r.stockType || "",
-          Number(r.quantity || 0),
-          r.unit || "",
-          r.updatedBy || ""
-        ].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(","))
+      const lines = [
+        currentExportHeaders.join(","),
+        ...currentExportRows.map((row) =>
+          row.map((cell) => `"${String(cell ?? "").replace(/"/g, '""')}"`).join(",")
+        )
       ];
 
-      const blob = new Blob(["\uFEFF" + csvLines.join("\n")], { type: "text/csv;charset=utf-8;" });
+      const blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      const dateStr = document.getElementById("filter-date").value || getTodayDateStr();
+      const label = reportMode === "monthly"
+        ? `monthly-${document.getElementById("filter-month").value || getCurrentMonthStr()}`
+        : `daily-${document.getElementById("filter-date").value || getTodayDateStr()}`;
+      const sheetType = document.getElementById("filter-sheet-type").value;
+
       a.href = url;
-      a.download = `fastlab-stock-${dateStr}.csv`;
+      a.download = `fastlab-${sheetType}-${label}.csv`;
       a.click();
       URL.revokeObjectURL(url);
     }
 
-    (function initStockManagement() {
-      const dateInput = document.getElementById("filter-date");
-      const today = getTodayDateStr();
-      dateInput.value = today;
-      dateInput.addEventListener("change", () => subscribeDateLogs(dateInput.value));
-      subscribeDateLogs(today);
+    (function initStockManagementPage() {
+      document.getElementById("filter-month").value = getCurrentMonthStr();
+      document.getElementById("filter-date").value = getTodayDateStr();
+
+      if (!db || !firebaseConfig || String(firebaseConfig.apiKey).includes("YOUR_API_KEY")) {
+        allLogsCache = {};
+        refreshActiveView();
+        return;
+      }
+
+      db.ref("daily_stock_logs").on("value", (snap) => {
+        allLogsCache = snap.val() || {};
+        refreshActiveView();
+      });
     })();
   </script>
 </body>
