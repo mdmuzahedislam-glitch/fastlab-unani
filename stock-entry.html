@@ -1,1 +1,466 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>স্টক ম্যান এন্ট্রি - ফাস্টল্যাব ইউনানী</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; background-color: #f3f6f4; }
+    .brand-green { background-color: #064e3b; }
+    .brand-green-dark { background-color: #04392b; }
+  </style>
+</head>
+<body class="min-h-screen text-gray-800">
 
+  <!-- লগইন স্ক্রিন -->
+  <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-sm bg-white rounded-2xl shadow-lg overflow-hidden border border-emerald-100">
+      <div class="brand-green text-white p-5 text-center">
+        <div class="w-12 h-12 rounded-full bg-white/15 mx-auto flex items-center justify-center mb-2">
+          <i class="fa-solid fa-boxes-stacked text-xl text-emerald-200"></i>
+        </div>
+        <h1 class="text-lg font-bold">ফাস্টল্যাব ইউনানী</h1>
+        <p class="text-xs text-emerald-100">স্টক ম্যান লগইন প্যানেল</p>
+      </div>
+      <form id="login-form" class="p-5 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1">ইউজার আইডি</label>
+          <input type="text" id="login-user" required placeholder="যেমন: stockman"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-700" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-gray-600 mb-1">পাসওয়ার্ড</label>
+          <input type="password" id="login-pass" required placeholder="••••••••"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-700" />
+        </div>
+        <button type="submit"
+          class="w-full brand-green hover:bg-emerald-900 text-white font-semibold py-2.5 rounded-lg text-sm transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-right-to-bracket"></i> লগইন করুন
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- স্টক এন্ট্রি মেইন পেজ -->
+  <div id="entry-screen" class="hidden min-h-screen pb-10">
+    <!-- হেডার -->
+    <header class="brand-green text-white sticky top-0 z-30 shadow">
+      <div class="max-w-xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div>
+          <h1 class="text-sm font-bold leading-tight">ফাস্টল্যাব ইউনানী — স্টক এন্ট্রি</h1>
+          <p id="logged-user-label" class="text-[11px] text-emerald-200"></p>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="index.html" class="text-xs bg-white/15 hover:bg-white/25 px-2.5 py-1.5 rounded-lg">হোম</a>
+          <button onclick="logoutStockMan()" class="text-xs bg-rose-600 hover:bg-rose-700 px-2.5 py-1.5 rounded-lg">
+            <i class="fa-solid fa-power-off"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-xl mx-auto px-4 pt-4 space-y-4">
+      <!-- তারিখ ও বর্তমান স্টক কার্ড -->
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <label class="text-xs font-bold text-gray-700">এন্ট্রির তারিখ:</label>
+          <input type="date" id="entry-date" onchange="onItemOrDateChange()"
+            class="border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-gray-800 focus:outline-none focus:border-emerald-700" />
+        </div>
+
+        <!-- ধরন সিলেকশন ড্রপডাউন -->
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">স্টকের ধরন (Type)</label>
+          <select id="stock-type" onchange="populateItemsDropdown()"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-gray-50 font-semibold focus:outline-none focus:border-emerald-700">
+            <option value="finished">ফিনিশড গুডস (Finished Goods)</option>
+            <option value="packaging">প্যাকেজিং আইটেম (Packaging Item)</option>
+          </select>
+        </div>
+
+        <!-- আইটেম সিলেকশন ড্রপডাউন -->
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">আইটেম / প্রোডাক্ট নির্বাচন</label>
+          <select id="stock-item" onchange="onItemOrDateChange()"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:border-emerald-700"></select>
+        </div>
+
+        <!-- বর্তমান ওপেনিং / পূর্বের স্টক ডিসপ্লে -->
+        <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 flex items-center justify-between">
+          <div>
+            <span class="block text-[11px] text-emerald-800 font-medium">আজকের ওপেনিং স্টক</span>
+            <span id="opening-stock-display" class="text-base font-bold text-emerald-950">0</span>
+          </div>
+          <div class="text-right">
+            <span class="block text-[11px] text-emerald-800 font-medium">আনুমানিক ক্লোজিং/মোট</span>
+            <span id="preview-closing-display" class="text-base font-bold text-emerald-700">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- সহজ ইনপুট ফর্ম -->
+      <form id="stock-entry-form" class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-3">
+        <!-- ফিনিশড গুডস ঘরসমূহ -->
+        <div id="finished-fields" class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Produced (উৎপাদন)</label>
+            <input type="number" step="any" id="fg-produced" value="0" oninput="calculatePreview()"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Market Return (রিটার্ন)</label>
+            <input type="number" step="any" id="fg-return" value="0" oninput="calculatePreview()"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Delivery / Sales (বিক্রি)</label>
+            <input type="number" step="any" id="fg-sales" value="0" oninput="calculatePreview()"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Sample (স্যাম্পল)</label>
+            <input type="number" step="any" id="fg-sample" value="0" oninput="calculatePreview()"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          </div>
+        </div>
+
+        <!-- প্যাকেজিং আইটেম ঘরসমূহ -->
+        <div id="packaging-fields" class="hidden grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Purchase (ক্রয়/আগমন)</label>
+            <input type="number" step="any" id="pkg-purchase" value="0" oninput="calculatePreview()"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Used (ব্যবহৃত)</label>
+            <input type="number" step="any" id="pkg-used" value="0" oninput="calculatePreview()"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Damage (নষ্ট/ড্যামেজ)</label>
+            <input type="number" step="any" id="pkg-damage" value="0" oninput="calculatePreview()"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Demand (ফ্যাক্টরি চাহিদা)</label>
+            <input type="number" step="any" id="pkg-demand" value="0"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm border-amber-300 bg-amber-50/40" />
+          </div>
+        </div>
+
+        <button type="submit"
+          class="w-full brand-green hover:bg-emerald-900 text-white font-bold py-3 rounded-xl text-sm shadow transition flex items-center justify-center gap-2 mt-2">
+          <i class="fa-solid fa-cloud-arrow-up"></i> স্টক সেভ ও অ্যাডমিনে পাঠান
+        </button>
+      </form>
+    </main>
+  </div>
+
+  <!-- ফাস্টল্যাব ইউনানী অফিসিয়াল নোটিশ পপ-আপ -->
+  <div id="official-notice-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+    <div class="w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden">
+      <div class="brand-green text-white px-4 py-3 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-white text-emerald-900 flex items-center justify-center font-bold">
+          <i class="fa-solid fa-leaf"></i>
+        </div>
+        <div>
+          <h3 class="text-sm font-bold leading-tight">ফাস্টল্যাব ইউনানী</h3>
+          <p class="text-[11px] text-emerald-100">অফিসিয়াল নোটিশ</p>
+        </div>
+      </div>
+      <div class="p-6 text-center space-y-4">
+        <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 mx-auto flex items-center justify-center text-xl">
+          <i id="notice-icon" class="fa-solid fa-bell"></i>
+        </div>
+        <p id="notice-message" class="text-sm font-semibold text-gray-800"></p>
+        <div class="flex justify-end pt-1">
+          <button onclick="closeOfficialNotice()"
+            class="brand-green-dark text-white text-xs font-semibold px-5 py-2.5 rounded-lg">
+            ঠিক আছে (OK)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+ <script>
+    // আপনার ফায়ারবেস কনফিগারেশন এখানে বসান
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+      projectId: "YOUR_PROJECT",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
+
+    // শিটের তালিকা অনুযায়ী ফিনিশড গুডস ও প্যাকেজিং আইটেম
+    const STOCK_ITEMS = {
+      finished: [
+        "FLJ-250ml Orange", "LJ-200ml Orange", "100ml(48Pcs) Oran.",
+        "100ml LJ(KP)(48Pcs)", "Fast LJ-200ml Green", "FastLJ-100ml Green",
+        "250ml Red", "200ml Red", "100ml Red",
+        "250ml Coffee", "200ml Coffee", "100ml Coffee",
+        "50ml Coffee", "50ml Red", "50ml(48Pcs)",
+        "Chana-Jhal-25g", "Chana-BBQ-25g", "Chan-Bhuj-350g",
+        "Chana-Bom-350g", "Motor Vaja-15g", "Chan-Bhuj-800g",
+        "Chan-Bom-900g", "Bana Lassa-200g"
+      ],
+      packaging: [
+        "Bottle: 50ml-Bottle", "Bottle: 100ml-Bottle-Old", "Bottle: 100ml-Bottle-Long",
+        "Bottle: 200ml-Bottle-Long", "Bottle: 200ml-Bottle-old", "Bottle: 250ml-Bottle-Old",
+        "Cap: Orange Cap", "Cap: Red-Cap", "Cap: Green-Cap",
+        "Label: 50ml-Label-Red", "Label: 50ml-Label-Black", "Label: 100m-label-Or",
+        "Label: 100ml-label-Kp", "Label: 100ml-Label-Green", "Label: 200ml-Label-Or",
+        "Label: 200ml-Label-Green", "Label: 250ml-Label-Or",
+        "LDPE: 50ml-LDPE", "LDPE: 100ml-LDPE", "LDPE: 250/200 LDPE",
+        "Shipers: 50ml-Shipers-red", "Shipers: 50ml-Shipers-Black", "Shipers: 50ml-Shipers-Green",
+        "Shipers: 100ml-Shipers-Or", "Shipers: 100ml-Shipers-green", "Shipers: 200ml-Shipers-Or",
+        "Shipers: 200ml-Shipers-Green", "Shipers: 250ml-Shipers-Or",
+        "Master: 50/100Master", "Master: 100ml-Master-Kp/Or", "Master: 200Ml-Master-Or/G",
+        "Master: 250ml-Master-Or", "Master: 100ml- Sipus-KP"
+      ]
+    };
+
+    let currentOpeningStock = 0;
+    let noticeCallback = null;
+
+    function showOfficialNotice(message, isError = false, onOk = null) {
+      document.getElementById("notice-message").textContent = message;
+      const icon = document.getElementById("notice-icon");
+      icon.className = isError ? "fa-solid fa-triangle-exclamation text-rose-600" : "fa-solid fa-bell text-emerald-700";
+      noticeCallback = onOk;
+      const modal = document.getElementById("official-notice-modal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeOfficialNotice() {
+      const modal = document.getElementById("official-notice-modal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      if (typeof noticeCallback === "function") {
+        const cb = noticeCallback;
+        noticeCallback = null;
+        cb();
+      }
+    }
+
+    // সেশন চেক
+    const savedStockUser = sessionStorage.getItem("fastlab_stock_user");
+    if (savedStockUser) {
+      initEntryScreen(savedStockUser);
+    }
+
+    // লগইন হ্যান্ডলার
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const user = document.getElementById("login-user").value.trim();
+      const pass = document.getElementById("login-pass").value.trim();
+
+      const snap = await db.ref("stock_users").once("value");
+      const users = snap.val();
+
+      let valid = false;
+      if (users) {
+        for (const key in users) {
+          const u = users[key];
+          if ((u.username === user || key === user) && String(u.password) === pass && u.status !== "blocked") {
+            valid = true;
+            break;
+          }
+        }
+      } else if (user === "stockman" && pass === "1234") {
+        valid = true;
+      }
+
+      if (valid) {
+        sessionStorage.setItem("fastlab_stock_user", user);
+        initEntryScreen(user);
+      } else {
+        showOfficialNotice("ভুল ইউজার আইডি বা পাসওয়ার্ড দেওয়া হয়েছে!", true);
+      }
+    });
+
+    function logoutStockMan() {
+      sessionStorage.removeItem("fastlab_stock_user");
+      location.reload();
+    }
+
+    function initEntryScreen(user) {
+      document.getElementById("login-screen").classList.add("hidden");
+      document.getElementById("entry-screen").classList.remove("hidden");
+      document.getElementById("logged-user-label").textContent = "স্টক ম্যান: " + user;
+      document.getElementById("entry-date").value = new Date().toISOString().split("T")[0];
+      populateItemsDropdown();
+      autoCleanThreeMonthsStock();
+    }
+
+    function populateItemsDropdown() {
+      const type = document.getElementById("stock-type").value;
+      const itemSelect = document.getElementById("stock-item");
+      itemSelect.innerHTML = "";
+
+      STOCK_ITEMS[type].forEach((name) => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        itemSelect.appendChild(opt);
+      });
+
+      const isFinished = type === "finished";
+      document.getElementById("finished-fields").classList.toggle("hidden", !isFinished);
+      document.getElementById("finished-fields").classList.toggle("grid", isFinished);
+      document.getElementById("packaging-fields").classList.toggle("hidden", isFinished);
+      document.getElementById("packaging-fields").classList.toggle("grid", !isFinished);
+
+      onItemOrDateChange();
+    }
+
+    // আগের দিনের ক্লোজিং বা বর্তমান দিনের এন্ট্রি থেকে ওপেনিং লোড
+    async function onItemOrDateChange() {
+      const dateStr = document.getElementById("entry-date").value;
+      const type = document.getElementById("stock-type").value;
+      const item = document.getElementById("stock-item").value;
+      if (!dateStr || !item) return;
+
+      const safeKey = encodeURIComponent(item);
+      const currentSnap = await db.ref(`daily_stock_logs/${dateStr}/${type}/${safeKey}`).once("value");
+      const currentData = currentSnap.val();
+
+      if (currentData) {
+        currentOpeningStock = Number(currentData.opening || 0);
+        if (type === "finished") {
+          document.getElementById("fg-produced").value = currentData.produced || 0;
+          document.getElementById("fg-return").value = currentData.marketReturn || 0;
+          document.getElementById("fg-sales").value = currentData.sales || 0;
+          document.getElementById("fg-sample").value = currentData.sample || 0;
+        } else {
+          document.getElementById("pkg-purchase").value = currentData.purchase || 0;
+          document.getElementById("pkg-used").value = currentData.used || 0;
+          document.getElementById("pkg-damage").value = currentData.damage || 0;
+          document.getElementById("pkg-demand").value = currentData.demand || 0;
+        }
+      } else {
+        // পূর্বের সর্বশেষ তারিখের closing/totalStock খুঁজে ওপেনিং হিসেবে আনা
+        const allLogsSnap = await db.ref("daily_stock_logs").orderByKey().endAt(dateStr).limitToLast(15).once("value");
+        const logs = allLogsSnap.val() || {};
+        const dates = Object.keys(logs).filter((d) => d < dateStr).sort().reverse();
+
+        let foundOpening = 0;
+        for (const d of dates) {
+          const rec = logs[d]?.[type]?.[safeKey];
+          if (rec) {
+            foundOpening = Number(rec.closingStock ?? rec.totalStock ?? 0);
+            break;
+          }
+        }
+        currentOpeningStock = foundOpening;
+        resetInputs();
+      }
+
+      document.getElementById("opening-stock-display").textContent = currentOpeningStock;
+      calculatePreview();
+    }
+
+    function resetInputs() {
+      ["fg-produced", "fg-return", "fg-sales", "fg-sample", "pkg-purchase", "pkg-used", "pkg-damage", "pkg-demand"]
+        .forEach((id) => { const el = document.getElementById(id); if (el) el.value = 0; });
+    }
+
+    function calculatePreview() {
+      const type = document.getElementById("stock-type").value;
+      let result = currentOpeningStock;
+
+      if (type === "finished") {
+        const produced = Number(document.getElementById("fg-produced").value || 0);
+        const ret = Number(document.getElementById("fg-return").value || 0);
+        const sales = Number(document.getElementById("fg-sales").value || 0);
+        const sample = Number(document.getElementById("fg-sample").value || 0);
+        result = currentOpeningStock + produced + ret - sales - sample;
+      } else {
+        const purchase = Number(document.getElementById("pkg-purchase").value || 0);
+        const used = Number(document.getElementById("pkg-used").value || 0);
+        const damage = Number(document.getElementById("pkg-damage").value || 0);
+        result = currentOpeningStock + purchase - used - damage;
+      }
+
+      document.getElementById("preview-closing-display").textContent = result;
+      return result;
+    }
+
+    // স্টক সেভ ও অ্যাডমিন প্যানেলে রিয়েলটাইম আপডেট
+    document.getElementById("stock-entry-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const dateStr = document.getElementById("entry-date").value;
+      const type = document.getElementById("stock-type").value;
+      const item = document.getElementById("stock-item").value;
+      const safeKey = encodeURIComponent(item);
+      const updatedBy = sessionStorage.getItem("fastlab_stock_user") || "stockman";
+
+      const payload = {
+        itemName: item,
+        type,
+        date: dateStr,
+        opening: currentOpeningStock,
+        updatedBy,
+        updatedAt: Date.now()
+      };
+
+      if (type === "finished") {
+        const produced = Number(document.getElementById("fg-produced").value || 0);
+        const marketReturn = Number(document.getElementById("fg-return").value || 0);
+        const sales = Number(document.getElementById("fg-sales").value || 0);
+        const sample = Number(document.getElementById("fg-sample").value || 0);
+        const totalStock = currentOpeningStock + produced + marketReturn;
+        const closingStock = totalStock - sales - sample;
+
+        Object.assign(payload, { produced, marketReturn, sales, sample, totalStock, closingStock });
+      } else {
+        const purchase = Number(document.getElementById("pkg-purchase").value || 0);
+        const used = Number(document.getElementById("pkg-used").value || 0);
+        const damage = Number(document.getElementById("pkg-damage").value || 0);
+        const demand = Number(document.getElementById("pkg-demand").value || 0);
+        const total = currentOpeningStock + purchase;
+        const totalStock = total - used - damage;
+
+        Object.assign(payload, { purchase, total, used, damage, totalStock, demand });
+      }
+
+      try {
+        await db.ref(`daily_stock_logs/${dateStr}/${type}/${safeKey}`).set(payload);
+        autoCleanThreeMonthsStock();
+        showOfficialNotice(`"${item}" এর স্টক সফলভাবে আপডেট ও অ্যাডমিনে সিঙ্ক হয়েছে!`);
+      } catch (err) {
+        showOfficialNotice("স্টক সেভ করতে সমস্যা হয়েছে: " + err.message, true);
+      }
+    });
+
+    // ৩ মাসের রোলিং অটো-ডিলিট
+    function autoCleanThreeMonthsStock() {
+      const cutoff = new Date();
+      cutoff.setMonth(cutoff.getMonth() - 3);
+      const cutoffStr = cutoff.toISOString().split("T")[0];
+
+      db.ref("daily_stock_logs").once("value", (snap) => {
+        const logs = snap.val();
+        if (!logs) return;
+        Object.keys(logs).forEach((d) => {
+          if (d < cutoffStr) {
+            db.ref(`daily_stock_logs/${d}`).remove();
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
